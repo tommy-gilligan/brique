@@ -7,6 +7,19 @@ import:
 preflight:
   erc: true
   drc: true
+  filters:
+  - filter: 'Zone clearance'
+    error: 'clearance'
+    regex: 'Clearance violation \(zone clearance'
+  - filter: 'Netclass clearance'
+    error: 'clearance'
+    regex: 'Clearance violation \(netclass'
+  - filter: 'Hole clearance'
+    error: 'hole_clearance'
+    regex: 'Hole clearance violation'
+  - filter: 'Power pin not driven'
+    error: 'power_pin_not_driven'
+    regex: 'Input Power pin not driven by any Output Power pins'
 
 outputs:
   - name: 'print_sch'

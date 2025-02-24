@@ -9,6 +9,9 @@ on:
   schedule:
     - cron: '43 5 * * 3'
 
+permissions:
+  contents: write
+
 jobs:
   ERC:
     runs-on: ubuntu-latest
@@ -25,7 +28,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: ERC_Output
-        path: Fabrication
+        path: pcb/Fabrication
 
   DRC:
     runs-on: ubuntu-latest
@@ -43,42 +46,43 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: DRC_Output
-        path: Fabrication
+        path: pcb/Fabrication
 
-  FabSch:
-    name: Schematic fabrication files
-    runs-on: ubuntu-latest
-    container: ghcr.io/inti-cmnb/kicad8_auto:latest
-    needs: ERC
-
-    steps:
-    - uses: actions/checkout@v4
-
-    - name: Run schematic stuff
-      run: |
-        [ -f *.kicad_sch ] && kibot  -d Fabrication -s drc,erc print_sch bom_html
-
-    - name: Retrieve results
-      uses: actions/upload-artifact@v4
-      with:
-        name: FabSch_Output
-        path: Fabrication
-
-  FabPCB:
-    name: PCB fabrication files
+  Fab:
+    name: Fabrication files
     runs-on: ubuntu-latest
     container: ghcr.io/inti-cmnb/kicad8_auto_full:latest
     needs: DRC
-
+  
     steps:
     - uses: actions/checkout@v4
-
+  
+    - name: Run schematic stuff
+      run: |
+        [ -f *.kicad_sch ] && kibot  -d Fabrication -s drc,erc print_sch bom_html
+  
     - name: Run PCB stuff
       run: |
         [ -f *.kicad_pcb ] && kibot  -d Fabrication -s all print_front gerbers _blender_3d_top
-
+  
     - name: Retrieve results
       uses: actions/upload-artifact@v4
       with:
-        name: FabPCB_Output
-        path: Fabrication
+        name: Fab_Output
+        path: pcb/Fabrication
+  
+    - name: Release
+      uses: softprops/action-gh-release@v2
+      if: startsWith(github.ref, 'refs/tags/')
+      with:
+        path: pcb/Fabrication/**/*
+        fail_on_unmatched_files: true
+        draft: true
+
+# - name: Zip
+#   run: |
+#     sudo apt update
+#     sudo apt install -y zip
+#     zip Fab *
+# needs: ERC
+# needs: DRC

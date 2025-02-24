@@ -9,25 +9,29 @@ Because the board would need to fit into the chassis of a Nokia 3310 and because
 ![3D render of front of adapter board](./front.jpg)
 ![3D render of back of adapter board](./back.jpg)
 
+## Setting up web environment
+
+## Setting up rp environment
+
+## Setting up board
 ### Ordering Board
+### Disassemble 3310
+### Install Hardware Test Program
+### Reassemble 3310
+### Manual Test
+### Install Custom Software
 
 ### TODO
 #### Sooner
 ##### Hardware
-- Come up with better name
 - dress up repo
-- create example that plays RTTTL (and writes it to screen)
-- USB-C (USB needs to be replaced anyways, JLCPCB does not stock part in current design)
-- swap positions of USB with debug connectors
-- move debug connections further inside chassis
-- LiPo charging
-- power button (circuit 'down-stream' from charging, jumper for bypass)
-- main speaker connection
-- backlight LEDs (many options but prudent to go with whatever uses least power, is simplest)
-- accomodate headset connection TRRS 2.5 (probably just swap for 3.5): mic shares onboard mic connection.  left channel = big speaker, right channel = buzzer
-- accomodate onboard microphone.  use TRRS connection as 'breakout'
+- Come up with better name
+- add back supercap rtc
+- double check power regulation
+- add jlcpcb part numbers, 3d models
 
 ##### Software
+- create example that plays RTTTL (and writes it to screen)
 - Snake
 - USB text entry
 - use text_input for inputing secret for TOTP (drives the need for inputting numeric digits easily and RTC)
@@ -40,5 +44,6 @@ Because the board would need to fit into the chassis of a Nokia 3310 and because
 - flex pcb for keypad?
 - LTE modem?
 - e-ink display?
+- power button used for BOOT/RUN?
 
 https://serdisplib.sourceforge.net/ser/pcd8544.html
