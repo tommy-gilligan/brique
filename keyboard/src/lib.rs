@@ -36,7 +36,7 @@ impl Application for Keyboard {
         _rtc: &mut impl shared::Rtc,
         _backlight: &mut impl shared::Backlight,
         _system_response: Option<[u8; 64]>,
-    ) -> Option<shared::UsbTx>
+    ) -> Option<shared::SystemRequest>
     where
         <D as DrawTarget>::Error: Debug,
     {
@@ -60,22 +60,22 @@ impl Application for Keyboard {
         // .unwrap();
 
         match keypad.event().await {
-            KeyEvent::Down(Key::Down) => Some(shared::UsbTx::HidChar('d')),
-            KeyEvent::Down(Key::Up) => Some(shared::UsbTx::HidChar('u')),
-            KeyEvent::Down(Key::One) => Some(shared::UsbTx::HidChar('1')),
-            KeyEvent::Down(Key::Two) => Some(shared::UsbTx::HidChar('2')),
-            KeyEvent::Down(Key::Four) => Some(shared::UsbTx::HidChar('4')),
-            KeyEvent::Down(Key::Five) => Some(shared::UsbTx::HidChar('5')),
-            KeyEvent::Down(Key::Six) => Some(shared::UsbTx::HidChar('6')),
-            KeyEvent::Down(Key::Eight) => Some(shared::UsbTx::HidChar('8')),
-            KeyEvent::Down(Key::Seven) => Some(shared::UsbTx::HidChar('7')),
-            KeyEvent::Down(Key::Nine) => Some(shared::UsbTx::HidChar('9')),
-            KeyEvent::Down(Key::Three) => Some(shared::UsbTx::HidChar('3')),
-            KeyEvent::Down(Key::Select) => Some(shared::UsbTx::HidChar('s')),
-            KeyEvent::Down(Key::Cancel) => Some(shared::UsbTx::HidChar('c')),
-            KeyEvent::Down(Key::Asterisk) => Some(shared::UsbTx::HidChar('*')),
-            KeyEvent::Down(Key::Zero) => Some(shared::UsbTx::HidChar('0')),
-            KeyEvent::Down(Key::Hash) => Some(shared::UsbTx::HidChar('#')),
+            KeyEvent::Down(Key::Down) => Some(shared::SystemRequest::UsbTx(shared::UsbTx::HidChar('d'))),
+            KeyEvent::Down(Key::Up) => Some(shared::SystemRequest::UsbTx(shared::UsbTx::HidChar('u'))),
+            KeyEvent::Down(Key::One) => Some(shared::SystemRequest::UsbTx(shared::UsbTx::HidChar('1'))),
+            KeyEvent::Down(Key::Two) => Some(shared::SystemRequest::UsbTx(shared::UsbTx::HidChar('2'))),
+            KeyEvent::Down(Key::Four) => Some(shared::SystemRequest::UsbTx(shared::UsbTx::HidChar('4'))),
+            KeyEvent::Down(Key::Five) => Some(shared::SystemRequest::UsbTx(shared::UsbTx::HidChar('5'))),
+            KeyEvent::Down(Key::Six) => Some(shared::SystemRequest::UsbTx(shared::UsbTx::HidChar('6'))),
+            KeyEvent::Down(Key::Eight) => Some(shared::SystemRequest::UsbTx(shared::UsbTx::HidChar('8'))),
+            KeyEvent::Down(Key::Seven) => Some(shared::SystemRequest::UsbTx(shared::UsbTx::HidChar('7'))),
+            KeyEvent::Down(Key::Nine) => Some(shared::SystemRequest::UsbTx(shared::UsbTx::HidChar('9'))),
+            KeyEvent::Down(Key::Three) => Some(shared::SystemRequest::UsbTx(shared::UsbTx::HidChar('3'))),
+            KeyEvent::Down(Key::Select) => Some(shared::SystemRequest::UsbTx(shared::UsbTx::HidChar('s'))),
+            KeyEvent::Down(Key::Cancel) => Some(shared::SystemRequest::UsbTx(shared::UsbTx::HidChar('c'))),
+            KeyEvent::Down(Key::Asterisk) => Some(shared::SystemRequest::UsbTx(shared::UsbTx::HidChar('*'))),
+            KeyEvent::Down(Key::Zero) => Some(shared::SystemRequest::UsbTx(shared::UsbTx::HidChar('0'))),
+            KeyEvent::Down(Key::Hash) => Some(shared::SystemRequest::UsbTx(shared::UsbTx::HidChar('#'))),
             KeyEvent::Up(_) => None,
         }
     }

@@ -28,20 +28,36 @@ Because the board would need to fit into the chassis of a Nokia 3310 and because
 #### v0.3
 - create example that plays RTTTL (and writes it to screen)
 - Snake
-- USB text entry
+- USB text entry (can't really test properly until new board arrives but most of the right parts are there)
+	- make textbox component
+	- char to hid report
+	- multitap
+- give more control over display flushing, keep track of what needs updating, what needs flushing
+	- display has command for clearing (don't need to send a whole buffer of blank, just to blank)
+	- display can do 90deg rotated addressing
+- hardware test: should be using menu
 
-- power button (digital latch.  can this be triggered by 'any key'?  ie. any keypad press turns the device on.  there's enough GPIO to spare that we should have a dedicated GPIO for any key too)
-- double check power regulation, boot button
-- backlight LEDs (many options but prudent to go with whatever uses least power, is simplest.  use transistor to drive LED directly from battery/power)
-- add back supercap rtc
-- add jlcpcb part numbers, 3d models
-- double check usb footprint
 - pass more KiCAD checks in CI
+- add back supercap rtc: just leave spot for it?  finding it hard to source
+- power button (digital latch)
+	- RTC alarm (INT) pin on RTC should connect to latch and GPIO
+	- latch needs to be reseettable by GPIO
+	- should probably have a bypass jumper
+- motor contacts got messed up at seom stage, need to fix
+- D12 clearance
+- U2 clearance
+- messed up power button footprint
+- pin assignment for U6, U7, U8
 
 - terse, unfriendly instructions (ie. README)
 - document app API
 
 #### Later
+- charging IC should communicate state with rp2350 (charging, full, should be able to just sense 'LED' outputs)
+- switch off after 5 minutes idle (switching on takes no time)
+- rp2350 very low power state
+- UI component model?
+- power button: can this be triggered by 'any key'?  ie. any keypad press turns the device on.  there's enough GPIO to spare that we should have a dedicated GPIO for any key too)
 - make all system work live on primary core.  give apps dedicated secondary core.
 - optional pico-w for wifi/bluetooth (using a module avoids need for recertification?)
     - looks like RP will release such a module (RM2) so go ahead with designing with that in mind
@@ -65,3 +81,5 @@ Because the board would need to fit into the chassis of a Nokia 3310 and because
 - e-ink display?
 
 https://serdisplib.sourceforge.net/ser/pcd8544.html
+
+84x48

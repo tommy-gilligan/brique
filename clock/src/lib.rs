@@ -54,7 +54,7 @@ impl Application for Clock {
         rtc: &mut impl shared::Rtc,
         _backlight: &mut impl shared::Backlight,
         _system_response: Option<[u8; 64]>,
-    ) -> Option<shared::UsbTx>
+    ) -> Option<shared::SystemRequest>
     where
         <D as DrawTarget>::Error: Debug,
     {

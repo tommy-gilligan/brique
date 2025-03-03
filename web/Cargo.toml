@@ -23,6 +23,8 @@ shared = { path = "../shared" }
 js-sys = "=0.3.70"
 clock = { path = "../clock" }
 hardware-test = { path = "../hardware_test" }
+reset-to-boot = { path = "../reset_to_boot" }
+keyboard = { path = "../keyboard" }
 
 # [lints.clippy]
 # alloc_instead_of_core = "deny"

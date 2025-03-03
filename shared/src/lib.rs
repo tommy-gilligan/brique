@@ -79,17 +79,20 @@ pub trait Application {
         rtc: &mut impl Rtc,
         backlight: &mut impl Backlight,
         system_response: Option<[u8; 64]>,
-    ) -> impl Future<Output = Option<UsbTx>>
+    ) -> impl Future<Output = Option<SystemRequest>>
     where
         <D as DrawTarget>::Error: Debug;
 }
-
-pub enum SystemRequest {}
 
 pub type UsbRx = [u8; 64];
 pub enum UsbTx {
     CdcBuffer([u8; 64]),
     HidChar(char),
+}
+
+pub enum SystemRequest {
+    UsbTx(UsbTx),
+    ResetToBoot
 }
 
 // decide your time budgets
@@ -111,7 +114,7 @@ pub async fn run_app<D: DrawTarget<Color = BinaryColor>>(
     // just usb rx for now
     system_response: Option<[u8; 64]>,
     // just usb tx for now
-) -> Option<UsbTx>
+) -> Option<SystemRequest>
 where
     <D as DrawTarget>::Error: Debug,
 {

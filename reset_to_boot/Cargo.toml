@@ -1,0 +1,9 @@
+[package]
+name = "reset-to-boot"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+embassy-time = { workspace = true }
+embedded-graphics = "0.8"
+shared = { path = "../shared" }

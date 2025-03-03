@@ -102,72 +102,78 @@ async fn main(_spawner: Spawner) {
 
     let mut backlight = backlight::Light::new(p.PIN_15);
 
-    let items = ["Clock", "Hardware Test", "Keyboard"];
+    let items = ["Clock", "Hardware Test", "Keyboard", "Reboot to USB"];
     let mut menu = shared::menu::Menu::new(&items);
 
     loop {
-        let i = loop {
-            if let Some(index) = menu.process(&mut keypad, &mut display).await {
-                break index;
+        let result = match menu.process(&mut keypad, &mut display).await {
+            0 => {
+                let clock_app = clock::Clock;
+                shared::run_app(
+                    clock_app,
+                    &mut vibration_motor,
+                    &mut buzzer,
+                    &mut display,
+                    &mut keypad,
+                    &mut clock,
+                    &mut backlight,
+                    &mut power,
+                    usb::RX_CHANNEL.try_receive().ok(),
+                )
+                .await
+            }
+            1 => {
+                let hardware_test = hardware_test::HardwareTest::default();
+                shared::run_app(
+                    hardware_test,
+                    &mut vibration_motor,
+                    &mut buzzer,
+                    &mut display,
+                    &mut keypad,
+                    &mut clock,
+                    &mut backlight,
+                    &mut power,
+                    usb::RX_CHANNEL.try_receive().ok(),
+                )
+                .await
+            }
+            2 => {
+                let keyboard = keyboard::Keyboard;
+                shared::run_app(
+                    keyboard,
+                    &mut vibration_motor,
+                    &mut buzzer,
+                    &mut display,
+                    &mut keypad,
+                    &mut clock,
+                    &mut backlight,
+                    &mut power,
+                    usb::RX_CHANNEL.try_receive().ok(),
+                )
+                .await
+            }
+            _ => {
+                let reset = reset_to_boot::ResetToBoot::default();
+                shared::run_app(
+                    reset,
+                    &mut vibration_motor,
+                    &mut buzzer,
+                    &mut display,
+                    &mut keypad,
+                    &mut clock,
+                    &mut backlight,
+                    &mut power,
+                    usb::RX_CHANNEL.try_receive().ok(),
+                )
+                .await
             }
         };
-        if i == 0 {
-            let clock_app = clock::Clock;
-            match shared::run_app(
-                clock_app,
-                &mut vibration_motor,
-                &mut buzzer,
-                &mut display,
-                &mut keypad,
-                &mut clock,
-                &mut backlight,
-                &mut power,
-                usb::RX_CHANNEL.try_receive().ok(),
-            )
-            .await
-            {
-                Some(shared::UsbTx::HidChar(c)) => usb::HID_TX_CHANNEL.send(c).await,
-                Some(shared::UsbTx::CdcBuffer(b)) => usb::CDC_TX_CHANNEL.send(b).await,
-                None => {}
-            }
-        } else if i == 2 {
-            let keyboard = keyboard::Keyboard;
-            match shared::run_app(
-                keyboard,
-                &mut vibration_motor,
-                &mut buzzer,
-                &mut display,
-                &mut keypad,
-                &mut clock,
-                &mut backlight,
-                &mut power,
-                usb::RX_CHANNEL.try_receive().ok(),
-            )
-            .await
-            {
-                Some(shared::UsbTx::HidChar(c)) => usb::HID_TX_CHANNEL.send(c).await,
-                Some(shared::UsbTx::CdcBuffer(b)) => usb::CDC_TX_CHANNEL.send(b).await,
-                None => {}
-            }
-        } else {
-            let hardware_test = hardware_test::HardwareTest::default();
-            match shared::run_app(
-                hardware_test,
-                &mut vibration_motor,
-                &mut buzzer,
-                &mut display,
-                &mut keypad,
-                &mut clock,
-                &mut backlight,
-                &mut power,
-                usb::RX_CHANNEL.try_receive().ok(),
-            )
-            .await
-            {
-                Some(shared::UsbTx::HidChar(c)) => usb::HID_TX_CHANNEL.send(c).await,
-                Some(shared::UsbTx::CdcBuffer(b)) => usb::CDC_TX_CHANNEL.send(b).await,
-                None => {}
-            }
+
+        match result {
+            Some(shared::SystemRequest::UsbTx(shared::UsbTx::HidChar(c))) => usb::HID_TX_CHANNEL.send(c).await,
+            Some(shared::SystemRequest::UsbTx(shared::UsbTx::CdcBuffer(b))) => usb::CDC_TX_CHANNEL.send(b).await,
+            Some(shared::SystemRequest::ResetToBoot) =>  { embassy_rp::rom_data::reset_to_usb_boot(0, 0); }
+            _ => { unimplemented!() }
         }
     }
 }

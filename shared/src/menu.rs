@@ -74,24 +74,19 @@ impl<'a> Menu<'a> {
         &mut self,
         keypad: &mut KEYPAD,
         draw_target: &mut D,
-    ) -> Option<usize>
+    ) -> usize
     where
         KEYPAD: Keypad,
         D: DrawTarget<Color = BinaryColor>,
     {
-        self.draw(draw_target);
-        match keypad.event().await {
-            super::KeyEvent::Down(super::Key::Down) => {
-                self.down();
-                None
+        loop {
+            self.draw(draw_target);
+            match keypad.event().await {
+                super::KeyEvent::Down(super::Key::Down) => { self.down(); }
+                super::KeyEvent::Down(super::Key::Up) => { self.up(); }
+                super::KeyEvent::Down(super::Key::Select) => { return self.index; },
+                _ => { },
             }
-            super::KeyEvent::Down(super::Key::Up) => {
-                self.up();
-                None
-            }
-
-            super::KeyEvent::Down(super::Key::Select) => Some(self.index),
-            _ => None,
         }
     }
 }

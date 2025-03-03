@@ -833,7 +833,9 @@ dependencies = [
  "embedded-graphics-web-simulator",
  "hardware-test",
  "js-sys",
+ "keyboard",
  "log",
+ "reset-to-boot",
  "shared",
  "wasm-bindgen",
  "wasm-logger",
@@ -2249,6 +2251,15 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "2b15c43186be67a4fd63bee50d0303afffcef381492ebe2c5d87f324e1b8815c"
 
 [[package]]
+name = "reset-to-boot"
+version = "0.1.0"
+dependencies = [
+ "embassy-time",
+ "embedded-graphics",
+ "shared",
+]
+
+[[package]]
 name = "rgb"
 version = "0.8.50"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2290,6 +2301,7 @@ dependencies = [
  "log",
  "panic-probe",
  "pcd8544",
+ "reset-to-boot",
  "shared",
  "static_cell",
  "unofficial-piicodev",

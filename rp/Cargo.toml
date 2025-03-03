@@ -40,6 +40,7 @@ shared = { path = "../shared" }
 unofficial-piicodev = { git = "https://github.com/tommy-gilligan/piicodev-rs.git" }
 critical-section = "*"
 clock = { path = "../clock" }
+reset-to-boot = { path = "../reset_to_boot" }
 hardware-test = { path = "../hardware_test" }
 keyboard = { path = "../keyboard" }
 log = "0.4"
