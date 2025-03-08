@@ -25,6 +25,7 @@ clock = { path = "../clock" }
 hardware-test = { path = "../hardware_test" }
 reset-to-boot = { path = "../reset_to_boot" }
 keyboard = { path = "../keyboard" }
+ringtones = { path = "../ringtones" }
 
 # [lints.clippy]
 # alloc_instead_of_core = "deny"

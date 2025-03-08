@@ -1,6 +1,8 @@
 #![no_std]
 
+pub mod confirmation;
 pub mod menu;
+pub mod console;
 
 use core::{fmt::Debug, future::Future};
 
@@ -37,6 +39,10 @@ pub trait Rtc {
     fn timestamp(&mut self) -> i64;
 }
 
+use enum_iterator::Sequence;
+use strum_macros::IntoStaticStr;
+
+#[derive(Clone, IntoStaticStr, Sequence, PartialEq)]
 pub enum Key {
     Select,
     Cancel,
@@ -92,7 +98,7 @@ pub enum UsbTx {
 
 pub enum SystemRequest {
     UsbTx(UsbTx),
-    ResetToBoot
+    ResetToBoot,
 }
 
 // decide your time budgets

@@ -2,14 +2,7 @@
 
 use core::fmt::Debug;
 
-use embedded_graphics::{
-    draw_target::DrawTarget,
-    mono_font::{MonoTextStyle, ascii::FONT_10X20},
-    pixelcolor::BinaryColor,
-    prelude::*,
-    primitives::PrimitiveStyle,
-    text::{Alignment, Text},
-};
+use embedded_graphics::{draw_target::DrawTarget, pixelcolor::BinaryColor};
 use shared::Application;
 
 pub struct ResetToBoot;
@@ -41,6 +34,5 @@ impl Application for ResetToBoot {
         <D as DrawTarget>::Error: Debug,
     {
         None
-
     }
 }

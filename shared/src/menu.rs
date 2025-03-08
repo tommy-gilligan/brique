@@ -70,11 +70,7 @@ impl<'a> Menu<'a> {
         }
     }
 
-    pub async fn process<KEYPAD, D>(
-        &mut self,
-        keypad: &mut KEYPAD,
-        draw_target: &mut D,
-    ) -> usize
+    pub async fn process<KEYPAD, D>(&mut self, keypad: &mut KEYPAD, draw_target: &mut D) -> usize
     where
         KEYPAD: Keypad,
         D: DrawTarget<Color = BinaryColor>,
@@ -82,10 +78,16 @@ impl<'a> Menu<'a> {
         loop {
             self.draw(draw_target);
             match keypad.event().await {
-                super::KeyEvent::Down(super::Key::Down) => { self.down(); }
-                super::KeyEvent::Down(super::Key::Up) => { self.up(); }
-                super::KeyEvent::Down(super::Key::Select) => { return self.index; },
-                _ => { },
+                super::KeyEvent::Down(super::Key::Down) => {
+                    self.down();
+                }
+                super::KeyEvent::Down(super::Key::Up) => {
+                    self.up();
+                }
+                super::KeyEvent::Down(super::Key::Select) => {
+                    return self.index;
+                }
+                _ => {}
             }
         }
     }

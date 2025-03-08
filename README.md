@@ -35,7 +35,6 @@ Because the board would need to fit into the chassis of a Nokia 3310 and because
 - give more control over display flushing, keep track of what needs updating, what needs flushing
 	- display has command for clearing (don't need to send a whole buffer of blank, just to blank)
 	- display can do 90deg rotated addressing
-- hardware test: should be using menu
 
 - pass more KiCAD checks in CI
 - add back supercap rtc: just leave spot for it?  finding it hard to source

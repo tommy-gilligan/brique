@@ -8,7 +8,6 @@ mod rtc;
 mod vibration_motor;
 
 use embassy_executor::Spawner;
-use embassy_time::Timer;
 
 #[embassy_executor::main]
 async fn main(spawner: Spawner) {
@@ -30,74 +29,88 @@ async fn main(spawner: Spawner) {
     let mut light = backlight::Light::new(svg);
     let mut power = power::DomPower::new("power");
 
-    let items = ["Clock", "Hardware Test", "Keyboard", "Reboot to USB"];
+    let items = ["Ringtones", "Clock", "Hardware Test", "Keyboard", "Reboot to USB"];
     let mut menu = shared::menu::Menu::new(&items);
     let mut keypad = keypad::DomKeypad::new(
         "cancel", "select", "up", "down", "one", "two", "three", "four", "five", "six", "seven",
         "eight", "nine", "asterisk", "zero", "hash",
     );
     loop {
-            let result = match menu.process(&mut keypad, &mut display).await {
-                0 => {
-                    let clock = clock::Clock;
-                    shared::run_app(
-                        clock,
-                        &mut vibration_motor,
-                        &mut buzzer,
-                        &mut display,
-                        &mut keypad,
-                        &mut rtc,
-                        &mut light,
-                        &mut power,
-                        None,
-                    ).await
-                }
-                1 => {
-                    let hardware_test = hardware_test::HardwareTest::default();
-                    shared::run_app(
-                        hardware_test,
-                        &mut vibration_motor,
-                        &mut buzzer,
-                        &mut display,
-                        &mut keypad,
-                        &mut rtc,
-                        &mut light,
-                        &mut power,
-                        None,
-                    ).await
-                }
-                2 => {
-                    let keyboard = keyboard::Keyboard;
-                    shared::run_app(
-                        keyboard,
-                        &mut vibration_motor,
-                        &mut buzzer,
-                        &mut display,
-                        &mut keypad,
-                        &mut rtc,
-                        &mut light,
-                        &mut power,
-                        None,
-                    ).await
-                }
-                _ => {
-                    let reset = reset_to_boot::ResetToBoot;
-                    shared::run_app(
-                        reset,
-                        &mut vibration_motor,
-                        &mut buzzer,
-                        &mut display,
-                        &mut keypad,
-                        &mut rtc,
-                        &mut light,
-                        &mut power,
-                        None,
-                    ).await
-                }
-            };
-            match result {
-                _ => unimplemented!()
+        let result = match menu.process(&mut keypad, &mut display).await {
+            0 => {
+                let ringtones = ringtones::Ringtones::new(&mut display);
+                shared::run_app(
+                    ringtones,
+                    &mut vibration_motor,
+                    &mut buzzer,
+                    &mut display,
+                    &mut keypad,
+                    &mut rtc,
+                    &mut light,
+                    &mut power,
+                    None,
+                ).await
             }
+            1 => {
+                let clock = clock::Clock;
+                shared::run_app(
+                    clock,
+                    &mut vibration_motor,
+                    &mut buzzer,
+                    &mut display,
+                    &mut keypad,
+                    &mut rtc,
+                    &mut light,
+                    &mut power,
+                    None,
+                ).await
+            }
+            2 => {
+                let hardware_test = hardware_test::HardwareTest::default();
+                shared::run_app(
+                    hardware_test,
+                    &mut vibration_motor,
+                    &mut buzzer,
+                    &mut display,
+                    &mut keypad,
+                    &mut rtc,
+                    &mut light,
+                    &mut power,
+                    None,
+                ).await
+            }
+            3 => {
+                let keyboard = keyboard::Keyboard;
+                shared::run_app(
+                    keyboard,
+                    &mut vibration_motor,
+                    &mut buzzer,
+                    &mut display,
+                    &mut keypad,
+                    &mut rtc,
+                    &mut light,
+                    &mut power,
+                    None,
+                ).await
+            }
+            _ => {
+                let reset = reset_to_boot::ResetToBoot;
+                shared::run_app(
+                    reset,
+                    &mut vibration_motor,
+                    &mut buzzer,
+                    &mut display,
+                    &mut keypad,
+                    &mut rtc,
+                    &mut light,
+                    &mut power,
+                    None,
+                ).await
+            }
+        };
+        match result {
+            _ => unimplemented!()
+        }
     }
 }
 

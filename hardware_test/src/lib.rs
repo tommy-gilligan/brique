@@ -1,3 +1,4 @@
+#![feature(let_chains)]
 #![no_std]
 
 use core::fmt::Debug;
@@ -6,30 +7,71 @@ use embedded_graphics::{
     draw_target::DrawTarget,
     pixelcolor::BinaryColor,
     prelude::*,
-    primitives::{PrimitiveStyle, PrimitiveStyleBuilder, Rectangle, StrokeAlignment, Triangle},
 };
-use shared::{Application, Key, KeyEvent};
+use enum_iterator::Sequence;
+use shared::Application;
 
-pub struct HardwareTest(i32);
+mod keypad;
+use keypad::*;
+mod vibration;
+use vibration::*;
+mod buzzer;
+use buzzer::*;
+mod backlight;
+use backlight::*;
 
-impl HardwareTest {
-    pub fn new(yoffset: i32) -> Self {
-        Self(yoffset)
+#[derive(Clone, PartialEq)]
+enum Status {
+    Passed,
+    Failed,
+    InProgress,
+}
+
+#[derive(Clone, Sequence, PartialEq)]
+enum Test<'a> {
+    Keypad(KeypadTest<'a>),
+    Vibration(VibrationTest<'a>),
+    Buzzer(BuzzerTest<'a>),
+    Backlight(BacklightTest<'a>),
+}
+
+pub struct HardwareTest<'a>(Status, shared::console::Console<'a>, Test<'a>);
+
+impl HardwareTest<'_> {
+    pub fn new(test: Status) -> Self {
+        Self(test, shared::console::Console::new(), Test::Keypad(Default::default()))
+    }
+
+    pub fn next(&mut self) {
+        match self.2 {
+            Test::Keypad(_) => {
+                self.2 = Test::Vibration(Default::default());
+            }
+            Test::Vibration(_) => {
+                self.2 = Test::Buzzer(Default::default());
+            }
+            Test::Buzzer(_) => {
+                self.2 = Test::Backlight(Default::default());
+            }
+            Test::Backlight(_) => {
+                self.2 = Test::Keypad(Default::default());
+            }
+        }
     }
 }
 
-impl Default for HardwareTest {
+impl Default for HardwareTest<'_> {
     fn default() -> Self {
-        Self::new(10)
+        Self::new(Status::InProgress)
     }
 }
 
-impl Application for HardwareTest {
+impl Application for HardwareTest<'_> {
     async fn run<D: DrawTarget<Color = BinaryColor>>(
         &mut self,
         vibration_motor: &mut impl shared::VibrationMotor,
         buzzer: &mut impl shared::Buzzer,
-        display: &mut D,
+        draw_target: &mut D,
         keypad: &mut impl shared::Keypad,
         _rtc: &mut impl shared::Rtc,
         backlight: &mut impl shared::Backlight,
@@ -38,80 +80,51 @@ impl Application for HardwareTest {
     where
         <D as DrawTarget>::Error: Debug,
     {
-        let thin_stroke = PrimitiveStyle::with_stroke(BinaryColor::Off, 1);
-        let border_stroke = PrimitiveStyleBuilder::new()
-            .stroke_color(BinaryColor::Off)
-            .stroke_width(3)
-            .stroke_alignment(StrokeAlignment::Inside)
-            .build();
-        let fill = PrimitiveStyle::with_fill(BinaryColor::Off);
-
-        display
-            .bounding_box()
-            .into_styled(border_stroke)
-            .draw(display)
-            .unwrap();
-
-        match keypad.event().await {
-            KeyEvent::Down(Key::Down) => {
-                self.0 -= 1;
+        match self.0 {
+            Status::InProgress => match self.2 {
+                Test::Keypad(ref mut test) => match test.run(keypad, draw_target).await {
+                    Status::Passed => self.next(),
+                    Status::Failed => {
+                        self.0 = Status::Failed;
+                    }
+                    _ => {}
+                },
+                Test::Vibration(ref mut test) => {
+                    match test.run(keypad, vibration_motor, draw_target).await {
+                        Status::Passed => self.next(),
+                        Status::Failed => {
+                            self.0 = Status::Failed;
+                        }
+                        _ => {}
+                    }
+                }
+                Test::Buzzer(ref mut test) => match test.run(keypad, buzzer, draw_target).await {
+                    Status::Passed => self.next(),
+                    Status::Failed => {
+                        self.0 = Status::Failed;
+                    }
+                    _ => {}
+                },
+                Test::Backlight(ref mut test) => {
+                    match test.run(keypad, backlight, draw_target).await {
+                        Status::Passed => {
+                            self.0 = Status::Passed;
+                        },
+                        Status::Failed => {
+                            self.0 = Status::Failed;
+                        }
+                        _ => {}
+                    }
+                }
+            },
+            Status::Passed => {
+                self.1.draw(draw_target, "Passed");
             }
-            KeyEvent::Down(Key::Up) => {
-                self.0 += 1;
+            Status::Failed => {
+                self.1.draw(draw_target, "Failed");
             }
-            KeyEvent::Down(Key::One) => {
-                buzzer.unmute();
-            }
-            KeyEvent::Down(Key::Two) => {
-                buzzer.mute();
-            }
-            KeyEvent::Down(Key::Four) => {
-                buzzer.set_frequency(440);
-            }
-            KeyEvent::Down(Key::Five) => {
-                buzzer.set_frequency(660);
-            }
-            KeyEvent::Down(Key::Six) => {
-                buzzer.set_frequency(880);
-            }
-            KeyEvent::Down(Key::Eight) => {
-                vibration_motor.start();
-            }
-            KeyEvent::Down(Key::Seven) => {
-                vibration_motor.stop();
-            }
-            KeyEvent::Down(Key::Nine) => {
-                backlight.on();
-            }
-            KeyEvent::Down(Key::Three) => {
-                backlight.off();
-            }
-            KeyEvent::Up(_) => {}
-            KeyEvent::Down(Key::Select) => {
-            }
-            KeyEvent::Down(Key::Cancel) => {
-            }
-            KeyEvent::Down(Key::Asterisk) => {
-            }
-            KeyEvent::Down(Key::Zero) => {
-            }
-            KeyEvent::Down(Key::Hash) => {
-            }
+            _ => {}
         }
-
-        Triangle::new(
-            Point::new(16, 16 + self.0),
-            Point::new(16 + 16, 16 + self.0),
-            Point::new(16 + 8, self.0),
-        )
-        .into_styled(thin_stroke)
-        .draw(display)
-        .unwrap();
-
-        Rectangle::new(Point::new(52, self.0), Size::new(16, 16))
-            .into_styled(fill)
-            .draw(display)
-            .unwrap();
 
         None
     }
