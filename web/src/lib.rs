@@ -6,6 +6,7 @@ mod keypad;
 mod power;
 mod rtc;
 mod vibration_motor;
+mod system_request_handler;
 
 use embassy_executor::Spawner;
 
@@ -18,7 +19,7 @@ async fn main(spawner: Spawner) {
     let svg = document.get_element_by_id("svg1").unwrap();
     let mut vibration_motor = vibration_motor::Motor::new(svg);
 
-    let svg = document.get_element_by_id("nokia").unwrap();
+    let svg = document.get_element_by_id("body").unwrap();
     let mut buzzer = buzzer::Buzzer::new(svg);
     let mut rtc = rtc::Clock::new();
 
@@ -35,10 +36,14 @@ async fn main(spawner: Spawner) {
         "cancel", "select", "up", "down", "one", "two", "three", "four", "five", "six", "seven",
         "eight", "nine", "asterisk", "zero", "hash",
     );
+    let console = document.get_element_by_id("console").unwrap();
+    let mut handler = system_request_handler::Handler::new(console);
+
     loop {
-        let result = match menu.process(&mut keypad, &mut display).await {
+        match menu.process(&mut keypad, &mut display).await {
             0 => {
-                let ringtones = ringtones::Ringtones::new(&mut display);
+                let mut buffer: [u8; 1024] = [0; 1024];
+                let ringtones = ringtones::Ringtones::new(&mut display, &mut buffer);
                 shared::run_app(
                     ringtones,
                     &mut vibration_motor,
@@ -49,6 +54,7 @@ async fn main(spawner: Spawner) {
                     &mut light,
                     &mut power,
                     None,
+                    &mut handler,
                 ).await
             }
             1 => {
@@ -63,6 +69,7 @@ async fn main(spawner: Spawner) {
                     &mut light,
                     &mut power,
                     None,
+                    &mut handler,
                 ).await
             }
             2 => {
@@ -77,10 +84,12 @@ async fn main(spawner: Spawner) {
                     &mut light,
                     &mut power,
                     None,
+                    &mut handler,
                 ).await
             }
             3 => {
-                let keyboard = keyboard::Keyboard;
+                let mut buffer: [u8; 1024] = [0; 1024];
+                let keyboard = keyboard::Keyboard::new(&mut display, &mut buffer);
                 shared::run_app(
                     keyboard,
                     &mut vibration_motor,
@@ -91,6 +100,7 @@ async fn main(spawner: Spawner) {
                     &mut light,
                     &mut power,
                     None,
+                    &mut handler,
                 ).await
             }
             _ => {
@@ -105,12 +115,10 @@ async fn main(spawner: Spawner) {
                     &mut light,
                     &mut power,
                     None,
+                    &mut handler,
                 ).await
             }
         };
-        match result {
-            _ => unimplemented!()
-        }
     }
 }
 

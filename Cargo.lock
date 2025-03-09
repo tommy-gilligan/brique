@@ -838,6 +838,7 @@ dependencies = [
  "reset-to-boot",
  "ringtones",
  "shared",
+ "ssmarshal",
  "wasm-bindgen",
  "wasm-logger",
  "web-sys",
@@ -1561,6 +1562,8 @@ dependencies = [
  "embassy-time",
  "embedded-graphics",
  "shared",
+ "ssmarshal",
+ "usbd-hid",
 ]
 
 [[package]]
@@ -2590,15 +2593,19 @@ dependencies = [
 name = "shared"
 version = "0.1.0"
 dependencies = [
+ "defmt",
+ "embassy-futures",
  "embassy-time",
  "embedded-graphics",
  "embedded-graphics-core",
  "embedded-text",
  "enum-iterator",
  "enum-iterator-derive",
+ "futures",
  "log",
  "strum 0.27.1",
  "strum_macros 0.27.1",
+ "usbd-hid",
 ]
 
 [[package]]

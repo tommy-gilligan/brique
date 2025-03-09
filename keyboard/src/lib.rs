@@ -1,82 +1,133 @@
 #![no_std]
+#![feature(ascii_char_variants)]
+#![feature(ascii_char)]
+
+use shared::Application;
+
+pub struct Keyboard<'a>(shared::textbox::Textbox<'a>);
 
 use core::fmt::Debug;
+use core::ascii::Char;
 
 use embedded_graphics::{
     draw_target::DrawTarget,
-    // mono_font::{MonoTextStyle, ascii::FONT_10X20},
+    mono_font::{MonoTextStyle, ascii::FONT_6X10},
     pixelcolor::BinaryColor,
     prelude::*,
-    primitives::PrimitiveStyle,
-    // text::{Alignment, Text},
+    primitives::{Rectangle},
 };
-use shared::{Application, Key, KeyEvent};
+use embedded_graphics::text::renderer::TextRenderer;
+use embedded_graphics::primitives::PrimitiveStyle;
+use embedded_graphics::text::Text;
+use embedded_graphics::text::Alignment;
 
-pub struct Keyboard;
+impl <'a>Keyboard<'a> {
+    pub fn new<D: DrawTarget<Color = BinaryColor>>(draw_target: &mut D, buffer: &'a mut [u8]) -> Self where <D as DrawTarget>::Error: Debug {
+        Self(
+            shared::textbox::Textbox::new(draw_target, buffer),
+        )
+    }
+}
+use usbd_hid::descriptor::KeyboardUsage;
 
-impl Keyboard {
-    pub fn new() -> Self {
-        Self
+fn build_report(c: Char) -> usbd_hid::descriptor::KeyboardReport {
+    let keycode = match c {
+        Char::Space => KeyboardUsage::KeyboardSpacebar,
+        Char::Digit0 => KeyboardUsage::Keyboard0CloseParens,
+        Char::Digit1 => KeyboardUsage::Keyboard1Exclamation,
+        Char::Digit2 => KeyboardUsage::Keyboard2At,
+        Char::Digit3 => KeyboardUsage::Keyboard3Hash,
+        Char::Digit4 => KeyboardUsage::Keyboard4Dollar,
+        Char::Digit5 => KeyboardUsage::Keyboard5Percent,
+        Char::Digit6 => KeyboardUsage::Keyboard6Caret,
+        Char::Digit7 => KeyboardUsage::Keyboard7Ampersand,
+        Char::Digit8 => KeyboardUsage::Keyboard8Asterisk,
+        Char::Digit9 => KeyboardUsage::Keyboard9OpenParens,
+        Char::CapitalA => KeyboardUsage::KeyboardAa,
+        Char::CapitalB => KeyboardUsage::KeyboardBb,
+        Char::CapitalC => KeyboardUsage::KeyboardCc,
+        Char::CapitalD => KeyboardUsage::KeyboardDd,
+        Char::CapitalE => KeyboardUsage::KeyboardEe,
+        Char::CapitalF => KeyboardUsage::KeyboardFf,
+        Char::CapitalG => KeyboardUsage::KeyboardGg,
+        Char::CapitalH => KeyboardUsage::KeyboardHh,
+        Char::CapitalI => KeyboardUsage::KeyboardIi,
+        Char::CapitalJ => KeyboardUsage::KeyboardJj,
+        Char::CapitalK => KeyboardUsage::KeyboardKk,
+        Char::CapitalL => KeyboardUsage::KeyboardLl,
+        Char::CapitalM => KeyboardUsage::KeyboardMm,
+        Char::CapitalN => KeyboardUsage::KeyboardNn,
+        Char::CapitalO => KeyboardUsage::KeyboardOo,
+        Char::CapitalP => KeyboardUsage::KeyboardPp,
+        Char::CapitalQ => KeyboardUsage::KeyboardQq,
+        Char::CapitalR => KeyboardUsage::KeyboardRr,
+        Char::CapitalS => KeyboardUsage::KeyboardSs,
+        Char::CapitalT => KeyboardUsage::KeyboardTt,
+        Char::CapitalU => KeyboardUsage::KeyboardUu,
+        Char::CapitalV => KeyboardUsage::KeyboardVv,
+        Char::CapitalW => KeyboardUsage::KeyboardWw,
+        Char::CapitalX => KeyboardUsage::KeyboardXx,
+        Char::CapitalY => KeyboardUsage::KeyboardYy,
+        Char::CapitalZ => KeyboardUsage::KeyboardZz,
+        Char::SmallA => KeyboardUsage::KeyboardAa,
+        Char::SmallB => KeyboardUsage::KeyboardBb,
+        Char::SmallC => KeyboardUsage::KeyboardCc,
+        Char::SmallD => KeyboardUsage::KeyboardDd,
+        Char::SmallE => KeyboardUsage::KeyboardEe,
+        Char::SmallF => KeyboardUsage::KeyboardFf,
+        Char::SmallG => KeyboardUsage::KeyboardGg,
+        Char::SmallH => KeyboardUsage::KeyboardHh,
+        Char::SmallI => KeyboardUsage::KeyboardIi,
+        Char::SmallJ => KeyboardUsage::KeyboardJj,
+        Char::SmallK => KeyboardUsage::KeyboardKk,
+        Char::SmallL => KeyboardUsage::KeyboardLl,
+        Char::SmallM => KeyboardUsage::KeyboardMm,
+        Char::SmallN => KeyboardUsage::KeyboardNn,
+        Char::SmallO => KeyboardUsage::KeyboardOo,
+        Char::SmallP => KeyboardUsage::KeyboardPp,
+        Char::SmallQ => KeyboardUsage::KeyboardQq,
+        Char::SmallR => KeyboardUsage::KeyboardRr,
+        Char::SmallS => KeyboardUsage::KeyboardSs,
+        Char::SmallT => KeyboardUsage::KeyboardTt,
+        Char::SmallU => KeyboardUsage::KeyboardUu,
+        Char::SmallV => KeyboardUsage::KeyboardVv,
+        Char::SmallW => KeyboardUsage::KeyboardWw,
+        Char::SmallX => KeyboardUsage::KeyboardXx,
+        Char::SmallY => KeyboardUsage::KeyboardYy,
+        Char::SmallZ => KeyboardUsage::KeyboardZz,
+        _ => KeyboardUsage::KeyboardZz
+    };
+
+    usbd_hid::descriptor::KeyboardReport {
+        keycodes: [keycode as u8, 0, 0, 0, 0, 0],
+        leds: 0,
+        modifier: 0,
+        reserved: 0,
     }
 }
 
-impl Default for Keyboard {
-    fn default() -> Self {
-        Self
-    }
-}
-
-impl Application for Keyboard {
+impl Application for Keyboard<'_> {
     async fn run<D: DrawTarget<Color = BinaryColor>>(
         &mut self,
         _vibration_motor: &mut impl shared::VibrationMotor,
         _buzzer: &mut impl shared::Buzzer,
         display: &mut D,
         keypad: &mut impl shared::Keypad,
-        _rtc: &mut impl shared::Rtc,
+        rtc: &mut impl shared::Rtc,
         _backlight: &mut impl shared::Backlight,
         _system_response: Option<[u8; 64]>,
     ) -> Option<shared::SystemRequest>
     where
         <D as DrawTarget>::Error: Debug,
     {
-        let fill = PrimitiveStyle::with_fill(BinaryColor::Off);
-        display
-            .bounding_box()
-            .into_styled(fill)
-            .draw(display)
-            .unwrap();
-
-        // let character_style = MonoTextStyle::new(&FONT_10X20, BinaryColor::Off);
-        // let now = chrono::DateTime::<chrono::Utc>::from_timestamp(rtc.timestamp(), 0).unwrap();
-        // let mut text: heapless::String<8> = heapless::String::new();
-        // Text::with_alignment(
-        //     &text,
-        //     display.bounding_box().center() + Point::new(0, 6),
-        //     character_style,
-        //     Alignment::Center,
-        // )
-        // .draw(display)
-        // .unwrap();
-
-        match keypad.event().await {
-            KeyEvent::Down(Key::Down) => Some(shared::SystemRequest::UsbTx(shared::UsbTx::HidChar('d'))),
-            KeyEvent::Down(Key::Up) => Some(shared::SystemRequest::UsbTx(shared::UsbTx::HidChar('u'))),
-            KeyEvent::Down(Key::One) => Some(shared::SystemRequest::UsbTx(shared::UsbTx::HidChar('1'))),
-            KeyEvent::Down(Key::Two) => Some(shared::SystemRequest::UsbTx(shared::UsbTx::HidChar('2'))),
-            KeyEvent::Down(Key::Four) => Some(shared::SystemRequest::UsbTx(shared::UsbTx::HidChar('4'))),
-            KeyEvent::Down(Key::Five) => Some(shared::SystemRequest::UsbTx(shared::UsbTx::HidChar('5'))),
-            KeyEvent::Down(Key::Six) => Some(shared::SystemRequest::UsbTx(shared::UsbTx::HidChar('6'))),
-            KeyEvent::Down(Key::Eight) => Some(shared::SystemRequest::UsbTx(shared::UsbTx::HidChar('8'))),
-            KeyEvent::Down(Key::Seven) => Some(shared::SystemRequest::UsbTx(shared::UsbTx::HidChar('7'))),
-            KeyEvent::Down(Key::Nine) => Some(shared::SystemRequest::UsbTx(shared::UsbTx::HidChar('9'))),
-            KeyEvent::Down(Key::Three) => Some(shared::SystemRequest::UsbTx(shared::UsbTx::HidChar('3'))),
-            KeyEvent::Down(Key::Select) => Some(shared::SystemRequest::UsbTx(shared::UsbTx::HidChar('s'))),
-            KeyEvent::Down(Key::Cancel) => Some(shared::SystemRequest::UsbTx(shared::UsbTx::HidChar('c'))),
-            KeyEvent::Down(Key::Asterisk) => Some(shared::SystemRequest::UsbTx(shared::UsbTx::HidChar('*'))),
-            KeyEvent::Down(Key::Zero) => Some(shared::SystemRequest::UsbTx(shared::UsbTx::HidChar('0'))),
-            KeyEvent::Down(Key::Hash) => Some(shared::SystemRequest::UsbTx(shared::UsbTx::HidChar('#'))),
-            KeyEvent::Up(_) => None,
+        if let Some(c) = self.0.process(display, keypad).await {
+            Some(
+                shared::SystemRequest::UsbTx(
+                    shared::UsbTx::HidChar(build_report(c))
+                )
+            )
+        } else {
+            None
         }
     }
 }

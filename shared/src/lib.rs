@@ -1,13 +1,22 @@
+#![feature(ascii_char)]
+#![feature(ascii_char_variants)]
+#![feature(trivial_bounds)]
+#![feature(let_chains)]
+
 #![no_std]
 
 pub mod confirmation;
 pub mod menu;
 pub mod console;
+pub mod multitap;
+pub mod textbox;
 
 use core::{fmt::Debug, future::Future};
-
 use embedded_graphics::{Drawable, prelude::Primitive, primitives::PrimitiveStyle};
 use embedded_graphics_core::{draw_target::DrawTarget, pixelcolor::BinaryColor};
+use enum_iterator::Sequence;
+use strum_macros::IntoStaticStr;
+use core::ascii::Char;
 
 pub trait Backlight {
     fn on(&mut self);
@@ -39,9 +48,6 @@ pub trait Rtc {
     fn timestamp(&mut self) -> i64;
 }
 
-use enum_iterator::Sequence;
-use strum_macros::IntoStaticStr;
-
 #[derive(Clone, IntoStaticStr, Sequence, PartialEq)]
 pub enum Key {
     Select,
@@ -60,6 +66,29 @@ pub enum Key {
     Asterisk,
     Zero,
     Hash,
+}
+
+impl From<Key> for Char {
+    fn from(k: Key) -> Char {
+        match k {
+            Key::Select => Char::CarriageReturn,
+            Key::Cancel => Char::Backspace,
+            Key::Up => Char::Digit1,
+            Key::Down => Char::Digit1,
+            Key::One => Char::Digit1,
+            Key::Two => Char::CapitalA,
+            Key::Three => Char::CapitalD,
+            Key::Four => Char::CapitalG,
+            Key::Five => Char::CapitalJ,
+            Key::Six => Char::CapitalM,
+            Key::Seven => Char::CapitalP,
+            Key::Eight => Char::CapitalT,
+            Key::Nine => Char::CapitalW,
+            Key::Asterisk => Char::Asterisk,
+            Key::Zero => Char::Space,
+            Key::Hash => Char::NumberSign,
+        }
+    }
 }
 
 pub enum KeyEvent {
@@ -93,12 +122,16 @@ pub trait Application {
 pub type UsbRx = [u8; 64];
 pub enum UsbTx {
     CdcBuffer([u8; 64]),
-    HidChar(char),
+    HidChar(usbd_hid::descriptor::KeyboardReport),
 }
 
 pub enum SystemRequest {
     UsbTx(UsbTx),
     ResetToBoot,
+}
+
+pub trait SystemRequestHandler {
+    fn handle_request(&mut self, system_request: SystemRequest) -> impl core::future::Future<Output = ()>;
 }
 
 // decide your time budgets
@@ -119,11 +152,8 @@ pub async fn run_app<D: DrawTarget<Color = BinaryColor>>(
     power: &mut impl PowerButton,
     // just usb rx for now
     system_response: Option<[u8; 64]>,
-    // just usb tx for now
-) -> Option<SystemRequest>
-where
-    <D as DrawTarget>::Error: Debug,
-{
+    system_request_handler: &mut impl SystemRequestHandler
+) where <D as DrawTarget>::Error: Debug {
     let fill = PrimitiveStyle::with_fill(BinaryColor::On);
     display
         .bounding_box()
@@ -135,7 +165,7 @@ where
 
     loop {
         match embassy_time::with_timeout(
-            embassy_time::Duration::from_millis(1000),
+            embassy_time::Duration::from_millis(2000),
             app.run(
                 vibration_motor,
                 buzzer,
@@ -149,8 +179,8 @@ where
         .await
         {
             Ok(None) => {}
-            Ok(e) => {
-                return e;
+            Ok(Some(e)) => { 
+                system_request_handler.handle_request(e).await;
             }
             Err(embassy_time::TimeoutError) => {
                 log::info!("timed out");
@@ -166,8 +196,6 @@ where
                 .unwrap();
             buzzer.mute();
             vibration_motor.stop();
-
-            return None;
         }
     }
 }
