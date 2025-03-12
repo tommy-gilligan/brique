@@ -37,7 +37,7 @@ impl Confirmation {
     where
         <D as DrawTarget>::Error: Debug,
     {
-        draw_target.clear(BinaryColor::On);
+        let _ = draw_target.clear(BinaryColor::On);
 
         let fill = PrimitiveStyle::with_fill(BinaryColor::Off);
         if self.3 {

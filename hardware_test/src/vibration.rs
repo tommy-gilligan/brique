@@ -5,7 +5,10 @@ use embedded_graphics::{pixelcolor::BinaryColor, prelude::DrawTarget};
 use crate::Status;
 
 #[derive(Clone, PartialEq)]
-pub struct VibrationTest<'a>(shared::console::Console<'a>, shared::confirmation::Confirmation);
+pub struct VibrationTest<'a>(
+    shared::console::Console<'a>,
+    shared::confirmation::Confirmation,
+);
 
 impl VibrationTest<'_> {
     pub fn new() -> Self {

@@ -7,25 +7,18 @@ use shared::Application;
 pub struct Ringtones<'a>(shared::textbox::Textbox<'a>);
 
 use core::fmt::Debug;
-use core::ascii::Char;
 
-use embedded_graphics::{
-    draw_target::DrawTarget,
-    mono_font::{MonoTextStyle, ascii::FONT_6X10},
-    pixelcolor::BinaryColor,
-    prelude::*,
-    primitives::{Rectangle},
-};
-use embedded_graphics::text::renderer::TextRenderer;
-use embedded_graphics::primitives::PrimitiveStyle;
-use embedded_graphics::text::Text;
-use embedded_graphics::text::Alignment;
+use embedded_graphics::{draw_target::DrawTarget, pixelcolor::BinaryColor};
 
-impl <'a>Ringtones<'a> {
-    pub fn new<D: DrawTarget<Color = BinaryColor>>(draw_target: &mut D, buffer: &'a mut [u8]) -> Self where <D as DrawTarget>::Error: Debug {
-        Self(
-            shared::textbox::Textbox::new(draw_target, buffer),
-        )
+impl<'a> Ringtones<'a> {
+    pub fn new<D: DrawTarget<Color = BinaryColor>>(
+        draw_target: &mut D,
+        buffer: &'a mut [u8],
+    ) -> Self
+    where
+        <D as DrawTarget>::Error: Debug,
+    {
+        Self(shared::textbox::Textbox::new(draw_target, buffer))
     }
 }
 
@@ -36,7 +29,7 @@ impl Application for Ringtones<'_> {
         _buzzer: &mut impl shared::Buzzer,
         display: &mut D,
         keypad: &mut impl shared::Keypad,
-        rtc: &mut impl shared::Rtc,
+        _rtc: &mut impl shared::Rtc,
         _backlight: &mut impl shared::Backlight,
         _system_response: Option<[u8; 64]>,
     ) -> Option<shared::SystemRequest>

@@ -5,13 +5,13 @@ mod display;
 mod keypad;
 mod power;
 mod rtc;
-mod vibration_motor;
 mod system_request_handler;
+mod vibration_motor;
 
 use embassy_executor::Spawner;
 
 #[embassy_executor::main]
-async fn main(spawner: Spawner) {
+async fn main(_spawner: Spawner) {
     wasm_logger::init(wasm_logger::Config::default());
 
     let window = web_sys::window().expect("no global `window` exists");
@@ -30,7 +30,13 @@ async fn main(spawner: Spawner) {
     let mut light = backlight::Light::new(svg);
     let mut power = power::DomPower::new("power");
 
-    let items = ["Ringtones", "Clock", "Hardware Test", "Keyboard", "Reboot to USB"];
+    let items = [
+        "Ringtones",
+        "Clock",
+        "Hardware Test",
+        "Keyboard",
+        "Reboot to USB",
+    ];
     let mut keypad = keypad::DomKeypad::new(
         "cancel", "select", "up", "down", "one", "two", "three", "four", "five", "six", "seven",
         "eight", "nine", "asterisk", "zero", "hash",
@@ -40,7 +46,10 @@ async fn main(spawner: Spawner) {
 
     let mut lock_screen = shared::lock_screen::LockScreen::new(&items);
     loop {
-        if let Some(index) = lock_screen.process(&mut rtc, &mut display, &mut keypad).await {
+        if let Some(index) = lock_screen
+            .process(&mut rtc, &mut display, &mut keypad)
+            .await
+        {
             match index {
                 0 => {
                     let mut buffer: [u8; 1024] = [0; 1024];
@@ -56,7 +65,8 @@ async fn main(spawner: Spawner) {
                         &mut power,
                         None,
                         &mut handler,
-                    ).await
+                    )
+                    .await
                 }
                 1 => {
                     let clock = clock::Clock;
@@ -71,7 +81,8 @@ async fn main(spawner: Spawner) {
                         &mut power,
                         None,
                         &mut handler,
-                    ).await
+                    )
+                    .await
                 }
                 2 => {
                     let hardware_test = hardware_test::HardwareTest::default();
@@ -86,7 +97,8 @@ async fn main(spawner: Spawner) {
                         &mut power,
                         None,
                         &mut handler,
-                    ).await
+                    )
+                    .await
                 }
                 3 => {
                     let mut buffer: [u8; 1024] = [0; 1024];
@@ -102,7 +114,8 @@ async fn main(spawner: Spawner) {
                         &mut power,
                         None,
                         &mut handler,
-                    ).await
+                    )
+                    .await
                 }
                 _ => {
                     let reset = reset_to_boot::ResetToBoot;
@@ -117,7 +130,8 @@ async fn main(spawner: Spawner) {
                         &mut power,
                         None,
                         &mut handler,
-                    ).await
+                    )
+                    .await
                 }
             }
         }

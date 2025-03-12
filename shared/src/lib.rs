@@ -2,23 +2,22 @@
 #![feature(ascii_char_variants)]
 #![feature(trivial_bounds)]
 #![feature(let_chains)]
-
 #![no_std]
 
 pub mod confirmation;
-pub mod menu;
-pub mod lock_screen;
 pub mod console;
+pub mod lock_screen;
+pub mod menu;
 pub mod multitap;
 pub mod textbox;
 pub mod time;
 
-use core::{fmt::Debug, future::Future};
+use core::{ascii::Char, fmt::Debug, future::Future};
+
 use embedded_graphics::{Drawable, prelude::Primitive, primitives::PrimitiveStyle};
 use embedded_graphics_core::{draw_target::DrawTarget, pixelcolor::BinaryColor};
 use enum_iterator::Sequence;
 use strum_macros::IntoStaticStr;
-use core::ascii::Char;
 
 pub trait Backlight {
     fn on(&mut self);
@@ -134,7 +133,10 @@ pub enum SystemRequest {
 }
 
 pub trait SystemRequestHandler {
-    fn handle_request(&mut self, system_request: SystemRequest) -> impl core::future::Future<Output = ()>;
+    fn handle_request(
+        &mut self,
+        system_request: SystemRequest,
+    ) -> impl core::future::Future<Output = ()>;
 }
 
 // decide your time budgets
@@ -155,8 +157,10 @@ pub async fn run_app<D: DrawTarget<Color = BinaryColor>>(
     power: &mut impl PowerButton,
     // just usb rx for now
     system_response: Option<[u8; 64]>,
-    system_request_handler: &mut impl SystemRequestHandler
-) where <D as DrawTarget>::Error: Debug {
+    system_request_handler: &mut impl SystemRequestHandler,
+) where
+    <D as DrawTarget>::Error: Debug,
+{
     let fill = PrimitiveStyle::with_fill(BinaryColor::On);
     display
         .bounding_box()
@@ -179,10 +183,15 @@ pub async fn run_app<D: DrawTarget<Color = BinaryColor>>(
                 system_response,
             ),
         )
-        .await {
+        .await
+        {
             Ok(None) => {}
-            Ok(Some(e)) => { system_request_handler.handle_request(e).await; }
-            Err(embassy_time::TimeoutError) => { log::info!("timed out"); }
+            Ok(Some(e)) => {
+                system_request_handler.handle_request(e).await;
+            }
+            Err(embassy_time::TimeoutError) => {
+                log::info!("timed out");
+            }
         }
 
         if power.was_pressed().await {

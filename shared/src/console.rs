@@ -16,6 +16,12 @@ use embedded_text::{
 #[derive(Clone, PartialEq)]
 pub struct Console<'a>(Rectangle, MonoTextStyle<'a, BinaryColor>, TextBoxStyle);
 
+impl Default for Console<'_> {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl<'a> Console<'a> {
     pub fn new() -> Self {
         Self(
@@ -39,4 +45,3 @@ impl<'a> Console<'a> {
             .unwrap();
     }
 }
-

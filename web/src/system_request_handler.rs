@@ -12,10 +12,12 @@ impl shared::SystemRequestHandler for Handler {
         match request {
             shared::SystemRequest::UsbTx(shared::UsbTx::HidChar(c)) => {
                 let mut buf: [u8; 10] = [0; 10];
-                ssmarshal::serialize(&mut buf, &c);
+                let _ = ssmarshal::serialize(&mut buf, &c);
                 self.0.append_with_str_1(&format!("{:?}\n", &buf)).unwrap();
-            },
-            _ => { unimplemented!() }
+            }
+            _ => {
+                unimplemented!()
+            }
         }
     }
 }

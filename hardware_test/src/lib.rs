@@ -3,11 +3,7 @@
 
 use core::fmt::Debug;
 
-use embedded_graphics::{
-    draw_target::DrawTarget,
-    pixelcolor::BinaryColor,
-    prelude::*,
-};
+use embedded_graphics::{draw_target::DrawTarget, pixelcolor::BinaryColor};
 use enum_iterator::Sequence;
 use shared::Application;
 
@@ -21,7 +17,7 @@ mod backlight;
 use backlight::*;
 
 #[derive(Clone, PartialEq)]
-enum Status {
+pub enum Status {
     Passed,
     Failed,
     InProgress,
@@ -39,7 +35,11 @@ pub struct HardwareTest<'a>(Status, shared::console::Console<'a>, Test<'a>);
 
 impl HardwareTest<'_> {
     pub fn new(test: Status) -> Self {
-        Self(test, shared::console::Console::new(), Test::Keypad(Default::default()))
+        Self(
+            test,
+            shared::console::Console::new(),
+            Test::Keypad(Default::default()),
+        )
     }
 
     pub fn next(&mut self) {
@@ -109,7 +109,7 @@ impl Application for HardwareTest<'_> {
                     match test.run(keypad, backlight, draw_target).await {
                         Status::Passed => {
                             self.0 = Status::Passed;
-                        },
+                        }
                         Status::Failed => {
                             self.0 = Status::Failed;
                         }
@@ -123,7 +123,6 @@ impl Application for HardwareTest<'_> {
             Status::Failed => {
                 self.1.draw(draw_target, "Failed");
             }
-            _ => {}
         }
 
         None

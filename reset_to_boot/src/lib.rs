@@ -24,9 +24,9 @@ impl Application for ResetToBoot {
         &mut self,
         _vibration_motor: &mut impl shared::VibrationMotor,
         _buzzer: &mut impl shared::Buzzer,
-        display: &mut D,
+        _display: &mut D,
         _keypad: &mut impl shared::Keypad,
-        rtc: &mut impl shared::Rtc,
+        _rtc: &mut impl shared::Rtc,
         _backlight: &mut impl shared::Backlight,
         _system_response: Option<[u8; 64]>,
     ) -> Option<shared::SystemRequest>

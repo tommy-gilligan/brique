@@ -5,7 +5,10 @@ use embedded_graphics::{pixelcolor::BinaryColor, prelude::DrawTarget};
 use crate::Status;
 
 #[derive(Clone, PartialEq)]
-pub struct BacklightTest<'a>(shared::console::Console<'a>, shared::confirmation::Confirmation);
+pub struct BacklightTest<'a>(
+    shared::console::Console<'a>,
+    shared::confirmation::Confirmation,
+);
 
 impl BacklightTest<'_> {
     pub fn new() -> Self {
@@ -46,7 +49,5 @@ impl BacklightTest<'_> {
                 return Status::Failed;
             }
         }
-
-        Status::InProgress
     }
 }

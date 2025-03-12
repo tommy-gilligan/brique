@@ -170,10 +170,18 @@ async fn main(_spawner: Spawner) {
         };
 
         match result {
-            Some(shared::SystemRequest::UsbTx(shared::UsbTx::HidChar(c))) => usb::HID_TX_CHANNEL.send(c).await,
-            Some(shared::SystemRequest::UsbTx(shared::UsbTx::CdcBuffer(b))) => usb::CDC_TX_CHANNEL.send(b).await,
-            Some(shared::SystemRequest::ResetToBoot) =>  { embassy_rp::rom_data::reset_to_usb_boot(0, 0); }
-            _ => { unimplemented!() }
+            Some(shared::SystemRequest::UsbTx(shared::UsbTx::HidChar(c))) => {
+                usb::HID_TX_CHANNEL.send(c).await
+            }
+            Some(shared::SystemRequest::UsbTx(shared::UsbTx::CdcBuffer(b))) => {
+                usb::CDC_TX_CHANNEL.send(b).await
+            }
+            Some(shared::SystemRequest::ResetToBoot) => {
+                embassy_rp::rom_data::reset_to_usb_boot(0, 0);
+            }
+            _ => {
+                unimplemented!()
+            }
         }
     }
 }

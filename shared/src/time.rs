@@ -1,13 +1,4 @@
-use core::fmt::Debug;
 use chrono::Timelike;
-use embedded_graphics::{
-    draw_target::DrawTarget,
-    mono_font::{MonoTextStyle, ascii::FONT_10X20},
-    pixelcolor::BinaryColor,
-    prelude::*,
-    primitives::PrimitiveStyle,
-    text::{Alignment, Text},
-};
 
 // TODO: use something better
 pub fn to_char(digit: u32) -> char {
@@ -26,10 +17,7 @@ pub fn to_char(digit: u32) -> char {
     }
 }
 
-pub fn write_time(
-    rtc: &mut impl crate::Rtc,
-    seconds: bool
-) -> heapless::String<8> {
+pub fn write_time(rtc: &mut impl crate::Rtc, seconds: bool) -> heapless::String<8> {
     let now = chrono::DateTime::<chrono::Utc>::from_timestamp(rtc.timestamp(), 0).unwrap();
     let mut text = heapless::String::new();
 

@@ -6,26 +6,19 @@ use shared::Application;
 
 pub struct Keyboard<'a>(shared::textbox::Textbox<'a>);
 
-use core::fmt::Debug;
-use core::ascii::Char;
+use core::{ascii::Char, fmt::Debug};
 
-use embedded_graphics::{
-    draw_target::DrawTarget,
-    mono_font::{MonoTextStyle, ascii::FONT_6X10},
-    pixelcolor::BinaryColor,
-    prelude::*,
-    primitives::{Rectangle},
-};
-use embedded_graphics::text::renderer::TextRenderer;
-use embedded_graphics::primitives::PrimitiveStyle;
-use embedded_graphics::text::Text;
-use embedded_graphics::text::Alignment;
+use embedded_graphics::{draw_target::DrawTarget, pixelcolor::BinaryColor};
 
-impl <'a>Keyboard<'a> {
-    pub fn new<D: DrawTarget<Color = BinaryColor>>(draw_target: &mut D, buffer: &'a mut [u8]) -> Self where <D as DrawTarget>::Error: Debug {
-        Self(
-            shared::textbox::Textbox::new(draw_target, buffer),
-        )
+impl<'a> Keyboard<'a> {
+    pub fn new<D: DrawTarget<Color = BinaryColor>>(
+        draw_target: &mut D,
+        buffer: &'a mut [u8],
+    ) -> Self
+    where
+        <D as DrawTarget>::Error: Debug,
+    {
+        Self(shared::textbox::Textbox::new(draw_target, buffer))
     }
 }
 use usbd_hid::descriptor::KeyboardUsage;
@@ -95,7 +88,7 @@ fn build_report(c: Char) -> usbd_hid::descriptor::KeyboardReport {
         Char::SmallX => KeyboardUsage::KeyboardXx,
         Char::SmallY => KeyboardUsage::KeyboardYy,
         Char::SmallZ => KeyboardUsage::KeyboardZz,
-        _ => KeyboardUsage::KeyboardZz
+        _ => KeyboardUsage::KeyboardZz,
     };
 
     usbd_hid::descriptor::KeyboardReport {
@@ -113,21 +106,16 @@ impl Application for Keyboard<'_> {
         _buzzer: &mut impl shared::Buzzer,
         display: &mut D,
         keypad: &mut impl shared::Keypad,
-        rtc: &mut impl shared::Rtc,
+        _rtc: &mut impl shared::Rtc,
         _backlight: &mut impl shared::Backlight,
         _system_response: Option<[u8; 64]>,
     ) -> Option<shared::SystemRequest>
     where
         <D as DrawTarget>::Error: Debug,
     {
-        if let Some(c) = self.0.process(display, keypad).await {
-            Some(
-                shared::SystemRequest::UsbTx(
-                    shared::UsbTx::HidChar(build_report(c))
-                )
-            )
-        } else {
-            None
-        }
+        self.0
+            .process(display, keypad)
+            .await
+            .map(|c| shared::SystemRequest::UsbTx(shared::UsbTx::HidChar(build_report(c))))
     }
 }
