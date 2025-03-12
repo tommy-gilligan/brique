@@ -31,7 +31,6 @@ async fn main(spawner: Spawner) {
     let mut power = power::DomPower::new("power");
 
     let items = ["Ringtones", "Clock", "Hardware Test", "Keyboard", "Reboot to USB"];
-    let mut menu = shared::menu::Menu::new(&items);
     let mut keypad = keypad::DomKeypad::new(
         "cancel", "select", "up", "down", "one", "two", "three", "four", "five", "six", "seven",
         "eight", "nine", "asterisk", "zero", "hash",
@@ -39,86 +38,89 @@ async fn main(spawner: Spawner) {
     let console = document.get_element_by_id("console").unwrap();
     let mut handler = system_request_handler::Handler::new(console);
 
+    let mut lock_screen = shared::lock_screen::LockScreen::new(&items);
     loop {
-        match menu.process(&mut keypad, &mut display).await {
-            0 => {
-                let mut buffer: [u8; 1024] = [0; 1024];
-                let ringtones = ringtones::Ringtones::new(&mut display, &mut buffer);
-                shared::run_app(
-                    ringtones,
-                    &mut vibration_motor,
-                    &mut buzzer,
-                    &mut display,
-                    &mut keypad,
-                    &mut rtc,
-                    &mut light,
-                    &mut power,
-                    None,
-                    &mut handler,
-                ).await
+        if let Some(index) = lock_screen.process(&mut rtc, &mut display, &mut keypad).await {
+            match index {
+                0 => {
+                    let mut buffer: [u8; 1024] = [0; 1024];
+                    let ringtones = ringtones::Ringtones::new(&mut display, &mut buffer);
+                    shared::run_app(
+                        ringtones,
+                        &mut vibration_motor,
+                        &mut buzzer,
+                        &mut display,
+                        &mut keypad,
+                        &mut rtc,
+                        &mut light,
+                        &mut power,
+                        None,
+                        &mut handler,
+                    ).await
+                }
+                1 => {
+                    let clock = clock::Clock;
+                    shared::run_app(
+                        clock,
+                        &mut vibration_motor,
+                        &mut buzzer,
+                        &mut display,
+                        &mut keypad,
+                        &mut rtc,
+                        &mut light,
+                        &mut power,
+                        None,
+                        &mut handler,
+                    ).await
+                }
+                2 => {
+                    let hardware_test = hardware_test::HardwareTest::default();
+                    shared::run_app(
+                        hardware_test,
+                        &mut vibration_motor,
+                        &mut buzzer,
+                        &mut display,
+                        &mut keypad,
+                        &mut rtc,
+                        &mut light,
+                        &mut power,
+                        None,
+                        &mut handler,
+                    ).await
+                }
+                3 => {
+                    let mut buffer: [u8; 1024] = [0; 1024];
+                    let keyboard = keyboard::Keyboard::new(&mut display, &mut buffer);
+                    shared::run_app(
+                        keyboard,
+                        &mut vibration_motor,
+                        &mut buzzer,
+                        &mut display,
+                        &mut keypad,
+                        &mut rtc,
+                        &mut light,
+                        &mut power,
+                        None,
+                        &mut handler,
+                    ).await
+                }
+                _ => {
+                    let reset = reset_to_boot::ResetToBoot;
+                    shared::run_app(
+                        reset,
+                        &mut vibration_motor,
+                        &mut buzzer,
+                        &mut display,
+                        &mut keypad,
+                        &mut rtc,
+                        &mut light,
+                        &mut power,
+                        None,
+                        &mut handler,
+                    ).await
+                }
             }
-            1 => {
-                let clock = clock::Clock;
-                shared::run_app(
-                    clock,
-                    &mut vibration_motor,
-                    &mut buzzer,
-                    &mut display,
-                    &mut keypad,
-                    &mut rtc,
-                    &mut light,
-                    &mut power,
-                    None,
-                    &mut handler,
-                ).await
-            }
-            2 => {
-                let hardware_test = hardware_test::HardwareTest::default();
-                shared::run_app(
-                    hardware_test,
-                    &mut vibration_motor,
-                    &mut buzzer,
-                    &mut display,
-                    &mut keypad,
-                    &mut rtc,
-                    &mut light,
-                    &mut power,
-                    None,
-                    &mut handler,
-                ).await
-            }
-            3 => {
-                let mut buffer: [u8; 1024] = [0; 1024];
-                let keyboard = keyboard::Keyboard::new(&mut display, &mut buffer);
-                shared::run_app(
-                    keyboard,
-                    &mut vibration_motor,
-                    &mut buzzer,
-                    &mut display,
-                    &mut keypad,
-                    &mut rtc,
-                    &mut light,
-                    &mut power,
-                    None,
-                    &mut handler,
-                ).await
-            }
-            _ => {
-                let reset = reset_to_boot::ResetToBoot;
-                shared::run_app(
-                    reset,
-                    &mut vibration_motor,
-                    &mut buzzer,
-                    &mut display,
-                    &mut keypad,
-                    &mut rtc,
-                    &mut light,
-                    &mut power,
-                    None,
-                    &mut handler,
-                ).await
-            }
-        };
+        }
     }
 }
 

@@ -2593,6 +2593,7 @@ dependencies = [
 name = "shared"
 version = "0.1.0"
 dependencies = [
+ "chrono",
  "defmt",
  "embassy-futures",
  "embassy-time",
@@ -2602,6 +2603,7 @@ dependencies = [
  "enum-iterator",
  "enum-iterator-derive",
  "futures",
+ "heapless 0.8.0",
  "log",
  "strum 0.27.1",
  "strum_macros 0.27.1",

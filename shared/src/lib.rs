@@ -7,9 +7,11 @@
 
 pub mod confirmation;
 pub mod menu;
+pub mod lock_screen;
 pub mod console;
 pub mod multitap;
 pub mod textbox;
+pub mod time;
 
 use core::{fmt::Debug, future::Future};
 use embedded_graphics::{Drawable, prelude::Primitive, primitives::PrimitiveStyle};
@@ -91,6 +93,7 @@ impl From<Key> for Char {
     }
 }
 
+#[derive(PartialEq)]
 pub enum KeyEvent {
     Up(Key),
     Down(Key),
@@ -176,15 +179,10 @@ pub async fn run_app<D: DrawTarget<Color = BinaryColor>>(
                 system_response,
             ),
         )
-        .await
-        {
+        .await {
             Ok(None) => {}
-            Ok(Some(e)) => { 
-                system_request_handler.handle_request(e).await;
-            }
-            Err(embassy_time::TimeoutError) => {
-                log::info!("timed out");
-            }
+            Ok(Some(e)) => { system_request_handler.handle_request(e).await; }
+            Err(embassy_time::TimeoutError) => { log::info!("timed out"); }
         }
 
         if power.was_pressed().await {
@@ -196,6 +194,7 @@ pub async fn run_app<D: DrawTarget<Color = BinaryColor>>(
                 .unwrap();
             buzzer.mute();
             vibration_motor.stop();
+            return;
         }
     }
 }
