@@ -38,18 +38,18 @@ impl MultiTap {
         keypad: &mut KEYPAD,
         timeout_future: T,
         case: &crate::textbox::Case,
-    ) -> Event
+    ) -> Option<Event>
     where
         T: Future<Output = ()>,
         KEYPAD: crate::Keypad,
     {
         // if something has just been decided
         // still emit the next tentative
-        // if let Some(pending) = self.pending {
-        //     self.pending = None;
-        //     self.last_emitted = Some(pending);
-        //     return pending;
-        // }
+        if let Some(pending) = self.pending {
+            self.pending = None;
+            self.last_emitted = Some(pending);
+            return Some(pending);
+        }
 
         let event_future = keypad.event();
         pin_mut!(event_future);
@@ -62,11 +62,11 @@ impl MultiTap {
                         self.last_emitted = None;
                         self.last_press = None;
 
-                        return Event::Decided(e);
+                        return Some(Event::Decided(e));
                     }
                 }
                 Either::Right((crate::KeyEvent::Down(crate::Key::Hash), _)) => {
-                    return Event::Case;
+                    return Some(Event::Case);
                 }
                 Either::Right((crate::KeyEvent::Down(e), _)) => {
                     if let Some(p) = &self.last_press
@@ -85,7 +85,7 @@ impl MultiTap {
                             // TODO: panic if there is already a pending event
                             self.pending = Some(Event::Tentative(e));
 
-                            return Event::Decided(f);
+                            return Some(Event::Decided(f));
                         }
                     } else {
                         self.last_press = Some(e.clone());
@@ -105,7 +105,7 @@ impl MultiTap {
                             },
                         };
 
-                        return self.last_emitted.unwrap();
+                        return Some(self.last_emitted.unwrap());
                     }
                 }
                 Either::Right((crate::KeyEvent::Up(_), _)) => {}
@@ -113,7 +113,7 @@ impl MultiTap {
         } else if let crate::KeyEvent::Down(e) = event_future.await {
             match e {
                 crate::Key::Hash => {
-                    return Event::Case;
+                    return Some(Event::Case);
                 }
                 _ => {
                     if let Some(p) = &self.last_press
@@ -125,7 +125,7 @@ impl MultiTap {
                             // TODO: panic if there is already a pending event
                             self.pending = Some(Event::Tentative(e.clone().into()));
 
-                            return Event::Decided(f);
+                            return Some(Event::Decided(f));
                         }
                     } else {
                         self.last_press = Some(e.clone());
@@ -145,13 +145,13 @@ impl MultiTap {
                             },
                         };
 
-                        return self.last_emitted.unwrap();
+                        return Some(self.last_emitted.unwrap());
                     }
                 }
             }
         }
 
-        panic!()
+        None
     }
 }
 

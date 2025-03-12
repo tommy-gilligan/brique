@@ -20,6 +20,6 @@ unsafe impl Send for DomPower {}
 impl shared::PowerButton for DomPower {
     async fn was_pressed(&mut self) -> bool {
         Timer::after_millis(30).await;
-        (*self.power).borrow_mut().check()
+        (*self.power).borrow_mut().check() == Some(crate::Event::Down)
     }
 }

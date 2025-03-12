@@ -25,7 +25,6 @@ Because the board would need to fit into the chassis of a Nokia 3310 and because
 
 ### TODO
 #### v0.3
-- device
 - create example that plays RTTTL (and writes it to screen)
 - Snake
 - give more control over display flushing, keep track of what needs updating, what needs flushing
@@ -46,6 +45,11 @@ Because the board would need to fit into the chassis of a Nokia 3310 and because
 
 - terse, unfriendly instructions (ie. README)
 - document app API
+
+- replace power button stuff
+- more accurate clearance on mcu inductor resistors
+- inductor and diode should be very close to charging chip
+- more gnd vias
 
 #### Later
 - charging IC should communicate state with rp2350 (charging, full, should be able to just sense 'LED' outputs)

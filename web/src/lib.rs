@@ -81,6 +81,13 @@ use wasm_bindgen::{JsCast, closure::Closure};
 
 struct DomB {
     was_clicked: bool,
+    was_unclicked: bool,
+}
+
+#[derive(PartialEq)]
+pub enum Event {
+    Up,
+    Down,
 }
 
 impl DomB {
@@ -88,28 +95,54 @@ impl DomB {
     fn new(id: &'static str) -> Rc<RefCell<Self>> {
         let window = web_sys::window().expect("no global `window` exists");
         let document = window.document().expect("should have a document on window");
-        let s = Self { was_clicked: false };
+        let s = Self {
+            was_clicked: false,
+            was_unclicked: false,
+        };
         let r = Rc::new(RefCell::new(s));
         let g = r.clone();
+        let h = r.clone();
 
-        let closure = Closure::<dyn FnMut(_)>::new(move |_event: web_sys::MouseEvent| {
-            (*g).borrow_mut().was_clicked = true;
+        let mouse_down_closure =
+            Closure::<dyn FnMut(_)>::new(move |_event: web_sys::MouseEvent| {
+                (*g).borrow_mut().was_clicked = true;
+            });
+        let mouse_up_closure = Closure::<dyn FnMut(_)>::new(move |_event: web_sys::MouseEvent| {
+            (*h).borrow_mut().was_unclicked = true;
         });
 
         document
             .get_element_by_id(id)
             .unwrap()
-            .add_event_listener_with_callback("mousedown", closure.as_ref().unchecked_ref())
+            .add_event_listener_with_callback(
+                "mousedown",
+                mouse_down_closure.as_ref().unchecked_ref(),
+            )
             .unwrap();
 
-        closure.forget();
+        document
+            .get_element_by_id(id)
+            .unwrap()
+            .add_event_listener_with_callback("mouseup", mouse_up_closure.as_ref().unchecked_ref())
+            .unwrap();
+
+        mouse_down_closure.forget();
+        mouse_up_closure.forget();
 
         r
     }
 
-    fn check(&mut self) -> bool {
-        let result = self.was_clicked;
+    fn check(&mut self) -> Option<Event> {
+        let clicked_result = self.was_clicked;
+        let unclicked_result = self.was_unclicked;
         self.was_clicked = false;
-        result
+        self.was_unclicked = false;
+        if clicked_result {
+            Some(Event::Down)
+        } else if unclicked_result {
+            Some(Event::Up)
+        } else {
+            None
+        }
     }
 }

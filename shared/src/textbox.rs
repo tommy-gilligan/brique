@@ -57,7 +57,7 @@ impl<'a> Textbox<'a> {
             .event(device, embassy_time::Timer::after_millis(1500), &self.case)
             .await
         {
-            crate::multitap::Event::Tentative(c) => {
+            Some(crate::multitap::Event::Tentative(c)) => {
                 if c == Char::Backspace {
                     self.backspace(device);
                     return Some(c);
@@ -65,13 +65,13 @@ impl<'a> Textbox<'a> {
                     self.push_tentative(device, c.into());
                 }
             }
-            crate::multitap::Event::Decided(c) => {
+            Some(crate::multitap::Event::Decided(c)) => {
                 if c != Char::Backspace {
                     self.push(device, c.into());
                     return Some(c);
                 }
             }
-            crate::multitap::Event::Case => {
+            Some(crate::multitap::Event::Case) => {
                 self.case = match self.case {
                     Case::Upper => Case::Lower,
                     Case::Lower => Case::Upper,
@@ -79,6 +79,7 @@ impl<'a> Textbox<'a> {
                 };
                 self.draw_case_icon(device);
             }
+            None => {}
         }
         None
     }
