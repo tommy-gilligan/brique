@@ -44,37 +44,30 @@ impl<'a> Textbox<'a> {
     }
 
     // should return emitted characters
-    pub async fn process<D: DrawTarget<Color = BinaryColor>>(
-        &mut self,
-        display: &mut D,
-        keypad: &mut impl crate::Keypad,
-    ) -> Option<Char>
-    where
-        <D as DrawTarget>::Error: Debug,
-    {
+    pub async fn process(&mut self, device: &mut impl crate::Device) -> Option<Char> {
         if self.first_draw {
             self.first_draw = false;
-            display.clear(BinaryColor::On).unwrap();
-            self.draw_border(display);
-            self.draw_case_icon(display);
+            device.clear(BinaryColor::On).unwrap();
+            self.draw_border(device);
+            self.draw_case_icon(device);
         }
 
         match self
             .multitap
-            .event(keypad, embassy_time::Timer::after_millis(1500), &self.case)
+            .event(device, embassy_time::Timer::after_millis(1500), &self.case)
             .await
         {
             crate::multitap::Event::Tentative(c) => {
                 if c == Char::Backspace {
-                    self.backspace(display);
+                    self.backspace(device);
                     return Some(c);
                 } else {
-                    self.push_tentative(display, c.into());
+                    self.push_tentative(device, c.into());
                 }
             }
             crate::multitap::Event::Decided(c) => {
                 if c != Char::Backspace {
-                    self.push(display, c.into());
+                    self.push(device, c.into());
                     return Some(c);
                 }
             }
@@ -84,7 +77,7 @@ impl<'a> Textbox<'a> {
                     Case::Lower => Case::Upper,
                     _ => Case::Lower,
                 };
-                self.draw_case_icon(display);
+                self.draw_case_icon(device);
             }
         }
         None

@@ -1,7 +1,3 @@
-use core::fmt::Debug;
-
-use embedded_graphics::{pixelcolor::BinaryColor, prelude::DrawTarget};
-
 use crate::Status;
 
 #[derive(Clone, PartialEq)]
@@ -31,25 +27,17 @@ impl Default for BuzzerTest<'_> {
 }
 
 impl BuzzerTest<'_> {
-    pub async fn run<D: DrawTarget<Color = BinaryColor>>(
-        &mut self,
-        keypad: &mut impl shared::Keypad,
-        buzzer: &mut impl shared::Buzzer,
-        draw_target: &mut D,
-    ) -> Status
-    where
-        <D as DrawTarget>::Error: Debug,
-    {
-        buzzer.unmute();
-        buzzer.set_frequency(440);
-        match self.1.run(keypad, draw_target).await {
+    pub async fn run(&mut self, device: &mut impl shared::Device) -> Status {
+        device.unmute();
+        device.set_frequency(440);
+        match self.1.run(device).await {
             None => Status::InProgress,
             Some(true) => {
-                buzzer.mute();
+                device.mute();
                 Status::Passed
             }
             Some(false) => {
-                buzzer.mute();
+                device.mute();
                 Status::Failed
             }
         }

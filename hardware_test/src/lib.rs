@@ -1,9 +1,6 @@
 #![feature(let_chains)]
 #![no_std]
 
-use core::fmt::Debug;
-
-use embedded_graphics::{draw_target::DrawTarget, pixelcolor::BinaryColor};
 use enum_iterator::Sequence;
 use shared::Application;
 
@@ -67,61 +64,49 @@ impl Default for HardwareTest<'_> {
 }
 
 impl Application for HardwareTest<'_> {
-    async fn run<D: DrawTarget<Color = BinaryColor>>(
+    async fn run(
         &mut self,
-        vibration_motor: &mut impl shared::VibrationMotor,
-        buzzer: &mut impl shared::Buzzer,
-        draw_target: &mut D,
-        keypad: &mut impl shared::Keypad,
-        _rtc: &mut impl shared::Rtc,
-        backlight: &mut impl shared::Backlight,
+        device: &mut impl shared::Device,
         _system_response: Option<[u8; 64]>,
-    ) -> Option<shared::SystemRequest>
-    where
-        <D as DrawTarget>::Error: Debug,
-    {
+    ) -> Option<shared::SystemRequest> {
         match self.0 {
             Status::InProgress => match self.2 {
-                Test::Keypad(ref mut test) => match test.run(keypad, draw_target).await {
+                Test::Keypad(ref mut test) => match test.run(device).await {
                     Status::Passed => self.next(),
                     Status::Failed => {
                         self.0 = Status::Failed;
                     }
                     _ => {}
                 },
-                Test::Vibration(ref mut test) => {
-                    match test.run(keypad, vibration_motor, draw_target).await {
-                        Status::Passed => self.next(),
-                        Status::Failed => {
-                            self.0 = Status::Failed;
-                        }
-                        _ => {}
-                    }
-                }
-                Test::Buzzer(ref mut test) => match test.run(keypad, buzzer, draw_target).await {
+                Test::Vibration(ref mut test) => match test.run(device).await {
                     Status::Passed => self.next(),
                     Status::Failed => {
                         self.0 = Status::Failed;
                     }
                     _ => {}
                 },
-                Test::Backlight(ref mut test) => {
-                    match test.run(keypad, backlight, draw_target).await {
-                        Status::Passed => {
-                            self.0 = Status::Passed;
-                        }
-                        Status::Failed => {
-                            self.0 = Status::Failed;
-                        }
-                        _ => {}
+                Test::Buzzer(ref mut test) => match test.run(device).await {
+                    Status::Passed => self.next(),
+                    Status::Failed => {
+                        self.0 = Status::Failed;
                     }
-                }
+                    _ => {}
+                },
+                Test::Backlight(ref mut test) => match test.run(device).await {
+                    Status::Passed => {
+                        self.0 = Status::Passed;
+                    }
+                    Status::Failed => {
+                        self.0 = Status::Failed;
+                    }
+                    _ => {}
+                },
             },
             Status::Passed => {
-                self.1.draw(draw_target, "Passed");
+                self.1.draw(device, "Passed");
             }
             Status::Failed => {
-                self.1.draw(draw_target, "Failed");
+                self.1.draw(device, "Failed");
             }
         }
 

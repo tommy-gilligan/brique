@@ -2,6 +2,7 @@
 #![feature(ascii_char_variants)]
 #![feature(trivial_bounds)]
 #![feature(let_chains)]
+#![feature(associated_type_defaults)]
 #![no_std]
 
 pub mod confirmation;
@@ -12,7 +13,7 @@ pub mod multitap;
 pub mod textbox;
 pub mod time;
 
-use core::{ascii::Char, fmt::Debug, future::Future};
+use core::{ascii::Char, future::Future};
 
 use embedded_graphics::{Drawable, prelude::Primitive, primitives::PrimitiveStyle};
 use embedded_graphics_core::{draw_target::DrawTarget, pixelcolor::BinaryColor};
@@ -107,18 +108,11 @@ pub trait Application {
     // how long this takes
     // how long between calls
     #[allow(clippy::too_many_arguments)]
-    fn run<D: DrawTarget<Color = BinaryColor>>(
+    fn run(
         &mut self,
-        vibration_motor: &mut impl VibrationMotor,
-        buzzer: &mut impl Buzzer,
-        display: &mut D,
-        keypad: &mut impl Keypad,
-        rtc: &mut impl Rtc,
-        backlight: &mut impl Backlight,
+        device: &mut impl Device,
         system_response: Option<[u8; 64]>,
-    ) -> impl Future<Output = Option<SystemRequest>>
-    where
-        <D as DrawTarget>::Error: Debug;
+    ) -> impl Future<Output = Option<SystemRequest>>;
 }
 
 pub type UsbRx = [u8; 64];
@@ -139,6 +133,11 @@ pub trait SystemRequestHandler {
     ) -> impl core::future::Future<Output = ()>;
 }
 
+pub trait Device:
+    VibrationMotor + Buzzer + Keypad + Rtc + Backlight + DrawTarget<Color = BinaryColor, Error = ()>
+{
+}
+
 // decide your time budgets
 // 'trust' application takes at most 750ms
 // force pre-emption at 1500ms
@@ -146,42 +145,27 @@ pub trait SystemRequestHandler {
 // special kind of timer?
 // forced pre-emption should be signalled back to application + print log entry
 #[allow(clippy::too_many_arguments)]
-pub async fn run_app<D: DrawTarget<Color = BinaryColor>>(
+pub async fn run_app(
     mut app: impl Application,
-    vibration_motor: &mut impl VibrationMotor,
-    buzzer: &mut impl Buzzer,
-    display: &mut D,
-    keypad: &mut impl Keypad,
-    rtc: &mut impl Rtc,
-    light: &mut impl Backlight,
+    device: &mut impl Device,
     power: &mut impl PowerButton,
     // just usb rx for now
     system_response: Option<[u8; 64]>,
     system_request_handler: &mut impl SystemRequestHandler,
-) where
-    <D as DrawTarget>::Error: Debug,
-{
+) {
     let fill = PrimitiveStyle::with_fill(BinaryColor::On);
-    display
+    device
         .bounding_box()
         .into_styled(fill)
-        .draw(display)
+        .draw(device)
         .unwrap();
-    buzzer.mute();
-    vibration_motor.stop();
+    device.mute();
+    device.stop();
 
     loop {
         match embassy_time::with_timeout(
             embassy_time::Duration::from_millis(2000),
-            app.run(
-                vibration_motor,
-                buzzer,
-                display,
-                keypad,
-                rtc,
-                light,
-                system_response,
-            ),
+            app.run(device, system_response),
         )
         .await
         {
@@ -196,13 +180,13 @@ pub async fn run_app<D: DrawTarget<Color = BinaryColor>>(
 
         if power.was_pressed().await {
             let fill = PrimitiveStyle::with_fill(BinaryColor::On);
-            display
+            device
                 .bounding_box()
                 .into_styled(fill)
-                .draw(display)
+                .draw(device)
                 .unwrap();
-            buzzer.mute();
-            vibration_motor.stop();
+            device.mute();
+            device.stop();
             return;
         }
     }

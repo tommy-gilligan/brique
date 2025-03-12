@@ -1,10 +1,7 @@
 #![no_std]
 
-use core::fmt::Debug;
-
 use chrono::Timelike;
 use embedded_graphics::{
-    draw_target::DrawTarget,
     mono_font::{MonoTextStyle, ascii::FONT_10X20},
     pixelcolor::BinaryColor,
     prelude::*,
@@ -45,28 +42,20 @@ fn to_char(digit: u32) -> char {
 }
 
 impl Application for Clock {
-    async fn run<D: DrawTarget<Color = BinaryColor>>(
+    async fn run(
         &mut self,
-        _vibration_motor: &mut impl shared::VibrationMotor,
-        _buzzer: &mut impl shared::Buzzer,
-        display: &mut D,
-        _keypad: &mut impl shared::Keypad,
-        rtc: &mut impl shared::Rtc,
-        _backlight: &mut impl shared::Backlight,
+        device: &mut impl shared::Device,
         _system_response: Option<[u8; 64]>,
-    ) -> Option<shared::SystemRequest>
-    where
-        <D as DrawTarget>::Error: Debug,
-    {
+    ) -> Option<shared::SystemRequest> {
         let fill = PrimitiveStyle::with_fill(BinaryColor::On);
-        display
+        device
             .bounding_box()
             .into_styled(fill)
-            .draw(display)
+            .draw(device)
             .unwrap();
 
         let character_style = MonoTextStyle::new(&FONT_10X20, BinaryColor::Off);
-        let now = chrono::DateTime::<chrono::Utc>::from_timestamp(rtc.timestamp(), 0).unwrap();
+        let now = chrono::DateTime::<chrono::Utc>::from_timestamp(device.timestamp(), 0).unwrap();
         let mut text: heapless::String<8> = heapless::String::new();
 
         text.push(to_char(now.hour() / 10)).unwrap();
@@ -80,11 +69,11 @@ impl Application for Clock {
 
         Text::with_alignment(
             &text,
-            display.bounding_box().center() + Point::new(0, 6),
+            device.bounding_box().center() + Point::new(0, 6),
             character_style,
             Alignment::Center,
         )
-        .draw(display)
+        .draw(device)
         .unwrap();
         embassy_time::Timer::after_millis(10).await;
 

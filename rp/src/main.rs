@@ -46,6 +46,7 @@ use static_cell::StaticCell;
 mod backlight;
 mod button;
 mod buzzer;
+mod device;
 mod display;
 mod keypad;
 mod rtc;

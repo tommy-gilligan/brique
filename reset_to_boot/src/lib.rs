@@ -1,8 +1,5 @@
 #![no_std]
 
-use core::fmt::Debug;
-
-use embedded_graphics::{draw_target::DrawTarget, pixelcolor::BinaryColor};
 use shared::Application;
 
 pub struct ResetToBoot;
@@ -20,19 +17,11 @@ impl Default for ResetToBoot {
 }
 
 impl Application for ResetToBoot {
-    async fn run<D: DrawTarget<Color = BinaryColor>>(
+    async fn run(
         &mut self,
-        _vibration_motor: &mut impl shared::VibrationMotor,
-        _buzzer: &mut impl shared::Buzzer,
-        _display: &mut D,
-        _keypad: &mut impl shared::Keypad,
-        _rtc: &mut impl shared::Rtc,
-        _backlight: &mut impl shared::Backlight,
+        device: &mut impl shared::Device,
         _system_response: Option<[u8; 64]>,
-    ) -> Option<shared::SystemRequest>
-    where
-        <D as DrawTarget>::Error: Debug,
-    {
+    ) -> Option<shared::SystemRequest> {
         None
     }
 }

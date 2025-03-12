@@ -1,6 +1,3 @@
-use core::fmt::Debug;
-
-use embedded_graphics::{pixelcolor::BinaryColor, prelude::DrawTarget};
 use enum_iterator::{first, last, next};
 use shared::{Key, KeyEvent};
 
@@ -22,16 +19,9 @@ impl Default for KeypadTest<'_> {
 }
 
 impl KeypadTest<'_> {
-    pub async fn run<D: DrawTarget<Color = BinaryColor>>(
-        &mut self,
-        keypad: &mut impl shared::Keypad,
-        draw_target: &mut D,
-    ) -> Status
-    where
-        <D as DrawTarget>::Error: Debug,
-    {
-        self.1.draw(draw_target, self.0.clone().into());
-        if let KeyEvent::Down(key) = keypad.event().await
+    pub async fn run(&mut self, device: &mut impl shared::Device) -> Status {
+        self.1.draw(device, self.0.clone().into());
+        if let KeyEvent::Down(key) = device.event().await
             && key == self.0
         {
             if self.0 == last::<Key>().unwrap() {

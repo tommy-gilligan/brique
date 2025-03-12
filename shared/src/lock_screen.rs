@@ -28,14 +28,10 @@ impl<'a> LockScreen<'a> {
         }
     }
 
-    fn draw_scrollbar<D>(&mut self, draw_target: &mut D)
-    where
-        D: DrawTarget<Color = BinaryColor>,
-        <D as embedded_graphics::draw_target::DrawTarget>::Error: core::fmt::Debug,
-    {
+    fn draw_scrollbar(&mut self, device: &mut impl crate::Device) {
         Line::new(Point::new(81, 7), Point::new(81, 37))
             .into_styled(PrimitiveStyle::with_stroke(BinaryColor::Off, 1))
-            .draw(draw_target)
+            .draw(device)
             .unwrap();
 
         let top: f32 = 7.0;
@@ -48,33 +44,29 @@ impl<'a> LockScreen<'a> {
             Point::new(83, actual_top + 6),
         )
         .into_styled(PrimitiveStyle::with_stroke(BinaryColor::Off, 1))
-        .draw(draw_target)
+        .draw(device)
         .unwrap();
         Line::new(
             Point::new(81, actual_top + 1),
             Point::new(81, actual_top + 6),
         )
         .into_styled(PrimitiveStyle::with_stroke(BinaryColor::On, 1))
-        .draw(draw_target)
+        .draw(device)
         .unwrap();
         Line::new(Point::new(81, actual_top), Point::new(83, actual_top))
             .into_styled(PrimitiveStyle::with_stroke(BinaryColor::Off, 1))
-            .draw(draw_target)
+            .draw(device)
             .unwrap();
         Line::new(
             Point::new(81, actual_top + 7),
             Point::new(83, actual_top + 7),
         )
         .into_styled(PrimitiveStyle::with_stroke(BinaryColor::Off, 1))
-        .draw(draw_target)
+        .draw(device)
         .unwrap();
     }
 
-    fn draw_index<D>(&mut self, draw_target: &mut D)
-    where
-        D: DrawTarget<Color = BinaryColor>,
-        <D as embedded_graphics::draw_target::DrawTarget>::Error: core::fmt::Debug,
-    {
+    fn draw_index(&mut self, device: &mut impl crate::Device) {
         let mut text: heapless::String<2> = heapless::String::new();
         let major: u32 = ((self.index + 1) / 10).try_into().unwrap();
         if major != 0 {
@@ -91,23 +83,14 @@ impl<'a> LockScreen<'a> {
             MonoTextStyle::new(&FONT_4X6, BinaryColor::Off),
             Alignment::Right,
         )
-        .draw(draw_target)
+        .draw(device)
         .unwrap();
     }
 
-    pub async fn process<D>(
-        &mut self,
-        rtc: &mut impl crate::Rtc,
-        draw_target: &mut D,
-        keypad: &mut impl crate::Keypad,
-    ) -> Option<usize>
-    where
-        D: DrawTarget<Color = BinaryColor>,
-        <D as embedded_graphics::draw_target::DrawTarget>::Error: core::fmt::Debug,
-    {
-        let _ = draw_target.clear(BinaryColor::On);
+    pub async fn process(&mut self, device: &mut impl crate::Device) -> Option<usize> {
+        let _ = device.clear(BinaryColor::On);
 
-        let text = crate::time::write_time(rtc, false);
+        let text = crate::time::write_time(device, false);
 
         Text::with_alignment(
             &text,
@@ -115,7 +98,7 @@ impl<'a> LockScreen<'a> {
             MonoTextStyle::new(&FONT_4X6, BinaryColor::Off),
             Alignment::Right,
         )
-        .draw(draw_target)
+        .draw(device)
         .unwrap();
 
         let antenna = [
@@ -123,14 +106,14 @@ impl<'a> LockScreen<'a> {
         ];
         let raw: ImageRawBE<BinaryColor> = ImageRaw::new(&antenna, 8);
         let image = Image::new(&raw, Point::new(0, 34));
-        image.draw(draw_target).unwrap();
+        image.draw(device).unwrap();
 
         let battery = [
             0b10011111, 0b00001111, 0b01101111, 0b01101111, 0b01101111, 0b00001111,
         ];
         let raw: ImageRawBE<BinaryColor> = ImageRaw::new(&battery, 8);
         let image = Image::new(&raw, Point::new(80, 34));
-        image.draw(draw_target).unwrap();
+        image.draw(device).unwrap();
 
         if self.locked {
             Text::with_alignment(
@@ -139,7 +122,7 @@ impl<'a> LockScreen<'a> {
                 MonoTextStyle::new(&FONT_6X9, BinaryColor::Off),
                 Alignment::Center,
             )
-            .draw(draw_target)
+            .draw(device)
             .unwrap();
 
             let key = [
@@ -148,12 +131,12 @@ impl<'a> LockScreen<'a> {
             ];
             let raw: ImageRawBE<BinaryColor> = ImageRaw::new(&key, 16);
             let image = Image::new(&raw, Point::zero());
-            image.draw(draw_target).unwrap();
+            image.draw(device).unwrap();
 
-            if keypad.event().await == crate::KeyEvent::Down(crate::Key::Select) {
+            if device.event().await == crate::KeyEvent::Down(crate::Key::Select) {
                 let event_future = async {
                     loop {
-                        if keypad.event().await == crate::KeyEvent::Down(crate::Key::Asterisk) {
+                        if device.event().await == crate::KeyEvent::Down(crate::Key::Asterisk) {
                             return;
                         }
                     }
@@ -173,14 +156,14 @@ impl<'a> LockScreen<'a> {
                 }
             }
         } else if self.menu_open {
-            let _ = draw_target.clear(BinaryColor::On);
+            let _ = device.clear(BinaryColor::On);
             Text::with_alignment(
                 self.items[self.index],
                 Point::new(42, 16),
                 MonoTextStyle::new(&FONT_6X13, BinaryColor::Off),
                 Alignment::Center,
             )
-            .draw(draw_target)
+            .draw(device)
             .unwrap();
             Text::with_alignment(
                 "Select",
@@ -188,12 +171,12 @@ impl<'a> LockScreen<'a> {
                 MonoTextStyle::new(&FONT_6X9, BinaryColor::Off),
                 Alignment::Center,
             )
-            .draw(draw_target)
+            .draw(device)
             .unwrap();
-            self.draw_index(draw_target);
-            self.draw_scrollbar(draw_target);
+            self.draw_index(device);
+            self.draw_scrollbar(device);
 
-            match keypad.event().await {
+            match device.event().await {
                 crate::KeyEvent::Down(crate::Key::Cancel) => {
                     self.menu_open = false;
                 }
@@ -219,15 +202,15 @@ impl<'a> LockScreen<'a> {
                 MonoTextStyle::new(&FONT_6X9, BinaryColor::Off),
                 Alignment::Center,
             )
-            .draw(draw_target)
+            .draw(device)
             .unwrap();
 
-            if keypad.event().await == crate::KeyEvent::Down(crate::Key::Select) {
+            if device.event().await == crate::KeyEvent::Down(crate::Key::Select) {
                 self.menu_open = true;
 
                 let event_future = async {
                     loop {
-                        if keypad.event().await == crate::KeyEvent::Down(crate::Key::Asterisk) {
+                        if device.event().await == crate::KeyEvent::Down(crate::Key::Asterisk) {
                             return;
                         }
                     }

@@ -23,20 +23,12 @@ impl<'a> Ringtones<'a> {
 }
 
 impl Application for Ringtones<'_> {
-    async fn run<D: DrawTarget<Color = BinaryColor>>(
+    async fn run(
         &mut self,
-        _vibration_motor: &mut impl shared::VibrationMotor,
-        _buzzer: &mut impl shared::Buzzer,
-        display: &mut D,
-        keypad: &mut impl shared::Keypad,
-        _rtc: &mut impl shared::Rtc,
-        _backlight: &mut impl shared::Backlight,
+        device: &mut impl shared::Device,
         _system_response: Option<[u8; 64]>,
-    ) -> Option<shared::SystemRequest>
-    where
-        <D as DrawTarget>::Error: Debug,
-    {
-        self.0.process(display, keypad).await;
+    ) -> Option<shared::SystemRequest> {
+        self.0.process(device).await;
         None
     }
 }

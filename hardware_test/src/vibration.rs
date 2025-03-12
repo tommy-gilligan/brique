@@ -1,7 +1,3 @@
-use core::fmt::Debug;
-
-use embedded_graphics::{pixelcolor::BinaryColor, prelude::DrawTarget};
-
 use crate::Status;
 
 #[derive(Clone, PartialEq)]
@@ -26,24 +22,16 @@ impl Default for VibrationTest<'_> {
 }
 
 impl VibrationTest<'_> {
-    pub async fn run<D: DrawTarget<Color = BinaryColor>>(
-        &mut self,
-        keypad: &mut impl shared::Keypad,
-        vibration: &mut impl shared::VibrationMotor,
-        draw_target: &mut D,
-    ) -> Status
-    where
-        <D as DrawTarget>::Error: Debug,
-    {
-        vibration.start();
-        match self.1.run(keypad, draw_target).await {
+    pub async fn run(&mut self, device: &mut impl shared::Device) -> Status {
+        device.start();
+        match self.1.run(device).await {
             None => Status::InProgress,
             Some(true) => {
-                vibration.stop();
+                device.stop();
                 Status::Passed
             }
             Some(false) => {
-                vibration.stop();
+                device.stop();
                 Status::Failed
             }
         }

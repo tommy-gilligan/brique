@@ -1,5 +1,3 @@
-use core::fmt::Debug;
-
 use embedded_graphics::{
     Drawable,
     mono_font::{MonoTextStyle, ascii::FONT_6X10},
@@ -29,26 +27,19 @@ impl Confirmation {
         Self(message, r#true, r#false, selected)
     }
 
-    pub async fn run<D: DrawTarget<Color = BinaryColor>>(
-        &mut self,
-        keypad: &mut impl crate::Keypad,
-        draw_target: &mut D,
-    ) -> Option<bool>
-    where
-        <D as DrawTarget>::Error: Debug,
-    {
-        let _ = draw_target.clear(BinaryColor::On);
+    pub async fn run(&mut self, device: &mut impl crate::Device) -> Option<bool> {
+        let _ = device.clear(BinaryColor::On);
 
         let fill = PrimitiveStyle::with_fill(BinaryColor::Off);
         if self.3 {
             Rectangle::new(Point::new(0, 36), Size::new(42, 12))
                 .into_styled(fill)
-                .draw(draw_target)
+                .draw(device)
                 .unwrap();
         } else {
             Rectangle::new(Point::new(42, 36), Size::new(42, 12))
                 .into_styled(fill)
-                .draw(draw_target)
+                .draw(device)
                 .unwrap();
         }
 
@@ -58,7 +49,7 @@ impl Confirmation {
             MonoTextStyle::new(&FONT_6X10, BinaryColor::Off)
         };
         Text::with_alignment(self.1, Point::new(21, 44), true_style, Alignment::Center)
-            .draw(draw_target)
+            .draw(device)
             .unwrap();
         let false_style = if self.3 {
             MonoTextStyle::new(&FONT_6X10, BinaryColor::Off)
@@ -66,7 +57,7 @@ impl Confirmation {
             MonoTextStyle::new(&FONT_6X10, BinaryColor::On)
         };
         Text::with_alignment(self.2, Point::new(63, 44), false_style, Alignment::Center)
-            .draw(draw_target)
+            .draw(device)
             .unwrap();
 
         TextBox::with_textbox_style(
@@ -79,10 +70,10 @@ impl Confirmation {
                 .paragraph_spacing(6)
                 .build(),
         )
-        .draw(draw_target)
+        .draw(device)
         .unwrap();
 
-        match keypad.event().await {
+        match device.event().await {
             KeyEvent::Down(crate::Key::Up | crate::Key::Down) => {
                 self.3 = !self.3;
                 None

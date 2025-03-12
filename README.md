@@ -22,10 +22,10 @@ Because the board would need to fit into the chassis of a Nokia 3310 and because
 ### Install Hardware Test Program
 ### Reassemble 3310
 ### Manual Test
-### Install Custom Software
 
 ### TODO
 #### v0.3
+- device
 - create example that plays RTTTL (and writes it to screen)
 - Snake
 - give more control over display flushing, keep track of what needs updating, what needs flushing
@@ -64,7 +64,6 @@ Because the board would need to fit into the chassis of a Nokia 3310 and because
 - how should software versions synchronize with hardware versions. what level of compatibility should be supported.
 - institute changelog
 - use 'Issues' instead of README for tracking
-- USB on simulated device
 - optimise GPIO pin mapping.  shorten traces etc.
 - connection plate for 3d printing
 - increase flash capacity? i'd prefer to remove this part altogether by using rp2354 due for release later in the year

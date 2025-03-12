@@ -1,7 +1,3 @@
-use core::fmt::Debug;
-
-use embedded_graphics::{pixelcolor::BinaryColor, prelude::DrawTarget};
-
 use crate::Status;
 
 #[derive(Clone, PartialEq)]
@@ -26,27 +22,17 @@ impl Default for BacklightTest<'_> {
 }
 
 impl BacklightTest<'_> {
-    pub async fn run<D: DrawTarget<Color = BinaryColor>>(
-        &mut self,
-        keypad: &mut impl shared::Keypad,
-        backlight: &mut impl shared::Backlight,
-        draw_target: &mut D,
-    ) -> Status
-    where
-        <D as DrawTarget>::Error: Debug,
-    {
-        backlight.on();
-        match self.1.run(keypad, draw_target).await {
-            None => {
-                return Status::InProgress;
-            }
+    pub async fn run(&mut self, device: &mut impl shared::Device) -> Status {
+        device.on();
+        match self.1.run(device).await {
+            None => Status::InProgress,
             Some(true) => {
-                backlight.off();
-                return Status::Passed;
+                device.off();
+                Status::Passed
             }
             Some(false) => {
-                backlight.off();
-                return Status::Failed;
+                device.off();
+                Status::Failed
             }
         }
     }
