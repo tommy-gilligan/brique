@@ -7,6 +7,7 @@
 
 pub mod confirmation;
 pub mod console;
+pub mod held_key;
 pub mod lock_screen;
 pub mod menu;
 pub mod multitap;

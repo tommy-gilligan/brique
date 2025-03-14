@@ -1,5 +1,4 @@
 use core::{ascii::Char, fmt::Debug};
-use crate::multitap::Case;
 
 use embedded_graphics::{
     draw_target::DrawTarget,
@@ -10,6 +9,8 @@ use embedded_graphics::{
     primitives::{PrimitiveStyle, Rectangle},
     text::renderer::TextRenderer,
 };
+
+use crate::multitap::Case;
 
 pub struct Textbox<'a> {
     cursor: Point,
@@ -29,7 +30,7 @@ impl<'a> Textbox<'a> {
     {
         Self {
             cursor: Point::new(0, 9),
-            multitap: crate::multitap::MultiTap::new(),
+            multitap: crate::multitap::MultiTap::new(1500),
             buffer,
             index: 0,
             first_draw: true,
@@ -42,14 +43,9 @@ impl<'a> Textbox<'a> {
             self.first_draw = false;
             device.clear(BinaryColor::On).unwrap();
             self.draw_border(device);
-            self.draw_case_icon(device, self.multitap.case());
         }
 
-        match self
-            .multitap
-            .event(device)
-            .await
-        {
+        match self.multitap.event(device).await {
             Some(crate::multitap::Event::Tentative(c)) => {
                 if c == Char::Backspace {
                     self.backspace(device);
@@ -98,18 +94,27 @@ impl<'a> Textbox<'a> {
         image.draw(draw_target).unwrap();
     }
 
-    fn draw_case_icon<D: DrawTarget<Color = BinaryColor>>(&mut self, draw_target: &mut D, c: crate::multitap::Case)
-    where
+    fn draw_case_icon<D: DrawTarget<Color = BinaryColor>>(
+        &mut self,
+        draw_target: &mut D,
+        c: crate::multitap::Case,
+    ) where
         <D as DrawTarget>::Error: Debug,
     {
         let icon = match c {
             Case::Upper => [
-                0b1000_1100, 0b0011_1000,
-                0b0010_0100, 0b1001_0011,
-                0b0010_0100, 0b0011_0011,
-                0b0000_0100, 0b1001_0011,
-                0b0010_0100, 0b1001_0011,
-                0b0010_0100, 0b0011_1000,
+                0b1000_1100,
+                0b0011_1000,
+                0b0010_0100,
+                0b1001_0011,
+                0b0010_0100,
+                0b0011_0011,
+                0b0000_0100,
+                0b1001_0011,
+                0b0010_0100,
+                0b1001_0011,
+                0b0010_0100,
+                0b0011_1000,
             ],
             Case::Lower => [
                 0b1111_1100,
@@ -126,12 +131,18 @@ impl<'a> Textbox<'a> {
                 0b0011_1000,
             ],
             Case::Number => [
-                0b1011_1011,0b0001_1111,
-                0b0011_0101,0b1101_1111,
-                0b1011_1101,0b1101_1111,
-                0b1011_1101,0b1011_1111,
-                0b1011_1011,0b1101_1111,
-                0b0001_0001,0b0011_1111,
+                0b1011_1011,
+                0b0001_1111,
+                0b0011_0101,
+                0b1101_1111,
+                0b1011_1101,
+                0b1101_1111,
+                0b1011_1101,
+                0b1011_1111,
+                0b1011_1011,
+                0b1101_1111,
+                0b0001_0001,
+                0b0011_1111,
             ],
         };
         let raw: ImageRawBE<BinaryColor> = ImageRaw::new(&icon, 16);

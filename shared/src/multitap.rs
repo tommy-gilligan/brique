@@ -1,17 +1,13 @@
-use core::{ascii::Char, future::Future};
+use core::ascii::Char;
 
 use defmt::Format;
-use futures::{future, future::Either, pin_mut};
-use core::pin::Pin;
 use embassy_time::Timer;
-use crate::{Key, KeyEvent};
 
-#[derive(Debug, PartialEq, Format, Copy, Clone)]
-pub enum Case {
-    Upper,
-    Lower,
-    Number,
-}
+use crate::{Key, held_key::HeldKey};
+mod case;
+pub use case::*;
+mod pending;
+pub use pending::*;
 
 #[derive(Debug, PartialEq, Format, Copy, Clone)]
 pub enum Event {
@@ -20,171 +16,96 @@ pub enum Event {
     Case(Case),
 }
 
-pub struct MultiTap {
-    case: crate::multitap::Case,
-    down: Option<Key>,
-    timer: Option<Timer>,
-    prev_case: crate::multitap::Case,
+pub struct Last {
     last_down: Option<Key>,
     last_tentative: Option<Char>,
-    pending: Option<Event>,
-    timer: Option<Timer>,
 }
 
-impl Default for MultiTap {
-    fn default() -> Self {
-        Self::new()
+impl Last {
+    fn new() -> Self {
+        Self {
+            last_down: None,
+            last_tentative: None,
+        }
     }
+
+    fn clear(&mut self) {
+        self.last_down = None;
+        self.last_tentative = None;
+    }
+}
+
+pub struct MultiTap {
+    case_state: CaseState,
+    last: Last,
+    pending: Pending<Event>,
+    held_key: HeldKey,
+    timer: Option<Timer>,
+    duration: u64,
 }
 
 impl MultiTap {
-    pub fn new() -> Self {
+    pub fn new(duration: u64) -> Self {
+        let case_state = CaseState::new(Case::Lower);
+        let mut pending = Pending::new();
+        pending.enqueue(Event::Case(case_state.case()));
+
         Self {
-            case: Case::Lower,
-            down: None,
+            case_state,
+            last: Last::new(),
+            pending,
+            held_key: HeldKey::new(1500),
+            duration,
             timer: None,
-            prev_case: Case::Lower,
-            last_down: None,
-            last_tentative: None,
-            pending: None
         }
     }
 
-    pub fn case(&self) -> Case {
-        self.case
+    fn case(&self) -> Case {
+        self.case_state.case()
     }
 
-    pub fn enable_numeric_case(&mut self) {
-        self.prev_case = self.case;
-        self.case = Case::Number;
-    }
-
-    pub fn cycle_case(&mut self) {
-        self.case = match self.case {
-            Case::Number => {
-                match self.prev_case {
-                    Case::Upper => Case::Lower,
-                    Case::Lower => Case::Upper,
-                    Case::Number => Case::Upper,
-                }
-            },
-            Case::Upper => Case::Lower,
-            Case::Lower => Case::Upper,
+    fn key_to_char(&mut self, d: Key) -> Char {
+        match self.case() {
+            Case::Upper => d.clone().into(),
+            _ => lowercase(d.clone().into()),
         }
     }
 
-    fn set_key_down(&mut self, key: Key) {
-        self.timer = Some(embassy_time::Timer::after_millis(1500));
-        self.down = Some(key.clone());
-        self.last_down = Some(key.clone());
-    }
-
-    fn clear_key_down(&mut self) {
-        self.timer = None;
-        self.down = None;
-    }
-
-    fn clear_pending(&mut self) {
-        self.pending = None;
-    }
-
-    pub fn key_event(&mut self, e: KeyEvent) -> Option<Event> {
-        match e {
-            crate::KeyEvent::Up(_) => {
-                self.clear_key_down();
-                None
-            },
-            crate::KeyEvent::Down(Key::Hash) => {
-                self.set_key_down(Key::Hash);
-                self.cycle_case();
-                Some(Event::Case(self.case))
-            },
-            crate::KeyEvent::Down(Key::Cancel) => {
-                self.clear_key_down();
-                Some(Event::Decided(core::ascii::Char::Backspace))
-            }
-            crate::KeyEvent::Down(d) => {
-                if self.case == Case::Number {
-                    self.set_key_down(d.clone());
-                    Some(Event::Decided(digit(d)))
-                } else {
-                    match self.last_down.clone() {
-                        Some(p) if p == d => {
-                            self.set_key_down(d.clone());
-                            self.last_tentative = Some(next_char(self.last_tentative.unwrap()));
-                            Some(Event::Tentative(self.last_tentative.unwrap()))
-                        }
-                        Some(p) => {
-                            self.set_key_down(d.clone());
-                            let d: Char = match self.case {
-                                Case::Upper => d.clone().into(),
-                                _ => lowercase(d.clone().into())
-                            };
-                            let result = self.last_tentative.unwrap();
-                            self.last_tentative = Some(d);
-                            self.pending = Some(Event::Tentative(d));
-                            Some(Event::Decided(result))
-                        }
-                        None => {
-                            self.set_key_down(d.clone());
-                            let d: Char = match self.case {
-                                Case::Upper => d.clone().into(),
-                                _ => lowercase(d.clone().into())
-                            };
-                            self.last_tentative = Some(d.clone().into());
-                            Some(Event::Tentative(d.into()))
-                        }
-                    }
-                }
-            }
-            _ => None
-        }
-    }
-
-    pub fn timeout_event(&mut self) -> Option<Event> {
-        match self.down.clone() {
-            Some(Key::Hash) => {
-                self.enable_numeric_case();
-                self.clear_key_down();
-                Some(Event::Case(self.case))
-            }
-            Some(d) => {
-                self.clear_key_down();
-                self.clear_pending();
-                self.last_tentative = None;
-                self.last_down = None;
-                Some(Event::Decided(digit(d)))
-            }
-            None => {
-                let result = self.last_tentative.unwrap();
-                Some(Event::Decided(result))
-            }
-        }
-    }
-
-    pub async fn event<KEYPAD>(
-        &mut self,
-        keypad: &mut KEYPAD,
-    ) -> Option<Event> where KEYPAD: crate::Keypad, {
-        // if something has just been decided
-        // still emit the next tentative
-        if let Some(pending) = self.pending {
-            self.pending = None;
-            // self.last_emitted = Some(pending);
+    pub async fn event<KEYPAD>(&mut self, keypad: &mut KEYPAD) -> Option<Event>
+    where
+        KEYPAD: crate::Keypad,
+    {
+        if let Some(pending) = self.pending.dequeue() {
             return Some(pending);
         }
 
-        let event_future = keypad.event();
-        pin_mut!(event_future);
-
-        if let Some(timer) = &mut self.timer {
-            match future::select(timer, event_future).await {
-                Either::Left((..)) => self.timeout_event(),
-                Either::Right((e, _)) => self.key_event(e)
-                
+        match self.held_key.event(keypad).await {
+            Some(crate::held_key::Event::Down(Key::Hash)) => {
+                self.case_state.cycle_case();
+                Some(Event::Case(self.case()))
             }
-        } else {
-            self.key_event(event_future.await)
+            Some(crate::held_key::Event::Held(Key::Hash)) => {
+                self.case_state.enable_numeric_case();
+                Some(Event::Case(self.case()))
+            }
+            Some(crate::held_key::Event::Down(Key::Cancel)) => {
+                Some(Event::Decided(core::ascii::Char::Backspace))
+            }
+            Some(crate::held_key::Event::Held(Key::Cancel)) => None,
+
+            Some(crate::held_key::Event::Held(d)) => {
+                self.last.clear();
+                Some(Event::Decided(digit(d)))
+            }
+
+            Some(crate::held_key::Event::Down(d)) => {
+                if self.case() == Case::Number {
+                    Some(Event::Decided(digit(d)))
+                } else {
+                    None
+                }
+            }
+            None => None,
         }
     }
 }
