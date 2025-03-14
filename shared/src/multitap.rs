@@ -54,7 +54,7 @@ impl MultiTap {
             case_state,
             last: Last::new(),
             pending,
-            held_key: HeldKey::new(1500),
+            held_key: HeldKey::new(1500, 500),
             duration,
             timer: None,
         }
@@ -71,10 +71,7 @@ impl MultiTap {
         }
     }
 
-    pub async fn event<KEYPAD>(&mut self, keypad: &mut KEYPAD) -> Option<Event>
-    where
-        KEYPAD: crate::Keypad,
-    {
+    pub async fn event(&mut self, keypad: &mut impl crate::Keypad) -> Option<Event> {
         if let Some(pending) = self.pending.dequeue() {
             return Some(pending);
         }
@@ -84,16 +81,16 @@ impl MultiTap {
                 self.case_state.cycle_case();
                 Some(Event::Case(self.case()))
             }
-            Some(crate::held_key::Event::Held(Key::Hash)) => {
+            Some(crate::held_key::Event::Delay(Key::Hash)) => {
                 self.case_state.enable_numeric_case();
                 Some(Event::Case(self.case()))
             }
             Some(crate::held_key::Event::Down(Key::Cancel)) => {
                 Some(Event::Decided(core::ascii::Char::Backspace))
             }
-            Some(crate::held_key::Event::Held(Key::Cancel)) => None,
+            Some(crate::held_key::Event::Delay(Key::Cancel)) => None,
 
-            Some(crate::held_key::Event::Held(d)) => {
+            Some(crate::held_key::Event::Delay(d)) => {
                 self.last.clear();
                 Some(Event::Decided(digit(d)))
             }
@@ -105,7 +102,7 @@ impl MultiTap {
                     None
                 }
             }
-            None => None,
+            None | Some(crate::held_key::Event::Repeat(_)) => None,
         }
     }
 }

@@ -5,48 +5,52 @@ use crate::{Key, KeyEvent};
 
 pub enum Event {
     Down(Key),
-    Held(Key),
+    Delay(Key),
+    Repeat(Key),
 }
 
 pub struct HeldKey {
     down: Option<Key>,
     timer: Option<Timer>,
-    held_duration: u64,
+    delay_duration: u64,
+    repeat_period: u64,
+    repeating: bool,
 }
 
 impl HeldKey {
-    pub fn new(held_duration: u64) -> Self {
+    pub fn new(delay_duration: u64, repeat_period: u64) -> Self {
         Self {
             down: None,
             timer: None,
-            held_duration,
+            delay_duration,
+            repeat_period,
+            repeating: false,
         }
-    }
-
-    fn set_key_down(&mut self, key: Key) {
-        self.timer = Some(embassy_time::Timer::after_millis(self.held_duration));
-        self.down = Some(key.clone());
-    }
-
-    fn clear_key_down(&mut self) {
-        self.timer = None;
-        self.down = None;
     }
 
     fn timeout_event(&mut self) -> Option<Event> {
         let result = self.down.clone();
-        self.clear_key_down();
-        result.map(Event::Held)
+
+        if self.repeating {
+            self.timer = Some(embassy_time::Timer::after_millis(self.repeat_period));
+            result.map(Event::Repeat)
+        } else {
+            self.repeating = true;
+            result.map(Event::Delay)
+        }
     }
 
     fn key_event(&mut self, key_event: KeyEvent) -> Option<Event> {
         match key_event {
             KeyEvent::Down(key) => {
-                self.set_key_down(key.clone());
+                self.timer = Some(embassy_time::Timer::after_millis(self.delay_duration));
+                self.down = Some(key.clone());
                 Some(Event::Down(key))
             }
             KeyEvent::Up(key) => {
-                self.clear_key_down();
+                self.timer = None;
+                self.down = None;
+                self.repeating = false;
                 None
             }
         }

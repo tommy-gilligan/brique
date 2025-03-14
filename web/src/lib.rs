@@ -43,6 +43,38 @@ async fn main(_spawner: Spawner) {
         "Hardware Test",
         "Keyboard",
         "Reboot to USB",
+        // ",",
+        // ".",
+        // ":",
+        // ";",
+        // "!",
+        // "?",
+        // "#",
+        // "$",
+        // "\"",
+        // "'",
+        // "`",
+        // "%",
+        // "&",
+        // "@",
+        // "^",
+        // "|",
+        // "~",
+        // "+",
+        // "-",
+        // "_",
+        // "=",
+        // "*",
+        // "/",
+        // "\\",
+        // "(",
+        // ")",
+        // "<",
+        // ">",
+        // "[",
+        // "]",
+        // "{",
+        // "}",
     ];
     let console = document.get_element_by_id("console").unwrap();
     let mut handler = system_request_handler::Handler::new(console);
@@ -71,7 +103,7 @@ async fn main(_spawner: Spawner) {
                 }
             }
         }
-    }
+     }
 }
 
 use core::cell::RefCell;

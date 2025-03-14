@@ -7,12 +7,14 @@
 
 pub mod confirmation;
 pub mod console;
+pub mod grid_menu;
 pub mod held_key;
 pub mod lock_screen;
 pub mod menu;
 pub mod multitap;
 pub mod textbox;
 pub mod time;
+pub mod abstract_menu;
 
 use core::{ascii::Char, future::Future};
 
