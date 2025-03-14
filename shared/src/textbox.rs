@@ -1,4 +1,5 @@
 use core::{ascii::Char, fmt::Debug};
+use crate::multitap::Case;
 
 use embedded_graphics::{
     draw_target::DrawTarget,
@@ -10,19 +11,12 @@ use embedded_graphics::{
     text::renderer::TextRenderer,
 };
 
-pub enum Case {
-    Upper,
-    Lower,
-    Number,
-}
-
 pub struct Textbox<'a> {
     cursor: Point,
     multitap: crate::multitap::MultiTap,
     buffer: &'a mut [u8],
     index: usize,
     first_draw: bool,
-    case: Case,
 }
 
 impl<'a> Textbox<'a> {
@@ -39,7 +33,6 @@ impl<'a> Textbox<'a> {
             buffer,
             index: 0,
             first_draw: true,
-            case: Case::Lower,
         }
     }
 
@@ -49,12 +42,12 @@ impl<'a> Textbox<'a> {
             self.first_draw = false;
             device.clear(BinaryColor::On).unwrap();
             self.draw_border(device);
-            self.draw_case_icon(device);
+            self.draw_case_icon(device, self.multitap.case());
         }
 
         match self
             .multitap
-            .event(device, embassy_time::Timer::after_millis(1500), &self.case)
+            .event(device)
             .await
         {
             Some(crate::multitap::Event::Tentative(c)) => {
@@ -69,15 +62,13 @@ impl<'a> Textbox<'a> {
                 if c != Char::Backspace {
                     self.push(device, c.into());
                     return Some(c);
+                } else {
+                    self.backspace(device);
+                    return Some(c);
                 }
             }
-            Some(crate::multitap::Event::Case) => {
-                self.case = match self.case {
-                    Case::Upper => Case::Lower,
-                    Case::Lower => Case::Upper,
-                    _ => Case::Lower,
-                };
-                self.draw_case_icon(device);
+            Some(crate::multitap::Event::Case(c)) => {
+                self.draw_case_icon(device, c);
             }
             None => {}
         }
@@ -107,24 +98,18 @@ impl<'a> Textbox<'a> {
         image.draw(draw_target).unwrap();
     }
 
-    fn draw_case_icon<D: DrawTarget<Color = BinaryColor>>(&mut self, draw_target: &mut D)
+    fn draw_case_icon<D: DrawTarget<Color = BinaryColor>>(&mut self, draw_target: &mut D, c: crate::multitap::Case)
     where
         <D as DrawTarget>::Error: Debug,
     {
-        let icon = match self.case {
+        let icon = match c {
             Case::Upper => [
-                0b1000_1100,
-                0b0011_1000,
-                0b0010_0100,
-                0b1001_0011,
-                0b0010_0100,
-                0b0011_0011,
-                0b0000_0100,
-                0b1001_0011,
-                0b0010_0100,
-                0b1001_0011,
-                0b0010_0100,
-                0b0011_1000,
+                0b1000_1100, 0b0011_1000,
+                0b0010_0100, 0b1001_0011,
+                0b0010_0100, 0b0011_0011,
+                0b0000_0100, 0b1001_0011,
+                0b0010_0100, 0b1001_0011,
+                0b0010_0100, 0b0011_1000,
             ],
             Case::Lower => [
                 0b1111_1100,
@@ -141,18 +126,12 @@ impl<'a> Textbox<'a> {
                 0b0011_1000,
             ],
             Case::Number => [
-                0b1111_1100,
-                0b1111_1111,
-                0b1111_1100,
-                0b1111_1111,
-                0b1000_0100,
-                0b0011_1000,
-                0b0010_0100,
-                0b1001_0011,
-                0b0010_0100,
-                0b1001_0011,
-                0b1000_0100,
-                0b0011_1000,
+                0b1011_1011,0b0001_1111,
+                0b0011_0101,0b1101_1111,
+                0b1011_1101,0b1101_1111,
+                0b1011_1101,0b1011_1111,
+                0b1011_1011,0b1101_1111,
+                0b0001_0001,0b0011_1111,
             ],
         };
         let raw: ImageRawBE<BinaryColor> = ImageRaw::new(&icon, 16);

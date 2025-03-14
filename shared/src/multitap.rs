@@ -2,18 +2,33 @@ use core::{ascii::Char, future::Future};
 
 use defmt::Format;
 use futures::{future, future::Either, pin_mut};
+use core::pin::Pin;
+use embassy_time::Timer;
+use crate::{Key, KeyEvent};
+
+#[derive(Debug, PartialEq, Format, Copy, Clone)]
+pub enum Case {
+    Upper,
+    Lower,
+    Number,
+}
 
 #[derive(Debug, PartialEq, Format, Copy, Clone)]
 pub enum Event {
     Tentative(Char),
     Decided(Char),
-    Case,
+    Case(Case),
 }
 
 pub struct MultiTap {
-    last_press: Option<crate::Key>,
-    last_emitted: Option<Event>,
+    case: crate::multitap::Case,
+    down: Option<Key>,
+    timer: Option<Timer>,
+    prev_case: crate::multitap::Case,
+    last_down: Option<Key>,
+    last_tentative: Option<Char>,
     pending: Option<Event>,
+    timer: Option<Timer>,
 }
 
 impl Default for MultiTap {
@@ -25,151 +40,170 @@ impl Default for MultiTap {
 impl MultiTap {
     pub fn new() -> Self {
         Self {
-            last_press: None,
-            last_emitted: None,
-            pending: None,
+            case: Case::Lower,
+            down: None,
+            timer: None,
+            prev_case: Case::Lower,
+            last_down: None,
+            last_tentative: None,
+            pending: None
         }
     }
 
-    pub async fn accept(&mut self) {}
+    pub fn case(&self) -> Case {
+        self.case
+    }
 
-    pub async fn event<T, KEYPAD>(
+    pub fn enable_numeric_case(&mut self) {
+        self.prev_case = self.case;
+        self.case = Case::Number;
+    }
+
+    pub fn cycle_case(&mut self) {
+        self.case = match self.case {
+            Case::Number => {
+                match self.prev_case {
+                    Case::Upper => Case::Lower,
+                    Case::Lower => Case::Upper,
+                    Case::Number => Case::Upper,
+                }
+            },
+            Case::Upper => Case::Lower,
+            Case::Lower => Case::Upper,
+        }
+    }
+
+    fn set_key_down(&mut self, key: Key) {
+        self.timer = Some(embassy_time::Timer::after_millis(1500));
+        self.down = Some(key.clone());
+        self.last_down = Some(key.clone());
+    }
+
+    fn clear_key_down(&mut self) {
+        self.timer = None;
+        self.down = None;
+    }
+
+    fn clear_pending(&mut self) {
+        self.pending = None;
+    }
+
+    pub fn key_event(&mut self, e: KeyEvent) -> Option<Event> {
+        match e {
+            crate::KeyEvent::Up(_) => {
+                self.clear_key_down();
+                None
+            },
+            crate::KeyEvent::Down(Key::Hash) => {
+                self.set_key_down(Key::Hash);
+                self.cycle_case();
+                Some(Event::Case(self.case))
+            },
+            crate::KeyEvent::Down(Key::Cancel) => {
+                self.clear_key_down();
+                Some(Event::Decided(core::ascii::Char::Backspace))
+            }
+            crate::KeyEvent::Down(d) => {
+                if self.case == Case::Number {
+                    self.set_key_down(d.clone());
+                    Some(Event::Decided(digit(d)))
+                } else {
+                    match self.last_down.clone() {
+                        Some(p) if p == d => {
+                            self.set_key_down(d.clone());
+                            self.last_tentative = Some(next_char(self.last_tentative.unwrap()));
+                            Some(Event::Tentative(self.last_tentative.unwrap()))
+                        }
+                        Some(p) => {
+                            self.set_key_down(d.clone());
+                            let d: Char = match self.case {
+                                Case::Upper => d.clone().into(),
+                                _ => lowercase(d.clone().into())
+                            };
+                            let result = self.last_tentative.unwrap();
+                            self.last_tentative = Some(d);
+                            self.pending = Some(Event::Tentative(d));
+                            Some(Event::Decided(result))
+                        }
+                        None => {
+                            self.set_key_down(d.clone());
+                            let d: Char = match self.case {
+                                Case::Upper => d.clone().into(),
+                                _ => lowercase(d.clone().into())
+                            };
+                            self.last_tentative = Some(d.clone().into());
+                            Some(Event::Tentative(d.into()))
+                        }
+                    }
+                }
+            }
+            _ => None
+        }
+    }
+
+    pub fn timeout_event(&mut self) -> Option<Event> {
+        match self.down.clone() {
+            Some(Key::Hash) => {
+                self.enable_numeric_case();
+                self.clear_key_down();
+                Some(Event::Case(self.case))
+            }
+            Some(d) => {
+                self.clear_key_down();
+                self.clear_pending();
+                self.last_tentative = None;
+                self.last_down = None;
+                Some(Event::Decided(digit(d)))
+            }
+            None => {
+                let result = self.last_tentative.unwrap();
+                Some(Event::Decided(result))
+            }
+        }
+    }
+
+    pub async fn event<KEYPAD>(
         &mut self,
         keypad: &mut KEYPAD,
-        timeout_future: T,
-        case: &crate::textbox::Case,
-    ) -> Option<Event>
-    where
-        T: Future<Output = ()>,
-        KEYPAD: crate::Keypad,
-    {
+    ) -> Option<Event> where KEYPAD: crate::Keypad, {
         // if something has just been decided
         // still emit the next tentative
         if let Some(pending) = self.pending {
             self.pending = None;
-            self.last_emitted = Some(pending);
+            // self.last_emitted = Some(pending);
             return Some(pending);
         }
 
         let event_future = keypad.event();
         pin_mut!(event_future);
-        pin_mut!(timeout_future);
 
-        if self.last_press.is_some() {
-            match future::select(timeout_future, event_future).await {
-                Either::Left((..)) => {
-                    if let Some(Event::Tentative(e)) = self.last_emitted {
-                        self.last_emitted = None;
-                        self.last_press = None;
-
-                        return Some(Event::Decided(e));
-                    }
-                }
-                Either::Right((crate::KeyEvent::Down(crate::Key::Hash), _)) => {
-                    return Some(Event::Case);
-                }
-                Either::Right((crate::KeyEvent::Down(e), _)) => {
-                    if let Some(p) = &self.last_press
-                        && *p != e
-                    {
-                        if let Some(Event::Tentative(f)) = self.last_emitted {
-                            self.last_press = Some(e.clone());
-                            let e: Char = match case {
-                                crate::textbox::Case::Upper => e.clone().into(),
-                                _ => {
-                                    let c: Char = e.clone().into();
-                                    lowercase(c)
-                                }
-                            };
-                            self.last_emitted = Some(Event::Tentative(e));
-                            // TODO: panic if there is already a pending event
-                            self.pending = Some(Event::Tentative(e));
-
-                            return Some(Event::Decided(f));
-                        }
-                    } else {
-                        self.last_press = Some(e.clone());
-                        self.last_emitted = match self.last_emitted {
-                            Some(Event::Case) => Some(Event::Case),
-
-                            Some(Event::Tentative(c)) => Some(Event::Tentative(next_char(c))),
-                            Some(Event::Decided(_)) => None,
-                            None => match case {
-                                crate::textbox::Case::Upper => {
-                                    Some(Event::Tentative(e.clone().into()))
-                                }
-                                _ => {
-                                    let c: Char = e.clone().into();
-                                    Some(Event::Tentative(lowercase(c)))
-                                }
-                            },
-                        };
-
-                        return Some(self.last_emitted.unwrap());
-                    }
-                }
-                Either::Right((crate::KeyEvent::Up(_), _)) => {}
+        if let Some(timer) = &mut self.timer {
+            match future::select(timer, event_future).await {
+                Either::Left((..)) => self.timeout_event(),
+                Either::Right((e, _)) => self.key_event(e)
+                
             }
-        } else if let crate::KeyEvent::Down(e) = event_future.await {
-            match e {
-                crate::Key::Hash => {
-                    return Some(Event::Case);
-                }
-                _ => {
-                    if let Some(p) = &self.last_press
-                        && *p != e
-                    {
-                        if let Some(Event::Tentative(f)) = self.last_emitted {
-                            self.last_emitted = Some(Event::Tentative(e.clone().into()));
-                            self.last_press = Some(e.clone());
-                            // TODO: panic if there is already a pending event
-                            self.pending = Some(Event::Tentative(e.clone().into()));
-
-                            return Some(Event::Decided(f));
-                        }
-                    } else {
-                        self.last_press = Some(e.clone());
-                        self.last_emitted = match self.last_emitted {
-                            Some(Event::Case) => Some(Event::Case),
-
-                            Some(Event::Tentative(c)) => Some(Event::Tentative(next_char(c))),
-                            Some(Event::Decided(_)) => None,
-                            None => match case {
-                                crate::textbox::Case::Upper => {
-                                    Some(Event::Tentative(e.clone().into()))
-                                }
-                                _ => {
-                                    let c: Char = e.clone().into();
-                                    Some(Event::Tentative(lowercase(c)))
-                                }
-                            },
-                        };
-
-                        return Some(self.last_emitted.unwrap());
-                    }
-                }
-            }
+        } else {
+            self.key_event(event_future.await)
         }
-
-        None
     }
 }
 
-// fn digit(k: crate::Key) -> Char {
-//     match k {
-//         crate::Key::One => core::ascii::Char::Digit1,
-//         crate::Key::Two => core::ascii::Char::Digit2,
-//         crate::Key::Three => core::ascii::Char::Digit3,
-//         crate::Key::Four => core::ascii::Char::Digit4,
-//         crate::Key::Five => core::ascii::Char::Digit5,
-//         crate::Key::Six => core::ascii::Char::Digit6,
-//         crate::Key::Seven => core::ascii::Char::Digit7,
-//         crate::Key::Eight => core::ascii::Char::Digit8,
-//         crate::Key::Nine => core::ascii::Char::Digit9,
-//         crate::Key::Zero => core::ascii::Char::Digit0,
-//         _ => core::ascii::Char::Digit0,
-//     }
-// }
+fn digit(k: crate::Key) -> Char {
+    match k {
+        crate::Key::One => core::ascii::Char::Digit1,
+        crate::Key::Two => core::ascii::Char::Digit2,
+        crate::Key::Three => core::ascii::Char::Digit3,
+        crate::Key::Four => core::ascii::Char::Digit4,
+        crate::Key::Five => core::ascii::Char::Digit5,
+        crate::Key::Six => core::ascii::Char::Digit6,
+        crate::Key::Seven => core::ascii::Char::Digit7,
+        crate::Key::Eight => core::ascii::Char::Digit8,
+        crate::Key::Nine => core::ascii::Char::Digit9,
+        crate::Key::Zero => core::ascii::Char::Digit0,
+        _ => core::ascii::Char::Digit0,
+    }
+}
 
 fn lowercase(c: Char) -> Char {
     match c {
