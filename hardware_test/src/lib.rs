@@ -1,4 +1,5 @@
 #![feature(let_chains)]
+#![feature(ascii_char)]
 #![no_std]
 
 use enum_iterator::Sequence;
@@ -14,6 +15,8 @@ mod backlight;
 use backlight::*;
 mod cdc;
 use cdc::*;
+mod hid;
+use hid::*;
 
 #[derive(Clone, PartialEq)]
 pub enum Status {
@@ -29,6 +32,7 @@ enum Test<'a> {
     Buzzer(BuzzerTest<'a>),
     Backlight(BacklightTest<'a>),
     Cdc(CdcTest<'a>),
+    Hid(HidTest<'a>),
 }
 
 pub struct HardwareTest<'a>(Status, shared::console::Console<'a>, Test<'a>);
@@ -38,7 +42,7 @@ impl HardwareTest<'_> {
         Self(
             test,
             shared::console::Console::new(),
-            Test::Keypad(Default::default()),
+            Test::Hid(Default::default()),
         )
     }
 
@@ -57,6 +61,9 @@ impl HardwareTest<'_> {
                 self.2 = Test::Cdc(Default::default());
             }
             Test::Cdc(_) => {
+                self.2 = Test::Hid(Default::default());
+            }
+            Test::Hid(_) => {
                 self.2 = Test::Keypad(Default::default());
             }
         }
@@ -81,34 +88,34 @@ impl Application for HardwareTest<'_> {
                     Status::Passed => {
                         self.next();
                         None
-                    },
+                    }
                     Status::Failed => {
                         self.0 = Status::Failed;
                         None
                     }
-                    _ => { None }
+                    _ => None,
                 },
                 Test::Vibration(ref mut test) => match test.run(device, system_response).await {
                     Status::Passed => {
                         self.next();
                         None
-                    },
+                    }
                     Status::Failed => {
                         self.0 = Status::Failed;
                         None
                     }
-                    _ => { None }
+                    _ => None,
                 },
                 Test::Buzzer(ref mut test) => match test.run(device, system_response).await {
                     Status::Passed => {
                         self.next();
                         None
-                    },
+                    }
                     Status::Failed => {
                         self.0 = Status::Failed;
                         None
                     }
-                    _ => { None }
+                    _ => None,
                 },
                 Test::Backlight(ref mut test) => match test.run(device, system_response).await {
                     Status::Passed => {
@@ -119,9 +126,20 @@ impl Application for HardwareTest<'_> {
                         self.0 = Status::Failed;
                         None
                     }
-                    _ => { None }
+                    _ => None,
                 },
                 Test::Cdc(ref mut test) => match test.run(device, system_response).await {
+                    Status::Passed => {
+                        self.next();
+                        None
+                    }
+                    Status::Failed => {
+                        self.0 = Status::Failed;
+                        None
+                    }
+                    Status::InProgress(system_request) => system_request,
+                },
+                Test::Hid(ref mut test) => match test.run(device, system_response).await {
                     Status::Passed => {
                         self.0 = Status::Passed;
                         None
@@ -130,7 +148,7 @@ impl Application for HardwareTest<'_> {
                         self.0 = Status::Failed;
                         None
                     }
-                    Status::InProgress(system_request) => { system_request }
+                    Status::InProgress(system_request) => system_request,
                 },
             },
             Status::Passed => {
@@ -141,7 +159,6 @@ impl Application for HardwareTest<'_> {
                 self.1.draw(device, "Failed");
                 None
             }
-            Status::InProgress(system_request) => system_request
         }
     }
 }

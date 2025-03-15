@@ -6,7 +6,6 @@ use embedded_graphics::{
     text::{Alignment, Text},
 };
 
-use super::Keypad;
 use crate::held_key::HeldKey;
 
 const ROW_LENGTH: usize = 8;

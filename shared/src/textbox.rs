@@ -219,11 +219,11 @@ impl<'a> Textbox<'a> {
             .draw(draw_target)
             .unwrap();
 
-        if let Ok(_) = renderer.draw_string(
+        let _ = renderer.draw_string(
             character.encode_utf8(&mut b),
             self.cursor,
             embedded_graphics::text::Baseline::Top,
             draw_target,
-        ) {}
+        );
     }
 }

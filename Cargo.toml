@@ -1,12 +1,10 @@
 [workspace]
 resolver = "2"
-members = ["ringtones", "rp", "shared", "web", "clock", "hardware_test", "keyboard", "reset_to_boot"]
+members = ["main_menu", "ringtones", "rp", "shared", "web", "clock", "hardware_test", "keyboard", "reset_to_boot"]
 
 [workspace.dependencies]
-# multi-tap = { path = "./multi-tap" }
 pcd8544 = { path = "./pcd8544" }
 # rtttl = { path = "./rtttl" }
-# app = { path = "./app" }
 
 embassy-embedded-hal = { version = "*", git = "https://github.com/embassy-rs/embassy.git", features = ["defmt"] }
 embassy-executor = { git = "https://github.com/embassy-rs/embassy.git", features = ["executor-thread", "integrated-timers"] }

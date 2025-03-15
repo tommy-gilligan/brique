@@ -2,7 +2,7 @@ use embedded_graphics::{
     Drawable,
     mono_font::{MonoTextStyle, ascii::FONT_6X10},
     pixelcolor::BinaryColor,
-    prelude::{DrawTarget, Point, Primitive, Size},
+    prelude::{Point, Primitive, Size},
     primitives::{PrimitiveStyle, Rectangle},
     text::{Alignment, Text},
 };
@@ -84,7 +84,7 @@ impl Confirmation {
             KeyEvent::Down(crate::Key::Select) => {
                 self.4 = Some(self.3);
                 self.4
-            },
+            }
             _ => None,
         }
     }

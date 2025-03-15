@@ -47,7 +47,7 @@ impl HeldKey {
                 self.down = Some(key.clone());
                 Some(Event::Down(key))
             }
-            KeyEvent::Up(key) => {
+            KeyEvent::Up(_key) => {
                 self.timer = None;
                 self.down = None;
                 self.repeating = false;

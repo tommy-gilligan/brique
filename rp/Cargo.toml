@@ -10,6 +10,7 @@ license = "MIT OR Apache-2.0"
 pcd8544 = { workspace = true }
 # app = { workspace = true }
 
+main-menu = { path = "../main_menu" }
 embedded-hal = { workspace = true }
 embedded-hal-async = { workspace = true }
 defmt = { workspace = true }
@@ -43,6 +44,7 @@ clock = { path = "../clock" }
 reset-to-boot = { path = "../reset_to_boot" }
 hardware-test = { path = "../hardware_test" }
 keyboard = { path = "../keyboard" }
+ringtones = { path = "../ringtones" }
 log = "0.4"
 assign-resources = { git = "https://github.com/adamgreig/assign-resources", rev = "94ad10e2729afdf0fd5a77cd12e68409a982f58a" }
 

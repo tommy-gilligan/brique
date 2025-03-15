@@ -19,7 +19,7 @@ impl Default for ResetToBoot {
 impl Application for ResetToBoot {
     async fn run(
         &mut self,
-        device: &mut impl shared::Device,
+        _device: &mut impl shared::Device,
         _system_response: Option<[u8; 64]>,
     ) -> Option<shared::SystemRequest> {
         None

@@ -1,3 +1,4 @@
+#![expect(dead_code)]
 use core::ascii::Char;
 
 use defmt::Format;

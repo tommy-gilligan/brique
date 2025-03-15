@@ -832,13 +832,16 @@ dependencies = [
  "embedded-graphics",
  "embedded-graphics-web-simulator",
  "hardware-test",
+ "hidreport",
  "js-sys",
  "keyboard",
  "log",
+ "main-menu",
  "reset-to-boot",
  "ringtones",
  "shared",
  "ssmarshal",
+ "usbd-hid",
  "wasm-bindgen",
  "wasm-logger",
  "web-sys",
@@ -1344,6 +1347,7 @@ dependencies = [
  "embedded-text",
  "enum-iterator",
  "shared",
+ "usbd-hid",
 ]
 
 [[package]]
@@ -1435,12 +1439,31 @@ dependencies = [
 ]
 
 [[package]]
+name = "hidreport"
+version = "0.5.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c2ea658c147ab3cf36313b696b49b7a58cc436ff3d9e6b48243d31cc19580647"
+dependencies = [
+ "hut",
+ "thiserror 1.0.69",
+]
+
+[[package]]
 name = "home"
 version = "0.5.11"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "589533453244b0995c858700322199b2becb13b627df2851f64a2775d024abcf"
 dependencies = [
  "windows-sys 0.59.0",
+]
+
+[[package]]
+name = "hut"
+version = "0.3.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "4a6847b91daf99e3afce87a66f4c8e371776f4567e4e3f9ef48705baaca09795"
+dependencies = [
+ "thiserror 1.0.69",
 ]
 
 [[package]]
@@ -1683,6 +1706,20 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "19b955cdeb2a02b9117f121ce63aa52d08ade45de53e48fe6a38b39c10f6f709"
 dependencies = [
  "libc",
+]
+
+[[package]]
+name = "main-menu"
+version = "0.1.0"
+dependencies = [
+ "clock",
+ "embassy-time",
+ "embedded-graphics",
+ "hardware-test",
+ "keyboard",
+ "reset-to-boot",
+ "ringtones",
+ "shared",
 ]
 
 [[package]]
@@ -2357,9 +2394,11 @@ dependencies = [
  "heapless 0.8.0",
  "keyboard",
  "log",
+ "main-menu",
  "panic-probe",
  "pcd8544",
  "reset-to-boot",
+ "ringtones",
  "shared",
  "static_cell",
  "unofficial-piicodev",

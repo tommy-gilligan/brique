@@ -7,5 +7,5 @@ edition = "2024"
 embassy-time = { workspace = true }
 embedded-graphics = "0.8"
 shared = { path = "../shared" }
-ssmarshal = "1.0.0"
+ssmarshal = { version = "1.0.0", default-features = false }
 usbd-hid.workspace = true

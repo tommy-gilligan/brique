@@ -43,6 +43,7 @@ pub struct Device {
 }
 
 impl Device {
+    #[allow(clippy::too_many_arguments)]
     pub fn new(
         backlight_element: Element,
         buzzer_element: Element,

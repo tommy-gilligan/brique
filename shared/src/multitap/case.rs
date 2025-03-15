@@ -13,8 +13,8 @@ pub struct CaseState {
 impl CaseState {
     pub fn new(case: Case) -> Self {
         Self {
-            case: Case::Lower,
-            prev_case: Case::Lower,
+            case,
+            prev_case: case,
         }
     }
 
