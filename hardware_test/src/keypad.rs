@@ -21,18 +21,21 @@ impl Default for KeypadTest<'_> {
 impl KeypadTest<'_> {
     pub async fn run(&mut self, device: &mut impl shared::Device, system_response: Option<[u8; 64]>) -> Status {
         self.1.draw(device, self.0.clone().into());
-        if let KeyEvent::Down(key) = device.event().await
-            && key == self.0
-        {
-            if self.0 == last::<Key>().unwrap() {
-                return Status::Passed;
-            } else {
-                self.0 = next(&self.0).unwrap();
+        match device.event().await {
+            KeyEvent::Down(key) if key == self.0 => {
+                if self.0 == last::<Key>().unwrap() {
+                    return Status::Passed;
+                } else {
+                    self.0 = next(&self.0).unwrap();
+                }
+                Status::InProgress(None)
             }
-        } else {
-            return Status::Failed;
+            KeyEvent::Down(key) => {
+                Status::Failed
+            }
+            _ => {
+                Status::InProgress(None)
+            }
         }
-
-        Status::InProgress(None)
     }
 }

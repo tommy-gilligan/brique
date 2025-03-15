@@ -12,12 +12,14 @@ mod buzzer;
 use buzzer::*;
 mod backlight;
 use backlight::*;
+mod cdc;
+use cdc::*;
 
 #[derive(Clone, PartialEq)]
 pub enum Status {
     Passed,
     Failed,
-    InProgress,
+    InProgress(Option<shared::SystemRequest>),
 }
 
 #[derive(Clone, Sequence, PartialEq)]
@@ -26,6 +28,7 @@ enum Test<'a> {
     Vibration(VibrationTest<'a>),
     Buzzer(BuzzerTest<'a>),
     Backlight(BacklightTest<'a>),
+    Cdc(CdcTest<'a>),
 }
 
 pub struct HardwareTest<'a>(Status, shared::console::Console<'a>, Test<'a>);
@@ -51,6 +54,9 @@ impl HardwareTest<'_> {
                 self.2 = Test::Backlight(Default::default());
             }
             Test::Backlight(_) => {
+                self.2 = Test::Cdc(Default::default());
+            }
+            Test::Cdc(_) => {
                 self.2 = Test::Keypad(Default::default());
             }
         }
@@ -59,7 +65,7 @@ impl HardwareTest<'_> {
 
 impl Default for HardwareTest<'_> {
     fn default() -> Self {
-        Self::new(Status::InProgress)
+        Self::new(Status::InProgress(None))
     }
 }
 
@@ -67,49 +73,75 @@ impl Application for HardwareTest<'_> {
     async fn run(
         &mut self,
         device: &mut impl shared::Device,
-        _system_response: Option<[u8; 64]>,
+        system_response: Option<[u8; 64]>,
     ) -> Option<shared::SystemRequest> {
-        match self.0 {
-            Status::InProgress => match self.2 {
-                Test::Keypad(ref mut test) => match test.run(device).await {
-                    Status::Passed => self.next(),
+        match self.0.clone() {
+            Status::InProgress(_) => match self.2 {
+                Test::Keypad(ref mut test) => match test.run(device, system_response).await {
+                    Status::Passed => {
+                        self.next();
+                        None
+                    },
                     Status::Failed => {
                         self.0 = Status::Failed;
+                        None
                     }
-                    _ => {}
+                    _ => { None }
                 },
-                Test::Vibration(ref mut test) => match test.run(device).await {
-                    Status::Passed => self.next(),
+                Test::Vibration(ref mut test) => match test.run(device, system_response).await {
+                    Status::Passed => {
+                        self.next();
+                        None
+                    },
                     Status::Failed => {
                         self.0 = Status::Failed;
+                        None
                     }
-                    _ => {}
+                    _ => { None }
                 },
-                Test::Buzzer(ref mut test) => match test.run(device).await {
-                    Status::Passed => self.next(),
+                Test::Buzzer(ref mut test) => match test.run(device, system_response).await {
+                    Status::Passed => {
+                        self.next();
+                        None
+                    },
                     Status::Failed => {
                         self.0 = Status::Failed;
+                        None
                     }
-                    _ => {}
+                    _ => { None }
                 },
-                Test::Backlight(ref mut test) => match test.run(device).await {
+                Test::Backlight(ref mut test) => match test.run(device, system_response).await {
+                    Status::Passed => {
+                        self.next();
+                        None
+                    }
+                    Status::Failed => {
+                        self.0 = Status::Failed;
+                        None
+                    }
+                    _ => { None }
+                },
+                Test::Cdc(ref mut test) => match test.run(device, system_response).await {
                     Status::Passed => {
                         self.0 = Status::Passed;
+                        None
                     }
                     Status::Failed => {
                         self.0 = Status::Failed;
+                        None
                     }
-                    _ => {}
+                    Status::InProgress(system_request) => { system_request }
                 },
             },
             Status::Passed => {
                 self.1.draw(device, "Passed");
+                None
             }
             Status::Failed => {
                 self.1.draw(device, "Failed");
+                None
             }
+            Status::InProgress(system_request) => system_request
         }
-
-        None
     }
 }
