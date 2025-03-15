@@ -27,11 +27,11 @@ impl Default for BuzzerTest<'_> {
 }
 
 impl BuzzerTest<'_> {
-    pub async fn run(&mut self, device: &mut impl shared::Device) -> Status {
+    pub async fn run(&mut self, device: &mut impl shared::Device, system_response: Option<[u8; 64]>) -> Status {
         device.unmute();
         device.set_frequency(440);
         match self.1.run(device).await {
-            None => Status::InProgress,
+            None => Status::InProgress(None),
             Some(true) => {
                 device.mute();
                 Status::Passed

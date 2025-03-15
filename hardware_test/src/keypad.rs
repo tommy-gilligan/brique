@@ -19,7 +19,7 @@ impl Default for KeypadTest<'_> {
 }
 
 impl KeypadTest<'_> {
-    pub async fn run(&mut self, device: &mut impl shared::Device) -> Status {
+    pub async fn run(&mut self, device: &mut impl shared::Device, system_response: Option<[u8; 64]>) -> Status {
         self.1.draw(device, self.0.clone().into());
         if let KeyEvent::Down(key) = device.event().await
             && key == self.0
@@ -33,6 +33,6 @@ impl KeypadTest<'_> {
             return Status::Failed;
         }
 
-        Status::InProgress
+        Status::InProgress(None)
     }
 }

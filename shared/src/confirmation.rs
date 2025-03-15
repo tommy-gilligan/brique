@@ -15,7 +15,7 @@ use embedded_text::{
 use crate::KeyEvent;
 
 #[derive(Clone, PartialEq)]
-pub struct Confirmation(&'static str, &'static str, &'static str, bool);
+pub struct Confirmation(&'static str, &'static str, &'static str, bool, Option<bool>);
 
 impl Confirmation {
     pub fn new(
@@ -24,10 +24,13 @@ impl Confirmation {
         r#false: &'static str,
         selected: bool,
     ) -> Self {
-        Self(message, r#true, r#false, selected)
+        Self(message, r#true, r#false, selected, None)
     }
 
     pub async fn run(&mut self, device: &mut impl crate::Device) -> Option<bool> {
+        if let Some(result) = self.4 {
+            return Some(result);
+        }
         let _ = device.clear(BinaryColor::On);
 
         let fill = PrimitiveStyle::with_fill(BinaryColor::Off);
@@ -78,7 +81,10 @@ impl Confirmation {
                 self.3 = !self.3;
                 None
             }
-            KeyEvent::Down(crate::Key::Select) => Some(self.3),
+            KeyEvent::Down(crate::Key::Select) => {
+                self.4 = Some(self.3);
+                self.4
+            },
             _ => None,
         }
     }

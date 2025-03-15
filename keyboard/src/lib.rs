@@ -108,6 +108,6 @@ impl Application for Keyboard<'_> {
         self.0
             .process(device)
             .await
-            .map(|c| shared::SystemRequest::UsbTx(shared::UsbTx::HidChar(build_report(c))))
+            .map(|c| shared::SystemRequest::UsbTx(shared::UsbTx::CdcBuffer([69; 64])))
     }
 }

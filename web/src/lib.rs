@@ -4,6 +4,49 @@ mod power;
 mod system_request_handler;
 
 use embassy_executor::Spawner;
+use web_sys::Element;
+
+pub struct CdcSend {
+    rx: Rc<RefCell<Option<[u8; 64]>>>
+}
+
+impl CdcSend {
+    fn new(element: Element) -> Self {
+        let rx = Rc::new(RefCell::new(None));
+        let l = rx.clone();
+        let change_closure =
+            Closure::<dyn FnMut(_)>::new(move |event: web_sys::Event| {
+                let input = event.target().unwrap()
+                    .dyn_into::<web_sys::HtmlInputElement>()
+                    .unwrap();
+                let mut buffer: [u8; 64] = [0; 64];
+                for (a, b) in buffer.iter_mut().zip(input.value().as_bytes()) {
+                    *a = *b;
+                }
+                input.set_value("");
+
+                *(*l).borrow_mut() = Some(buffer);
+            });
+
+        element
+            .add_event_listener_with_callback(
+                "change",
+                change_closure.as_ref().unchecked_ref(),
+            )
+            .unwrap();
+
+        change_closure.forget();
+
+        Self { rx }
+    }
+}
+
+impl shared::SystemResponse for CdcSend {
+    fn take(&mut self) -> Option<[u8; 64]> {
+        let l = self.rx.clone();
+        (*l).borrow_mut().take()
+    }
+}
 
 #[embassy_executor::main]
 async fn main(_spawner: Spawner) {
@@ -76,8 +119,11 @@ async fn main(_spawner: Spawner) {
         // "{",
         // "}",
     ];
-    let console = document.get_element_by_id("console").unwrap();
-    let mut handler = system_request_handler::Handler::new(console);
+    let hid_console = document.get_element_by_id("hid-console").unwrap();
+    let cdc_console = document.get_element_by_id("cdc-console").unwrap();
+    let mut handler = system_request_handler::Handler::new(hid_console, cdc_console);
+
+    let mut cdc_send = CdcSend::new(document.get_element_by_id("cdc-console-rx").unwrap());
 
     let mut lock_screen = shared::lock_screen::LockScreen::new(&items);
     loop {
@@ -86,20 +132,29 @@ async fn main(_spawner: Spawner) {
                 0 => {
                     let mut buffer: [u8; 1024] = [0; 1024];
                     let ringtones = ringtones::Ringtones::new(&mut device, &mut buffer);
-                    shared::run_app(ringtones, &mut device, &mut power, None, &mut handler).await
+
+                    shared::run_app(ringtones, &mut device, &mut power, &mut cdc_send, &mut handler).await
                 }
                 1 => {
                     let clock = clock::Clock;
-                    shared::run_app(clock, &mut device, &mut power, None, &mut handler).await
+
+                    shared::run_app(clock, &mut device, &mut power, &mut cdc_send, &mut handler).await
+                }
+                2 => {
+                    let hardware_test = hardware_test::HardwareTest::default();
+
+                    shared::run_app(hardware_test, &mut device, &mut power, &mut cdc_send, &mut handler).await
                 }
                 3 => {
                     let mut buffer: [u8; 1024] = [0; 1024];
                     let keyboard = keyboard::Keyboard::new(&mut device, &mut buffer);
-                    shared::run_app(keyboard, &mut device, &mut power, None, &mut handler).await
+
+                    shared::run_app(keyboard, &mut device, &mut power, &mut cdc_send, &mut handler).await
                 }
                 _ => {
                     let reset = reset_to_boot::ResetToBoot;
-                    shared::run_app(reset, &mut device, &mut power, None, &mut handler).await
+
+                    shared::run_app(reset, &mut device, &mut power, &mut cdc_send, &mut handler).await
                 }
             }
         }
@@ -122,8 +177,7 @@ pub enum Event {
     Down,
 }
 
-impl DomB {
-    #[allow(clippy::too_many_arguments)]
+impl DomB { #[allow(clippy::too_many_arguments)]
     fn new(id: &'static str) -> Rc<RefCell<Self>> {
         let window = web_sys::window().expect("no global `window` exists");
         let document = window.document().expect("should have a document on window");

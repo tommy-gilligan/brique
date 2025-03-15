@@ -23,6 +23,10 @@ use embedded_graphics_core::{draw_target::DrawTarget, pixelcolor::BinaryColor};
 use enum_iterator::Sequence;
 use strum_macros::IntoStaticStr;
 
+pub trait SystemResponse {
+    fn take(&mut self) -> Option<[u8; 64]>;
+}
+
 pub trait Backlight {
     fn on(&mut self);
     fn off(&mut self);
@@ -119,11 +123,13 @@ pub trait Application {
 }
 
 pub type UsbRx = [u8; 64];
+#[derive(Clone, PartialEq)]
 pub enum UsbTx {
     CdcBuffer([u8; 64]),
     HidChar(usbd_hid::descriptor::KeyboardReport),
 }
 
+#[derive(Clone, PartialEq)]
 pub enum SystemRequest {
     UsbTx(UsbTx),
     ResetToBoot,
@@ -153,7 +159,7 @@ pub async fn run_app(
     device: &mut impl Device,
     power: &mut impl PowerButton,
     // just usb rx for now
-    system_response: Option<[u8; 64]>,
+    system_response: &mut impl SystemResponse,
     system_request_handler: &mut impl SystemRequestHandler,
 ) {
     let fill = PrimitiveStyle::with_fill(BinaryColor::On);
@@ -168,14 +174,12 @@ pub async fn run_app(
     loop {
         match embassy_time::with_timeout(
             embassy_time::Duration::from_millis(2000),
-            app.run(device, system_response),
+            app.run(device, system_response.take()),
         )
         .await
         {
             Ok(None) => {}
-            Ok(Some(e)) => {
-                system_request_handler.handle_request(e).await;
-            }
+            Ok(Some(e)) => { system_request_handler.handle_request(e).await; }
             Err(embassy_time::TimeoutError) => {
                 log::info!("timed out");
             }
