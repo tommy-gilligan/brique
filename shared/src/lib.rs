@@ -8,6 +8,7 @@
 pub mod abstract_menu;
 pub mod confirmation;
 pub mod console;
+pub mod grid;
 pub mod grid_menu;
 pub mod held_key;
 pub mod lock_screen;
