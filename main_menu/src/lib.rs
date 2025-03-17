@@ -11,6 +11,7 @@ pub async fn main_menu(
         "Clock",
         "Hardware Test",
         "Keyboard",
+        "Snake",
         "Reboot to USB",
     ];
     let mut lock_screen = shared::lock_screen::LockScreen::new(&items);
@@ -60,6 +61,12 @@ pub async fn main_menu(
                         &mut handler,
                     )
                     .await
+                }
+                4 => {
+                    let snake = snake::Snake::new(0);
+
+                    shared::run_app(snake, &mut device, &mut power, &mut cdc_send, &mut handler)
+                        .await
                 }
                 _ => {
                     let reset = reset_to_boot::ResetToBoot;

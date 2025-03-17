@@ -27,8 +27,8 @@ impl Application for Ringtones<'_> {
         &mut self,
         device: &mut impl shared::Device,
         _system_response: Option<[u8; 64]>,
-    ) -> Option<shared::SystemRequest> {
+    ) -> Result<Option<shared::SystemRequest>, ()> {
         self.0.process(device).await;
-        None
+        Ok(None)
     }
 }

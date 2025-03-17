@@ -39,7 +39,7 @@ impl<'a> Display<'a> {
         thirty_seven: PIN_37,
         thirty_six: PIN_36,
         thirty_three: PIN_33,
-    ) -> Self {
+    ) -> Result<Self, display_interface::DisplayError> {
         let mut display_config = spi::Config::default();
         display_config.frequency = 4_000_000;
 
@@ -58,12 +58,12 @@ impl<'a> Display<'a> {
             Output::new(thirty_three, Level::High),
         );
 
-        pcd8544.init(&mut Delay).unwrap();
-        pcd8544.set_contrast(64).unwrap();
-        pcd8544.invert_display(true).unwrap();
+        pcd8544.init(&mut Delay)?;
+        pcd8544.set_contrast(64)?;
+        pcd8544.invert_display(true)?;
         pcd8544.clear(BinaryColor::Off).unwrap();
 
-        Self(pcd8544)
+        Ok(Self(pcd8544))
     }
 }
 

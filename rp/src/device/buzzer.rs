@@ -3,6 +3,7 @@ use embassy_rp::{
     pwm::{Config, Pwm, SetDutyCycle},
 };
 use shared::Buzzer;
+use embassy_rp::pwm::PwmError;
 
 pub struct Beeper<'a>(Pwm<'a>, u16);
 
@@ -11,10 +12,10 @@ impl Beeper<'_> {
         Self(Pwm::new_output_b(slice, pin, Config::default()), 0)
     }
 
-    fn update(&mut self) {
+    fn update(&mut self) -> Result<(), PwmError> {
         let mut c: embassy_rp::pwm::Config = Default::default();
         if self.1 == 0 {
-            self.0.set_duty_cycle_percent(0).unwrap();
+            self.0.set_duty_cycle_percent(0)
         } else {
             let divider = 16u8;
             let period =
@@ -24,26 +25,28 @@ impl Beeper<'_> {
             c.divider = divider.into();
 
             self.0.set_config(&c);
-            self.0.set_duty_cycle_percent(90).unwrap();
+            self.0.set_duty_cycle_percent(90)
         }
     }
 }
 
 impl Buzzer for Beeper<'_> {
-    fn mute(&mut self) {
-        self.0.set_duty_cycle_percent(0).unwrap();
+    type Error = PwmError;
+
+    fn mute(&mut self) -> Result<(), Self::Error> {
+        self.0.set_duty_cycle_percent(0)
     }
 
-    fn unmute(&mut self) {
-        self.0.set_duty_cycle_percent(90).unwrap();
+    fn unmute(&mut self) -> Result<(), Self::Error> {
+        self.0.set_duty_cycle_percent(90)
     }
 
     fn set_volume(&mut self, _volume: u8) {
         // self.0.set_duty_cycle_percent(volume).unwrap();
     }
 
-    fn set_frequency(&mut self, frequency: u16) {
+    fn set_frequency(&mut self, frequency: u16) -> Result<(), Self::Error> {
         self.1 = frequency;
-        self.update();
+        self.update()
     }
 }

@@ -1,5 +1,5 @@
 use core::cell::RefCell;
-
+use embassy_rp::pwm::PwmError;
 use embassy_rp::peripherals::{
     PIN_2, PIN_4, PIN_5, PIN_6, PIN_7, PIN_8, PIN_9, PIN_10, PIN_11, PIN_12, PIN_13, PIN_14,
     PIN_15, PIN_16, PIN_17, PIN_18, PIN_19, PIN_20, PIN_21, PIN_33, PIN_36, PIN_37, PWM_SLICE2,
@@ -58,17 +58,19 @@ impl<'a> Device<'a> {
             NoopRawMutex,
             RefCell<embassy_rp::spi::Spi<'a, SPI0, embassy_rp::spi::Blocking>>,
         >,
-    ) -> Self {
-        Self {
-            keypad: keypad::ContactKeypad::new(
-                pin_16, pin_12, pin_9, pin_8, pin_17, pin_13, pin_7, pin_18, pin_14, pin_6, pin_19,
-                pin_11, pin_5, pin_20, pin_10, pin_4,
-            ),
-            backlight: backlight::Light::new(pin_15),
-            vibration_motor: vibration_motor::Motor::new(pin_2),
-            buzzer: buzzer::Beeper::new(pwm_slice2, pin_21),
-            display: display::Display::new(spi_bus, pin_37, pin_36, pin_33),
-        }
+    ) -> Result<Self, display_interface::DisplayError> {
+        Ok(
+            Self {
+                keypad: keypad::ContactKeypad::new(
+                    pin_16, pin_12, pin_9, pin_8, pin_17, pin_13, pin_7, pin_18, pin_14, pin_6, pin_19,
+                    pin_11, pin_5, pin_20, pin_10, pin_4,
+                ),
+                backlight: backlight::Light::new(pin_15),
+                vibration_motor: vibration_motor::Motor::new(pin_2),
+                buzzer: buzzer::Beeper::new(pwm_slice2, pin_21),
+                display: display::Display::new(spi_bus, pin_37, pin_36, pin_33)?,
+            }
+        )
     }
 }
 
@@ -86,20 +88,22 @@ impl Backlight for Device<'_> {
 }
 
 impl Buzzer for Device<'_> {
-    fn mute(&mut self) {
-        self.buzzer.mute();
+    type Error = PwmError;
+
+    fn mute(&mut self) -> Result<(), Self::Error> {
+        self.buzzer.mute()
     }
 
-    fn unmute(&mut self) {
-        self.buzzer.unmute();
+    fn unmute(&mut self) -> Result<(), Self::Error> {
+        self.buzzer.unmute()
     }
 
     fn set_volume(&mut self, volume: u8) {
         self.buzzer.set_volume(volume);
     }
 
-    fn set_frequency(&mut self, frequency: u16) {
-        self.buzzer.set_frequency(frequency);
+    fn set_frequency(&mut self, frequency: u16) -> Result<(), Self::Error> {
+        self.buzzer.set_frequency(frequency)
     }
 }
 
@@ -154,7 +158,9 @@ impl shared::SystemResponse for CdcSend {
 }
 
 impl Rtc for Device<'_> {
-    fn timestamp(&mut self) -> i64 {
-        0
+    type Error = ();
+
+    fn timestamp(&mut self) -> Result<i64, ()> {
+        Ok(0)
     }
 }

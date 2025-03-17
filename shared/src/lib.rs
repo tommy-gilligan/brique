@@ -8,6 +8,7 @@
 pub mod abstract_menu;
 pub mod confirmation;
 pub mod console;
+pub mod grid;
 pub mod grid_menu;
 pub mod held_key;
 pub mod lock_screen;
@@ -39,10 +40,12 @@ pub trait VibrationMotor {
 }
 
 pub trait Buzzer {
-    fn set_frequency(&mut self, frequency: u16);
+    type Error;
+
+    fn set_frequency(&mut self, frequency: u16) -> Result<(), Self::Error>;
     fn set_volume(&mut self, volume: u8);
-    fn mute(&mut self);
-    fn unmute(&mut self);
+    fn mute(&mut self) -> Result<(), Self::Error>;
+    fn unmute(&mut self) -> Result<(), Self::Error>;
 }
 
 pub enum ButtonEvent {
@@ -55,7 +58,9 @@ pub trait PowerButton {
 }
 
 pub trait Rtc {
-    fn timestamp(&mut self) -> i64;
+    type Error: core::fmt::Debug;
+
+    fn timestamp(&mut self) -> Result<i64, Self::Error>;
 }
 
 #[derive(Clone, IntoStaticStr, Sequence, PartialEq)]
@@ -119,7 +124,7 @@ pub trait Application {
         &mut self,
         device: &mut impl Device,
         system_response: Option<[u8; 64]>,
-    ) -> impl Future<Output = Option<SystemRequest>>;
+    ) -> impl Future<Output = Result<Option<SystemRequest>, ()>>;
 }
 
 pub type UsbRx = [u8; 64];
@@ -178,10 +183,11 @@ pub async fn run_app(
         )
         .await
         {
-            Ok(None) => {}
-            Ok(Some(e)) => {
+            Ok(Ok(None)) => {}
+            Ok(Ok(Some(e))) => {
                 system_request_handler.handle_request(e).await;
             }
+            Ok(Err(_)) => {}
             Err(embassy_time::TimeoutError) => {
                 log::info!("timed out");
             }

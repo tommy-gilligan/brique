@@ -81,83 +81,83 @@ impl Application for HardwareTest<'_> {
         &mut self,
         device: &mut impl shared::Device,
         system_response: Option<[u8; 64]>,
-    ) -> Option<shared::SystemRequest> {
+    ) -> Result<Option<shared::SystemRequest>, ()> {
         match self.0.clone() {
             Status::InProgress(_) => match self.2 {
                 Test::Keypad(ref mut test) => match test.run(device, system_response).await {
                     Status::Passed => {
                         self.next();
-                        None
+                        Ok(None)
                     }
                     Status::Failed => {
                         self.0 = Status::Failed;
-                        None
+                        Ok(None)
                     }
-                    _ => None,
+                    _ => Ok(None),
                 },
                 Test::Vibration(ref mut test) => match test.run(device, system_response).await {
                     Status::Passed => {
                         self.next();
-                        None
+                        Ok(None)
                     }
                     Status::Failed => {
                         self.0 = Status::Failed;
-                        None
+                        Ok(None)
                     }
-                    _ => None,
+                    _ => Ok(None),
                 },
                 Test::Buzzer(ref mut test) => match test.run(device, system_response).await {
                     Status::Passed => {
                         self.next();
-                        None
+                        Ok(None)
                     }
                     Status::Failed => {
                         self.0 = Status::Failed;
-                        None
+                        Ok(None)
                     }
-                    _ => None,
+                    _ => Ok(None),
                 },
                 Test::Backlight(ref mut test) => match test.run(device, system_response).await {
                     Status::Passed => {
                         self.next();
-                        None
+                        Ok(None)
                     }
                     Status::Failed => {
                         self.0 = Status::Failed;
-                        None
+                        Ok(None)
                     }
-                    _ => None,
+                    _ => Ok(None),
                 },
                 Test::Cdc(ref mut test) => match test.run(device, system_response).await {
                     Status::Passed => {
                         self.next();
-                        None
+                        Ok(None)
                     }
                     Status::Failed => {
                         self.0 = Status::Failed;
-                        None
+                        Ok(None)
                     }
-                    Status::InProgress(system_request) => system_request,
+                    Status::InProgress(system_request) => Ok(system_request),
                 },
                 Test::Hid(ref mut test) => match test.run(device, system_response).await {
                     Status::Passed => {
                         self.0 = Status::Passed;
-                        None
+                        Ok(None)
                     }
                     Status::Failed => {
                         self.0 = Status::Failed;
-                        None
+                        Ok(None)
                     }
-                    Status::InProgress(system_request) => system_request,
+                    Status::InProgress(system_request) => Ok(system_request),
                 },
             },
             Status::Passed => {
                 self.1.draw(device, "Passed");
-                None
+                Ok(None)
             }
             Status::Failed => {
                 self.1.draw(device, "Failed");
-                None
+                Ok(None)
             }
         }
     }

@@ -1,12 +1,12 @@
 use core::ops::{Index, IndexMut};
 
 use embedded_graphics::{
+    Drawable,
     image::{Image, ImageDrawable},
     pixelcolor::BinaryColor,
     prelude::{DrawTarget, Point, Primitive, Size},
     primitives::{PrimitiveStyle, Rectangle},
     transform::Transform,
-    Drawable,
 };
 
 #[derive(Copy, Clone, PartialEq)]
@@ -243,8 +243,8 @@ mod test {
 
         fn draw<
             D: embedded_graphics::draw_target::DrawTarget<
-                Color = <Self as embedded_graphics::image::ImageDrawable>::Color,
-            >,
+                    Color = <Self as embedded_graphics::image::ImageDrawable>::Color,
+                >,
         >(
             &self,
             display: &mut D,
@@ -265,8 +265,8 @@ mod test {
 
         fn draw_sub_image<
             D: embedded_graphics::draw_target::DrawTarget<
-                Color = <Self as embedded_graphics::image::ImageDrawable>::Color,
-            >,
+                    Color = <Self as embedded_graphics::image::ImageDrawable>::Color,
+                >,
         >(
             &self,
             _: &mut D,

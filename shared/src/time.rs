@@ -18,7 +18,7 @@ pub fn to_char(digit: u32) -> char {
 }
 
 pub fn write_time(rtc: &mut impl crate::Rtc, seconds: bool) -> heapless::String<8> {
-    let now = chrono::DateTime::<chrono::Utc>::from_timestamp(rtc.timestamp(), 0).unwrap();
+    let now = chrono::DateTime::<chrono::Utc>::from_timestamp(rtc.timestamp().unwrap(), 0).unwrap();
     let mut text = heapless::String::new();
 
     text.push(to_char(now.hour() / 10)).unwrap();
