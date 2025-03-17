@@ -35,8 +35,8 @@ pub trait Backlight {
 }
 
 pub trait VibrationMotor {
-    fn start(&mut self);
-    fn stop(&mut self);
+    fn start_vibrating(&mut self);
+    fn stop_vibrating(&mut self);
 }
 
 pub trait Buzzer {
@@ -44,8 +44,8 @@ pub trait Buzzer {
 
     fn set_frequency(&mut self, frequency: u16) -> Result<(), Self::Error>;
     fn set_volume(&mut self, volume: u8);
-    fn mute(&mut self) -> Result<(), Self::Error>;
-    fn unmute(&mut self) -> Result<(), Self::Error>;
+    fn mute_buzzer(&mut self) -> Result<(), Self::Error>;
+    fn unmute_buzzer(&mut self) -> Result<(), Self::Error>;
 }
 
 pub enum ButtonEvent {
@@ -152,30 +152,25 @@ pub trait Device:
 {
 }
 
-// decide your time budgets
-// 'trust' application takes at most 750ms
-// force pre-emption at 1500ms
-// how do you progress things inside app that take longer than 750?
-// special kind of timer?
-// forced pre-emption should be signalled back to application + print log entry
-#[allow(clippy::too_many_arguments)]
-pub async fn run_app(
-    mut app: impl Application,
-    device: &mut impl Device,
-    power: &mut impl PowerButton,
-    // just usb rx for now
-    system_response: &mut impl SystemResponse,
-    system_request_handler: &mut impl SystemRequestHandler,
-) {
+fn prepare_for_app(device: &mut impl Device) {
     let fill = PrimitiveStyle::with_fill(BinaryColor::On);
     device
         .bounding_box()
         .into_styled(fill)
         .draw(device)
         .unwrap();
-    device.mute();
-    device.stop();
+    device.mute_buzzer();
+    device.stop_vibrating();
+}
 
+pub async fn run_app(
+    mut app: impl Application,
+    device: &mut impl Device,
+    power: &mut impl PowerButton,
+    system_response: &mut impl SystemResponse,
+    system_request_handler: &mut impl SystemRequestHandler,
+) {
+    prepare_for_app(device);
     loop {
         match embassy_time::with_timeout(
             embassy_time::Duration::from_millis(2000),
@@ -187,21 +182,15 @@ pub async fn run_app(
             Ok(Ok(Some(e))) => {
                 system_request_handler.handle_request(e).await;
             }
-            Ok(Err(_)) => {}
+            Ok(Err(_)) => {
+            }
             Err(embassy_time::TimeoutError) => {
                 log::info!("timed out");
             }
         }
 
         if power.was_pressed().await {
-            let fill = PrimitiveStyle::with_fill(BinaryColor::On);
-            device
-                .bounding_box()
-                .into_styled(fill)
-                .draw(device)
-                .unwrap();
-            device.mute();
-            device.stop();
+            prepare_for_app(device);
             return;
         }
     }

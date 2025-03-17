@@ -90,12 +90,12 @@ impl Backlight for Device<'_> {
 impl Buzzer for Device<'_> {
     type Error = PwmError;
 
-    fn mute(&mut self) -> Result<(), Self::Error> {
-        self.buzzer.mute()
+    fn mute_buzzer(&mut self) -> Result<(), Self::Error> {
+        self.buzzer.mute_buzzer()
     }
 
-    fn unmute(&mut self) -> Result<(), Self::Error> {
-        self.buzzer.unmute()
+    fn unmute_buzzer(&mut self) -> Result<(), Self::Error> {
+        self.buzzer.unmute_buzzer()
     }
 
     fn set_volume(&mut self, volume: u8) {
@@ -108,12 +108,12 @@ impl Buzzer for Device<'_> {
 }
 
 impl VibrationMotor for Device<'_> {
-    fn start(&mut self) {
-        self.vibration_motor.start();
+    fn start_vibrating(&mut self) {
+        self.vibration_motor.start_vibrating();
     }
 
-    fn stop(&mut self) {
-        self.vibration_motor.stop();
+    fn stop_vibrating(&mut self) {
+        self.vibration_motor.stop_vibrating();
     }
 }
 

@@ -33,11 +33,11 @@ impl Beeper<'_> {
 impl Buzzer for Beeper<'_> {
     type Error = PwmError;
 
-    fn mute(&mut self) -> Result<(), Self::Error> {
+    fn mute_buzzer(&mut self) -> Result<(), Self::Error> {
         self.0.set_duty_cycle_percent(0)
     }
 
-    fn unmute(&mut self) -> Result<(), Self::Error> {
+    fn unmute_buzzer(&mut self) -> Result<(), Self::Error> {
         self.0.set_duty_cycle_percent(90)
     }
 

@@ -13,11 +13,11 @@ impl Motor<'_> {
 }
 
 impl VibrationMotor for Motor<'_> {
-    fn start(&mut self) {
+    fn start_vibrating(&mut self) {
         self.0.set_high();
     }
 
-    fn stop(&mut self) {
+    fn stop_vibrating(&mut self) {
         self.0.set_low();
     }
 }

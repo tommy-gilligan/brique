@@ -3,11 +3,11 @@ use std::rc::Rc;
 use wasm_bindgen::prelude::*;
 
 impl shared::Buzzer for super::Device {
-    fn mute(&mut self) {
+    fn mute_buzzer(&mut self) {
         let binding = Rc::clone(&self.oscillator);
         let mut oscillator = binding.lock().unwrap();
         if let Some(o) = oscillator.as_mut() {
-            match o.stop() {
+            match o.stop_vibrating() {
                 Ok(()) => {}
                 Err(e) => {
                     let dom_exception: Option<&web_sys::DomException> = e.as_ref().dyn_ref();
@@ -19,11 +19,11 @@ impl shared::Buzzer for super::Device {
         }
     }
 
-    fn unmute(&mut self) {
+    fn unmute_buzzer(&mut self) {
         let binding = Rc::clone(&self.oscillator);
         let mut oscillator = binding.lock().unwrap();
         if let Some(o) = oscillator.as_mut() {
-            match o.start() {
+            match o.start_vibrating() {
                 Ok(()) => {}
                 Err(e) => {
                     let dom_exception: Option<&web_sys::DomException> = e.as_ref().dyn_ref();

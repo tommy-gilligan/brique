@@ -27,15 +27,15 @@ impl VibrationTest<'_> {
         device: &mut impl shared::Device,
         _system_response: Option<[u8; 64]>,
     ) -> Status {
-        device.start();
+        device.start_vibrating();
         match self.1.run(device).await {
             None => Status::InProgress(None),
             Some(true) => {
-                device.stop();
+                device.stop_vibrating();
                 Status::Passed
             }
             Some(false) => {
-                device.stop();
+                device.stop_vibrating();
                 Status::Failed
             }
         }

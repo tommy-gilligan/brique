@@ -87,7 +87,7 @@ impl<'a> LockScreen<'a> {
         .unwrap();
     }
 
-    pub async fn process(&mut self, device: &mut impl crate::Device) -> Option<usize> {
+    pub async fn get_selection(&mut self, device: &mut impl crate::Device) -> Option<usize> {
         let _ = device.clear(BinaryColor::On);
 
         let text = crate::time::write_time(device, false);

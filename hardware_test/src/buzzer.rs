@@ -15,8 +15,7 @@ impl BuzzerTest<'_> {
                 "Yes",
                 "No",
                 false,
-            ),
-        )
+            ),)
     }
 }
 
@@ -32,16 +31,24 @@ impl BuzzerTest<'_> {
         device: &mut impl shared::Device,
         _system_response: Option<[u8; 64]>,
     ) -> Status {
-        device.unmute();
-        device.set_frequency(440);
+        if let Err(_e) = device.unmute_buzzer() {
+            return Status::Failed;
+        }
+        if let Err(_e) = device.set_frequency(440) {
+            return Status::Failed;
+        }
         match self.1.run(device).await {
             None => Status::InProgress(None),
             Some(true) => {
-                device.mute();
+                if let Err(_e) = device.mute_buzzer() {
+                    return Status::Failed;
+                }
                 Status::Passed
             }
             Some(false) => {
-                device.mute();
+                if let Err(_e) = device.mute_buzzer() {
+                    return Status::Failed;
+                }
                 Status::Failed
             }
         }
