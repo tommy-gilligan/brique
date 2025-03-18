@@ -46,7 +46,7 @@ impl<'a> Song<'a> {
     }
 
     pub fn next(&mut self) -> Option<note::Note> {
-        self.notes.next().map(|n| crate::note::Note::new(n, self.octave, self.duration))
+        self.notes.next().map(|n| crate::note::Note::new(n, self.octave, self.duration, self.beats_per_minute))
     }
 
     // pub fn note_at(&mut self, time_ms: u32) -> Option<note::Note> {

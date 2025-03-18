@@ -3,7 +3,7 @@ use embassy_rp::pwm::PwmError;
 use embassy_rp::peripherals::{
     PIN_2, PIN_4, PIN_5, PIN_6, PIN_7, PIN_8, PIN_9, PIN_10, PIN_11, PIN_12, PIN_13, PIN_14,
     PIN_15, PIN_16, PIN_17, PIN_18, PIN_19, PIN_20, PIN_21, PIN_33, PIN_36, PIN_37, PWM_SLICE2,
-    SPI0,
+    SPI0, WATCHDOG
 };
 use embassy_sync::blocking_mutex::raw::NoopRawMutex;
 use embedded_graphics_core::{
@@ -12,6 +12,7 @@ use embedded_graphics_core::{
     prelude::{Dimensions, DrawTarget},
     primitives::Rectangle,
 };
+use embassy_rp::watchdog::Watchdog;
 mod backlight;
 mod buzzer;
 mod display;
@@ -24,6 +25,7 @@ pub struct Device<'a> {
     vibration_motor: vibration_motor::Motor<'a>,
     buzzer: buzzer::Beeper<'a>,
     display: display::Display<'a>,
+    watchdog: Watchdog
 }
 
 unsafe impl Send for Device<'_> {}
@@ -31,6 +33,7 @@ unsafe impl Send for Device<'_> {}
 impl<'a> Device<'a> {
     #[allow(clippy::too_many_arguments)]
     pub fn new(
+        watchdog: embassy_rp::watchdog::Watchdog,
         pin_2: PIN_2,
         pin_4: PIN_4,
         pin_5: PIN_5,
@@ -69,12 +72,21 @@ impl<'a> Device<'a> {
                 vibration_motor: vibration_motor::Motor::new(pin_2),
                 buzzer: buzzer::Beeper::new(pwm_slice2, pin_21),
                 display: display::Display::new(spi_bus, pin_37, pin_36, pin_33)?,
+                watchdog
             }
         )
     }
 }
 
-impl shared::Device for Device<'_> {}
+impl shared::Device for Device<'_> {
+    fn start_watchdog(&mut self, duration: embassy_time::Duration) {
+        self.watchdog.start(duration);
+    }
+
+    fn feed_watchdog(&mut self) {
+        self.watchdog.feed();
+    }
+}
 use shared::{Backlight, Buzzer, Keypad, Rtc, VibrationMotor};
 
 impl Backlight for Device<'_> {

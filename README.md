@@ -31,25 +31,32 @@ Because the board would need to fit into the chassis of a Nokia 3310 and because
 	- display has command for clearing (don't need to send a whole buffer of blank, just to blank)
 	- display can do 90deg rotated addressing
 
-- pass more KiCAD checks in CI
-- add back supercap rtc: just leave spot for it?  finding it hard to source
-- power button (digital latch)
-	- RTC alarm (INT) pin on RTC should connect to latch and GPIO
-	- latch needs to be reseettable by GPIO
-	- should probably have a bypass jumper
-- motor contacts got messed up at seom stage, need to fix
-- D12 clearance
-- U2 clearance
-- messed up power button footprint
-- pin assignment for U6, U7, U8
-
 - terse, unfriendly instructions (ie. README)
 - document app API
 
-- replace power button stuff
-- more accurate clearance on mcu inductor resistors
-- inductor and diode should be very close to charging chip
-- more gnd vias
+defects/small improvements:
+scrolling menu
+using ringtone menu async with playback
+split out ringtone name for menu
+unwrap should lead to reboot? take it back to main menu?
+persistenece/flash
+allow setting time
+allow setting alarms
+keyboard is kinda broken (multitap)
+grid menu from keyboard
+snake is broken
+
+defmt should be used if possible (instead of log).  currently it is used for uart/rtt but for usb i'm using log.  is there a way to use usb logging from defmt?  will probably require a bit of a bit deep dive
+
+
+allow stopping ringtone while it's playing 
+copious debuggin statements
+menu should label select button
+watchdog (for 2 cores?)... there's some special registers to keep some state across watchdog reset
+reboot to usb is broken
+options label for select button in keyboard
+show date in clock
+
 
 #### Later
 - charging IC should communicate state with rp2350 (charging, full, should be able to just sense 'LED' outputs)

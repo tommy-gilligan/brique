@@ -23,6 +23,7 @@ use embedded_graphics_core::{draw_target::DrawTarget, pixelcolor::BinaryColor};
 use enum_iterator::Sequence;
 use strum_macros::IntoStaticStr;
 use usbd_hid::descriptor::KeyboardUsage;
+use embassy_time::Duration;
 
 pub trait SystemResponse {
     fn take(&mut self) -> Option<[u8; 64]>;
@@ -149,6 +150,8 @@ pub trait SystemRequestHandler {
 pub trait Device:
     VibrationMotor + Buzzer + Keypad + Rtc + Backlight + DrawTarget<Color = BinaryColor, Error = ()>
 {
+    fn start_watchdog(&mut self, duration: Duration);
+    fn feed_watchdog(&mut self);
 }
 
 fn prepare_for_app(device: &mut impl Device) {
@@ -166,8 +169,9 @@ pub async fn run_app(
 ) {
     prepare_for_app(device);
     loop {
+        device.start_watchdog(Duration::from_millis(2200));
         match embassy_time::with_timeout(
-            embassy_time::Duration::from_millis(20000),
+            embassy_time::Duration::from_millis(2000),
             app.run(device, system_response.take()),
         )
         .await
@@ -185,7 +189,10 @@ pub async fn run_app(
 
         if power.was_pressed().await {
             prepare_for_app(device);
+            device.feed_watchdog();
             return;
+        } else {
+            device.feed_watchdog();
         }
     }
 }
