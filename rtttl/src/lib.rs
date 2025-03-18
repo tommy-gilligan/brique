@@ -4,10 +4,10 @@ pub mod note;
 
 #[derive(Debug)]
 pub struct Song<'a> {
-    title: &'a str,
+    pub title: &'a str,
     duration: u32,
     octave: u32,
-    beats_per_minute: u32,
+    pub beats_per_minute: u32,
     notes: core::iter::Peekable<core::str::Split<'a, &'a str>>,
     time: u32,
 }
@@ -45,18 +45,21 @@ impl<'a> Song<'a> {
         }
     }
 
-    pub fn note_at(&mut self, time_ms: u32) -> Option<note::Note> {
-        let note = note::Note::new(self.notes.peek().unwrap(), self.octave, self.duration);
-        self.time += note.duration(self.beats_per_minute);
-        if self.time > time_ms {
-            return Some(note);
-        }
-
-        None
+    pub fn next(&mut self) -> Option<note::Note> {
+        self.notes.next().map(|n| crate::note::Note::new(n, self.octave, self.duration))
     }
+
+    // pub fn note_at(&mut self, time_ms: u32) -> Option<note::Note> {
+    //     let note = note::Note::new(self.notes.peek().unwrap(), self.octave, self.duration);
+    //     self.time += note.duration(self.beats_per_minute);
+    //     if self.time > time_ms {
+    //         return Some(note);
+    //     }
+
+    //     None
+    // }
 }
 
-// TODO: expand tests
 #[cfg(test)]
 mod test {
     use super::*;
@@ -67,31 +70,83 @@ mod test {
 
     #[test]
     fn test_countdown() {
-        let song = Song::new(COUNTDOWN);
+        let mut song = Song::new(COUNTDOWN);
 
         assert_eq!(song.title, "countdown");
         assert_eq!(song.duration, 4);
         assert_eq!(song.octave, 5);
         assert_eq!(song.beats_per_minute, 125);
+
+        let note = song.next().unwrap();
+        assert_eq!(note.duration(125), 480);
+        assert_eq!(note.frequency(), None);
+
+        let note = song.next().unwrap();
+        assert_eq!(note.frequency(), None);
+        assert_eq!(note.duration(125), 240);
+
+        let note = song.next().unwrap();
+        assert_eq!(note.frequency(), Some(Ok(987)));
+        assert_eq!(note.duration(125), 120);
+
+        let note = song.next().unwrap();
+        assert_eq!(note.frequency(), Some(Ok(880)));
+        assert_eq!(note.duration(125), 120);
+
+        let note = song.next().unwrap();
+        assert_eq!(note.frequency(), Some(Ok(987)));
+        assert_eq!(note.duration(125), 480);
+
+        let note = song.next().unwrap();
+        assert_eq!(note.frequency(), Some(Ok(659)));
+        assert_eq!(note.duration(125), 480);
+
+        let note = song.next().unwrap();
+        assert_eq!(note.duration(125), 480);
+        assert_eq!(note.frequency(), None);
+
+        let note = song.next().unwrap();
+        assert_eq!(note.frequency(), None);
+        assert_eq!(note.duration(125), 240);
+
+        let note = song.next().unwrap();
+        assert_eq!(note.frequency(), Some(Ok(1046)));
+        assert_eq!(note.duration(125), 120);
     }
 
     #[test]
     fn test_song() {
-        let song = Song::new(HAUNTED_HOUSE);
+        let mut song = Song::new(HAUNTED_HOUSE);
 
         assert_eq!(song.title, "HauntHouse");
         assert_eq!(song.duration, 4);
         assert_eq!(song.octave, 5);
         assert_eq!(song.beats_per_minute, 108);
+
+        let first_note = song.next().unwrap();
+        assert_eq!(first_note.duration(108), 1111);
+        assert_eq!(first_note.frequency().unwrap().unwrap(), 440);
+
+        let second_note = song.next().unwrap();
+        assert_eq!(second_note.duration(108), 1111);
+        assert_eq!(second_note.frequency().unwrap().unwrap(), 659);
     }
 
     #[test]
     fn test_mission() {
-        let song = Song::new(MISSION);
+        let mut song = Song::new(MISSION);
 
         assert_eq!(song.title, "Mission");
         assert_eq!(song.duration, 4);
         assert_eq!(song.octave, 6);
         assert_eq!(song.beats_per_minute, 100);
+
+        let first_note = song.next().unwrap();
+        assert_eq!(first_note.duration(100), 75);
+        assert_eq!(first_note.frequency().unwrap().unwrap(), 1174);
+
+        let second_note = song.next().unwrap();
+        assert_eq!(second_note.duration(100), 75);
+        assert_eq!(second_note.frequency().unwrap().unwrap(), 1244);
     }
 }

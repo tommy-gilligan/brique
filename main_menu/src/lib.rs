@@ -6,19 +6,20 @@ pub async fn main_menu(
     mut system_response: impl shared::SystemResponse,
     mut system_request_handler: impl shared::SystemRequestHandler,
 ) {
+    let mut lock_screen = shared::lock_screen::LockScreen::new(&[
+        "Ringtones",
+        "Clock",
+        "Hardware Test",
+        "Keyboard",
+        "Snake",
+        "Reboot to USB",
+    ]);
     loop {
-        if let Some(index) = shared::lock_screen::LockScreen::new(&[
-            "Ringtones",
-            "Clock",
-            "Hardware Test",
-            "Keyboard",
-            "Snake",
-            "Reboot to USB",
-        ]).get_selection(&mut device).await {
+        if let Some(index) = lock_screen.get_selection(&mut device).await {
             match index {
                 0 => {
                     shared::run_app(
-                        ringtones::Ringtones::new(&mut device, &mut [0; 1024]),
+                        ringtones::Ringtones::new(),
                         &mut device,
                         &mut power,
                         &mut system_response,

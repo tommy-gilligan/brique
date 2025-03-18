@@ -18,10 +18,7 @@ impl<'a> Menu<'a> {
         Self { items, index: 0 }
     }
 
-    fn draw<D>(&mut self, draw_target: &mut D)
-    where
-        D: DrawTarget<Color = BinaryColor>,
-    {
+    fn draw(&mut self, draw_target: &mut impl crate::Device) {
         let bounding_box = draw_target.bounding_box();
         let top_left = bounding_box.top_left;
 
@@ -70,14 +67,10 @@ impl<'a> Menu<'a> {
         }
     }
 
-    pub async fn process<KEYPAD, D>(&mut self, keypad: &mut KEYPAD, draw_target: &mut D) -> usize
-    where
-        KEYPAD: Keypad,
-        D: DrawTarget<Color = BinaryColor>,
-    {
+    pub async fn process(&mut self, device: &mut impl crate::Device) -> usize {
         loop {
-            self.draw(draw_target);
-            match keypad.event().await {
+            self.draw(device);
+            match device.event().await {
                 super::KeyEvent::Down(super::Key::Down) => {
                     self.down();
                 }

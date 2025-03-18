@@ -44,35 +44,42 @@ impl FromStr for NoteName {
 }
 
 #[derive(Debug, PartialEq, Copy, Clone)]
-pub struct Note(u32, NoteName, u32, bool);
+pub struct Note {
+    name: NoteName,
+    duration: u32,
+    octave: u32,
+    tripled: bool
+}
 
 impl Note {
     pub fn new(text: &str, default_octave: u32, default_duration: u32) -> Self {
         let n = text.trim();
-        let mut find_name = n.match_indices(|c: char| !c.is_ascii_digit());
-        let (name_index, name) = find_name.next().unwrap();
+        let mut not_digit = n.match_indices(|c: char| !c.is_ascii_digit());
+        let (name_start_index, _) = not_digit.next().unwrap();
+        let (mut name_end_index, _) = not_digit.next().unwrap_or((name_start_index + 1, ""));
+        if n.contains('#') {
+            name_end_index += 1;
+        }
 
-        Note(
-            n[name_index + name.len()..]
-                .parse()
-                .unwrap_or(default_duration),
-            name.parse().unwrap(),
-            n[..name_index].parse().unwrap_or(default_octave),
-            n.ends_with("."),
-        )
+        Self {
+            octave: n[name_end_index..].parse().unwrap_or(default_octave),
+            name: n[name_start_index..name_end_index].parse().unwrap(),
+            duration: n[..name_start_index].parse().unwrap_or(default_duration),
+            tripled: n.ends_with("."),
+        }
     }
 
     pub fn duration(&self, beats_per_minute: u32) -> u32 {
-        if self.3 {
-            2 * 240 * 1000 / (3 * beats_per_minute * self.2)
+        if self.tripled {
+            (2 * 240 * 1000) / (3 * beats_per_minute * self.duration)
         } else {
-            240 * 1000 / (beats_per_minute * self.2)
+            (240 * 1000) / (beats_per_minute * self.duration)
         }
     }
 
     // TODO: DRY
     pub fn frequency(&self) -> Option<Result<u32, ()>> {
-        match (self.0, self.1) {
+        match (self.octave, self.name) {
             (_, NoteName::Pause) => None,
             (3, NoteName::C) => Some(Ok(130)),
             (3, NoteName::CSharp) => Some(Ok(138)),
@@ -133,6 +140,41 @@ mod test {
 
     #[test]
     fn test_note() {
-        assert_eq!(Note::new("2a4", 5, 4), Note(2, NoteName::A, 4, false));
+        assert_eq!(Note::new("2a3", 5, 4), Note {
+            name: NoteName::A,
+            octave: 3,
+            duration: 2,
+            tripled: false
+        });
+    }
+
+    #[test]
+    fn test_note_tripled() {
+        assert_eq!(Note::new("2a3.", 5, 4), Note {
+            name: NoteName::A,
+            octave: 3,
+            duration: 2,
+            tripled: true
+        });
+    }
+
+    #[test]
+    fn test_note_sharp() {
+        assert_eq!(Note::new("32d#", 5, 4), Note {
+            name: NoteName::DSharp,
+            octave: 5,
+            duration: 32,
+            tripled: false
+        });
+    }
+
+    #[test]
+    fn test_note_sharp_tripled() {
+        assert_eq!(Note::new("32d#.", 5, 4), Note {
+            name: NoteName::DSharp,
+            octave: 5,
+            duration: 32,
+            tripled: true
+        });
     }
 }

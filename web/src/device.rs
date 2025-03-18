@@ -40,6 +40,7 @@ pub struct Device {
     gain: Rc<Mutex<Option<GainNode>>>,
     closure: RefCell<Option<Closure<dyn FnMut()>>>,
     offset: i64,
+    mute: bool
 }
 
 impl Device {
@@ -100,6 +101,7 @@ impl Device {
             hash: crate::DomB::new(hash_id),
             vibration_element,
             offset: 0,
+            mute: true
         };
 
         let o = Rc::clone(&result.oscillator);

@@ -19,7 +19,6 @@ pub mod time;
 
 use core::{ascii::Char, future::Future};
 
-use embedded_graphics::{Drawable, prelude::Primitive, primitives::PrimitiveStyle};
 use embedded_graphics_core::{draw_target::DrawTarget, pixelcolor::BinaryColor};
 use enum_iterator::Sequence;
 use strum_macros::IntoStaticStr;
@@ -40,7 +39,7 @@ pub trait VibrationMotor {
 }
 
 pub trait Buzzer {
-    type Error;
+    type Error: core::fmt::Debug;
 
     fn set_frequency(&mut self, frequency: u16) -> Result<(), Self::Error>;
     fn set_volume(&mut self, volume: u8);
@@ -153,13 +152,8 @@ pub trait Device:
 }
 
 fn prepare_for_app(device: &mut impl Device) {
-    let fill = PrimitiveStyle::with_fill(BinaryColor::On);
-    device
-        .bounding_box()
-        .into_styled(fill)
-        .draw(device)
-        .unwrap();
-    device.mute_buzzer();
+    device.clear(BinaryColor::On).unwrap();
+    device.mute_buzzer().unwrap();
     device.stop_vibrating();
 }
 
@@ -173,7 +167,7 @@ pub async fn run_app(
     prepare_for_app(device);
     loop {
         match embassy_time::with_timeout(
-            embassy_time::Duration::from_millis(2000),
+            embassy_time::Duration::from_millis(20000),
             app.run(device, system_response.take()),
         )
         .await
