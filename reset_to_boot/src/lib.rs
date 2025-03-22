@@ -22,6 +22,6 @@ impl Application for ResetToBoot {
         _device: &mut impl shared::Device,
         _system_response: Option<[u8; 64]>,
     ) -> Result<Option<shared::SystemRequest>, ()> {
-        Ok(None)
+        Ok(Some(shared::SystemRequest::ResetToBoot))
     }
 }

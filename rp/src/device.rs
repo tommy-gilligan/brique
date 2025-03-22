@@ -155,9 +155,9 @@ impl Dimensions for Device<'_> {
     }
 }
 
-pub struct Handler;
+pub struct SystemRequestHandler;
 
-impl shared::SystemRequestHandler for Handler {
+impl shared::SystemRequestHandler for SystemRequestHandler {
     async fn handle_request(&mut self, _request: shared::SystemRequest) {}
 }
 

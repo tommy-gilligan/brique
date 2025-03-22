@@ -7,6 +7,7 @@ use wasm_bindgen::prelude::*;
 use web_sys::{AudioContext, Element, GainNode, OscillatorNode, OscillatorType};
 
 use crate::DomB;
+use js_sys::Date;
 
 mod backlight;
 mod buzzer;
@@ -142,7 +143,12 @@ impl Device {
 
         result
     }
+
+    fn set_time(&mut self, time: i64) {
+        self.offset = time - ((Date::now() / 1000.0) as i64);
+    }
 }
+
 impl shared::Device for Device {
     fn start_watchdog(&mut self, duration: embassy_time::Duration) {
     }

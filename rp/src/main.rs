@@ -179,6 +179,6 @@ async fn main(_spawner: Spawner) {
         ).unwrap(),
         button::Button::new(p.PIN_28),
         crate::device::CdcSend,
-        crate::device::Handler
+        crate::device::SystemRequestHandler
     ).await;
 }

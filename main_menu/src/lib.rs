@@ -30,7 +30,7 @@ pub async fn main_menu(
                 }
                 1 => {
                     log::debug!("Starting clock");
-                    shared::run_app(clock::Clock, &mut device, &mut power, &mut system_response, &mut system_request_handler)
+                    shared::run_app(clock::Clock::default(), &mut device, &mut power, &mut system_response, &mut system_request_handler)
                         .await
                 }
                 2 => {

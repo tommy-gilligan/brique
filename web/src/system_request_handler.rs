@@ -37,7 +37,13 @@ impl shared::SystemRequestHandler for Handler {
                 let s = core::str::from_utf8(&b);
                 self.cdc_console.append_with_str_1(s.unwrap()).unwrap();
             }
-            shared::SystemRequest::ResetToBoot => todo!(),
+            shared::SystemRequest::ResetToBoot => {
+                let window = web_sys::window().expect("no global `window` exists");
+                let location = window.location();
+                location.reload().unwrap();
+            },
+            shared::SystemRequest::SetTime(time) => {
+            }
         }
     }
 }

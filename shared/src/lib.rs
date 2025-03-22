@@ -138,6 +138,7 @@ pub enum UsbTx {
 pub enum SystemRequest {
     UsbTx(UsbTx),
     ResetToBoot,
+    SetTime(i64)
 }
 
 pub trait SystemRequestHandler {

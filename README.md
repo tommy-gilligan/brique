@@ -38,19 +38,18 @@ defects/small improvements:
 scrolling menu
 using ringtone menu async with playback
 split out ringtone name for menu
+
 persistenece/flash
 allow setting time
 allow setting alarms
 keyboard is kinda broken (multitap)
 grid menu from keyboard
-snake is broken
 
 defmt should be used if possible (instead of log).  currently it is used for uart/rtt but for usb i'm using log.  is there a way to use usb logging from defmt?  will probably require a bit of a bit deep dive
 
 allow stopping ringtone while it's playing 
 copious debuggin statements
 menu should label select button
-reboot to usb is broken
 options label for select button in keyboard
 
 #### Later

@@ -7,5 +7,7 @@ edition = "2024"
 chrono = { version = "0.4.39", default-features = false }
 embassy-time = { workspace = true }
 embedded-graphics = "0.8"
+enum-iterator = "2.1.0"
 heapless = "0.8.0"
+log = "0.4.26"
 shared = { path = "../shared" }
