@@ -116,6 +116,7 @@ impl<'a> LockScreen<'a> {
         image.draw(device).unwrap();
 
         if self.locked {
+            log::debug!("Drawing lock screen");
             Text::with_alignment(
                 "Unlock",
                 Point::new(42, 47),
@@ -156,6 +157,7 @@ impl<'a> LockScreen<'a> {
                 }
             }
         } else if self.menu_open {
+            log::debug!("Drawing menu");
             let _ = device.clear(BinaryColor::On);
             Text::with_alignment(
                 self.items[self.index],
@@ -196,6 +198,7 @@ impl<'a> LockScreen<'a> {
                 _ => {}
             }
         } else {
+            log::debug!("Drawing unlocked screen");
             Text::with_alignment(
                 "Menu",
                 Point::new(42, 47),

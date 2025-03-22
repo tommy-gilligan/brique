@@ -38,7 +38,6 @@ defects/small improvements:
 scrolling menu
 using ringtone menu async with playback
 split out ringtone name for menu
-unwrap should lead to reboot? take it back to main menu?
 persistenece/flash
 allow setting time
 allow setting alarms
@@ -48,17 +47,14 @@ snake is broken
 
 defmt should be used if possible (instead of log).  currently it is used for uart/rtt but for usb i'm using log.  is there a way to use usb logging from defmt?  will probably require a bit of a bit deep dive
 
-
 allow stopping ringtone while it's playing 
 copious debuggin statements
 menu should label select button
-watchdog (for 2 cores?)... there's some special registers to keep some state across watchdog reset
 reboot to usb is broken
 options label for select button in keyboard
-show date in clock
-
 
 #### Later
+- watchdog should involve both cores
 - charging IC should communicate state with rp2350 (charging, full, should be able to just sense 'LED' outputs)
 - switch off after 5 minutes idle (switching on takes no time)
 - rp2350 very low power state

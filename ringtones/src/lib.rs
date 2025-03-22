@@ -1,12 +1,14 @@
 #![no_std]
 #![feature(ascii_char_variants)]
 #![feature(ascii_char)]
+#![feature(iter_advance_by)]
 
 use shared::Application;
 
 pub struct Ringtones<'a> {
     menu: shared::menu::Menu<'a>,
-    song: Option<rtttl::Song<'a>>
+    song: Option<rtttl::Song<'a>>,
+    song_index: Option<usize>
 }
 
 use core::fmt::Debug;
@@ -42,7 +44,8 @@ impl <'a>Ringtones<'a> {
                     MISSION
                 ]
             ),
-            song: None
+            song: None,
+            song_index: None
         }
     }
 }
@@ -53,27 +56,34 @@ impl Application for Ringtones<'_> {
         device: &mut impl shared::Device,
         _system_response: Option<[u8; 64]>,
     ) -> Result<Option<shared::SystemRequest>, ()> {
+
         match &mut self.song {
             None => {
-                match self.menu.process(device).await {
-                    i => {
+                match embassy_time::with_timeout(
+                    embassy_time::Duration::from_millis(1000),
+                    self.menu.process(device, "Pause"),
+                ).await {
+                    Ok(Some(i)) => {
+                        log::debug!("Selected ringtone {}", i);
                         self.song = Some(rtttl::Song::new(SONGS[i]));
-                    }
+                    },
+                    _ => {}
                 }
             },
             Some(song) => {
                 if let Some(note) = song.next() {
                     if let Some(frequency) = note.frequency() {
                         device.unmute_buzzer();
+                        log::debug!("Playing {}Hz", frequency.unwrap());
                         device.set_frequency(frequency.unwrap() as u16);
                     } else {
                         device.mute_buzzer();
                     }
-
                     embassy_time::Timer::after_millis(note.duration().into()).await
                 } else {
                     device.mute_buzzer();
                     self.song = None;
+                    self.song_index = None;
                 }
             }
         }

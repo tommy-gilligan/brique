@@ -9,6 +9,7 @@ use embedded_graphics::{
     text::{Alignment, Text},
 };
 use shared::Application;
+use chrono::Datelike;
 
 pub struct Clock;
 
@@ -70,6 +71,26 @@ impl Application for Clock {
 
             Text::with_alignment(
                 &text,
+                device.bounding_box().center() + Point::new(0, -10),
+                character_style,
+                Alignment::Center,
+            )
+            .draw(device)
+            .unwrap();
+
+            let mut date: heapless::String<8> = heapless::String::new();
+
+            date.push(to_char(now.day() / 10)).unwrap();
+            date.push(to_char(now.day() % 10)).unwrap();
+            date.push('/').unwrap();
+            date.push(to_char(now.month() / 10)).unwrap();
+            date.push(to_char(now.month() % 10)).unwrap();
+            date.push('/').unwrap();
+
+            date.push(to_char(((now.year() / 10) % 100).try_into().unwrap())).unwrap();
+            date.push(to_char((now.year() % 10).try_into().unwrap())).unwrap();
+            Text::with_alignment(
+                &date,
                 device.bounding_box().center() + Point::new(0, 6),
                 character_style,
                 Alignment::Center,

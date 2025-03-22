@@ -1717,6 +1717,7 @@ dependencies = [
  "embedded-graphics",
  "hardware-test",
  "keyboard",
+ "log",
  "reset-to-boot",
  "ringtones",
  "shared",
@@ -2367,6 +2368,7 @@ version = "0.1.0"
 dependencies = [
  "embassy-time",
  "embedded-graphics",
+ "log",
  "rtttl",
  "shared",
 ]

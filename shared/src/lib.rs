@@ -155,6 +155,7 @@ pub trait Device:
 }
 
 fn prepare_for_app(device: &mut impl Device) {
+    log::debug!("Preparing device for app");
     device.clear(BinaryColor::On).unwrap();
     device.mute_buzzer().unwrap();
     device.stop_vibrating();
@@ -178,12 +179,13 @@ pub async fn run_app(
         {
             Ok(Ok(None)) => {}
             Ok(Ok(Some(e))) => {
+                log::debug!("Handling system request");
                 system_request_handler.handle_request(e).await;
             }
             Ok(Err(_)) => {
             }
             Err(embassy_time::TimeoutError) => {
-                log::info!("timed out");
+                log::debug!("Timed out while waiting for app to return");
             }
         }
 

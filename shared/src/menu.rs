@@ -1,5 +1,5 @@
 use embedded_graphics::{
-    mono_font::{MonoTextStyle, ascii::FONT_6X10},
+    mono_font::{MonoTextStyle, ascii::{FONT_6X9, FONT_6X10}},
     pixelcolor::BinaryColor,
     prelude::*,
     primitives::{PrimitiveStyle, Rectangle},
@@ -18,39 +18,56 @@ impl<'a> Menu<'a> {
         Self { items, index: 0 }
     }
 
-    fn draw(&mut self, draw_target: &mut impl crate::Device) {
-        let bounding_box = draw_target.bounding_box();
-        let top_left = bounding_box.top_left;
+    fn draw(&mut self, draw_target: &mut impl crate::Device, text: &str) {
+        draw_target.clear(BinaryColor::On);
+        let _ = Text::with_alignment(
+            text,
+            Point::new(42, 45),
+            MonoTextStyle::new(&FONT_6X9, BinaryColor::Off),
+            Alignment::Center,
+        )
+        .draw(draw_target);
 
-        let _ = bounding_box
-            .into_styled(PrimitiveStyle::with_fill(BinaryColor::On))
-            .draw(draw_target);
+        let mut clipped = draw_target.clipped(
+            &Rectangle::new(
+                Point::new(0, 0),
+                Size::new(84, 40),
+            )
+        );
 
-        for (index, item) in self.items.iter().enumerate() {
+        for (index, item) in self.items.iter().skip(self.index & 0xfffffffc).take(4).enumerate() {
             let y_offset: i32 = (index * 10).try_into().unwrap();
+
             if self.index == index {
                 let _ = Rectangle::new(
-                    top_left + Point::new(0, y_offset + 2),
-                    Size::new(draw_target.bounding_box().size.width, 11),
+                    Point::new(0, y_offset + 0),
+                    Size::new(84, 10),
                 )
                 .into_styled(PrimitiveStyle::with_fill(BinaryColor::Off))
-                .draw(draw_target);
+                .draw(&mut clipped);
 
                 let _ = Text::with_alignment(
                     item,
-                    top_left + Point::new(2, 10) + Point::new(0, y_offset),
+                    Point::new(2, 7 + y_offset),
                     MonoTextStyle::new(&FONT_6X10, BinaryColor::On),
                     Alignment::Left,
                 )
-                .draw(draw_target);
+                .draw(&mut clipped);
+
             } else {
+                let _ = Rectangle::new(
+                    Point::new(0, y_offset + 0),
+                    Size::new(84, 10),
+                )
+                .into_styled(PrimitiveStyle::with_fill(BinaryColor::On))
+                .draw(&mut clipped);
                 let _ = Text::with_alignment(
                     item,
-                    top_left + Point::new(2, 10) + Point::new(0, y_offset),
+                    Point::new(2, 7 + y_offset),
                     MonoTextStyle::new(&FONT_6X10, BinaryColor::Off),
                     Alignment::Left,
                 )
-                .draw(draw_target);
+                .draw(&mut clipped);
             }
         }
     }
@@ -67,21 +84,20 @@ impl<'a> Menu<'a> {
         }
     }
 
-    pub async fn process(&mut self, device: &mut impl crate::Device) -> usize {
-        loop {
-            self.draw(device);
-            match device.event().await {
-                super::KeyEvent::Down(super::Key::Down) => {
-                    self.down();
-                }
-                super::KeyEvent::Down(super::Key::Up) => {
-                    self.up();
-                }
-                super::KeyEvent::Down(super::Key::Select) => {
-                    return self.index;
-                }
-                _ => {}
+    pub async fn process(&mut self, device: &mut impl crate::Device, text: &str) -> Option<usize> {
+        self.draw(device, text);
+        match device.event().await {
+            super::KeyEvent::Down(super::Key::Down) => {
+                self.down();
             }
+            super::KeyEvent::Down(super::Key::Up) => {
+                self.up();
+            }
+            super::KeyEvent::Down(super::Key::Select) => {
+                return Some(self.index);
+            }
+            _ => {}
         }
+        None
     }
 }
