@@ -30,8 +30,14 @@ pub async fn main_menu(
                 }
                 1 => {
                     log::debug!("Starting clock");
-                    shared::run_app(clock::Clock::default(), &mut device, &mut power, &mut system_response, &mut system_request_handler)
-                        .await
+                    shared::run_app(
+                        clock::Clock::default(),
+                        &mut device,
+                        &mut power,
+                        &mut system_response,
+                        &mut system_request_handler,
+                    )
+                    .await
                 }
                 2 => {
                     log::debug!("Starting hardware test");
@@ -57,13 +63,25 @@ pub async fn main_menu(
                 }
                 4 => {
                     log::debug!("Starting snake");
-                    shared::run_app(snake::Snake::new(0), &mut device, &mut power, &mut system_response, &mut system_request_handler)
-                        .await
+                    shared::run_app(
+                        snake::Snake::new(0),
+                        &mut device,
+                        &mut power,
+                        &mut system_response,
+                        &mut system_request_handler,
+                    )
+                    .await
                 }
                 _ => {
                     log::debug!("Starting reset to boot");
-                    shared::run_app(reset_to_boot::ResetToBoot, &mut device, &mut power, &mut system_response, &mut system_request_handler)
-                        .await
+                    shared::run_app(
+                        reset_to_boot::ResetToBoot,
+                        &mut device,
+                        &mut power,
+                        &mut system_response,
+                        &mut system_request_handler,
+                    )
+                    .await
                 }
             }
         }

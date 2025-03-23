@@ -42,7 +42,7 @@ impl HardwareTest<'_> {
         Self(
             test,
             shared::console::Console::new(),
-            Test::Hid(Default::default()),
+            Test::Keypad(Default::default()),
         )
     }
 
@@ -86,6 +86,7 @@ impl Application for HardwareTest<'_> {
             Status::InProgress(_) => match self.2 {
                 Test::Keypad(ref mut test) => match test.run(device, system_response).await {
                     Status::Passed => {
+                        log::info!("Passed keypad");
                         self.next();
                         Ok(None)
                     }
@@ -97,6 +98,7 @@ impl Application for HardwareTest<'_> {
                 },
                 Test::Vibration(ref mut test) => match test.run(device, system_response).await {
                     Status::Passed => {
+                        log::info!("Passed vibration");
                         self.next();
                         Ok(None)
                     }
@@ -108,6 +110,7 @@ impl Application for HardwareTest<'_> {
                 },
                 Test::Buzzer(ref mut test) => match test.run(device, system_response).await {
                     Status::Passed => {
+                        log::info!("Passed buzzer");
                         self.next();
                         Ok(None)
                     }
@@ -119,6 +122,7 @@ impl Application for HardwareTest<'_> {
                 },
                 Test::Backlight(ref mut test) => match test.run(device, system_response).await {
                     Status::Passed => {
+                        log::info!("Passed backlight");
                         self.next();
                         Ok(None)
                     }
@@ -130,6 +134,7 @@ impl Application for HardwareTest<'_> {
                 },
                 Test::Cdc(ref mut test) => match test.run(device, system_response).await {
                     Status::Passed => {
+                        log::info!("Passed CDC");
                         self.next();
                         Ok(None)
                     }
@@ -141,6 +146,7 @@ impl Application for HardwareTest<'_> {
                 },
                 Test::Hid(ref mut test) => match test.run(device, system_response).await {
                     Status::Passed => {
+                        log::info!("Passed HID");
                         self.0 = Status::Passed;
                         Ok(None)
                     }
@@ -152,10 +158,13 @@ impl Application for HardwareTest<'_> {
                 },
             },
             Status::Passed => {
+                log::info!("Passed all tests");
                 self.1.draw(device, "Passed");
+                embassy_time::Timer::after_millis(10).await;
                 Ok(None)
             }
             Status::Failed => {
+                log::info!("Failed");
                 self.1.draw(device, "Failed");
                 Ok(None)
             }

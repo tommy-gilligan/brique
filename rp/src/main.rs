@@ -1,30 +1,25 @@
 #![no_std]
 #![no_main]
 
-use embassy_rp::block::{
-    PartitionTableBlock,
-    UnpartitionedSpace,
-    UnpartitionedFlag,
-    Permission,
-    PartitionFlag,
-    Link,
-};
-use assign_resources::assign_resources;
 use core::cell::RefCell;
-use defmt::{unwrap, info};
+
+use assign_resources::assign_resources;
+use defmt::{info, unwrap};
 use defmt_rtt as _;
 use embassy_executor::{Executor, Spawner};
 use embassy_rp::{
     bind_interrupts,
-    block::ImageDef,
-    block::Partition,
+    block::{
+        ImageDef, Link, Partition, PartitionFlag, PartitionTableBlock, Permission,
+        UnpartitionedFlag, UnpartitionedSpace,
+    },
     multicore::{Stack, spawn_core1},
     peripherals,
     peripherals::USB,
     spi,
     spi::Spi,
     usb::InterruptHandler,
-    watchdog::*
+    watchdog::*,
 };
 use embassy_sync::blocking_mutex::Mutex;
 use panic_probe as _;
@@ -92,10 +87,11 @@ pub static PICOTOOL_ENTRIES: [embassy_rp::binary_info::EntryAddr; 6] = [
     ),
 ];
 
-mod rtc;
+mod background_core;
 mod button;
 mod device;
-mod background_core;
+mod flash;
+mod rtc;
 
 assign_resources! {
     usbs: Usbs{
@@ -116,8 +112,9 @@ static EXECUTOR1: StaticCell<Executor> = StaticCell::new();
 const WATCHDOG_MARKER: u32 = 0xB000DEAD;
 
 #[embassy_executor::main]
-async fn main(_spawner: Spawner) {
+async fn main(spawner: Spawner) {
     let p = embassy_rp::init(Default::default());
+    defmt::println!("HEY");
     let r = split_resources!(p);
     let mut watchdog = embassy_rp::watchdog::Watchdog::new(p.WATCHDOG);
     // if watchdog.get_scratch(0) == WATCHDOG_MARKER {
@@ -126,12 +123,15 @@ async fn main(_spawner: Spawner) {
     // watchdog.set_scratch(0, WATCHDOG_MARKER);
     embassy_time::Timer::after_millis(10).await;
 
+    spawner.spawn(flash::flash_task(spawner, r.flashs)).unwrap();
     spawn_core1(
         p.CORE1,
         unsafe { &mut *core::ptr::addr_of_mut!(CORE1_STACK) },
         move || {
             let executor1 = EXECUTOR1.init(Executor::new());
-            executor1.run(|spawner| unwrap!(spawner.spawn(background_core::background(spawner, r.usbs, r.flashs))));
+            executor1.run(|spawner| {
+                unwrap!(spawner.spawn(background_core::background(spawner, r.usbs)))
+            });
         },
     );
     let _clock = rtc::Clock::new(p.I2C1, p.PIN_46, p.PIN_47);
@@ -165,20 +165,18 @@ async fn main(_spawner: Spawner) {
             p.PIN_36,
             p.PIN_37,
             p.PWM_SLICE2,
-            &Mutex::new(
-                RefCell::new(
-                    Spi::new_blocking(
-                        p.SPI0,
-                        p.PIN_38,
-                        p.PIN_39,
-                        p.PIN_32,
-                        display_config,
-                    )
-                )
-            ),
-        ).unwrap(),
+            &Mutex::new(RefCell::new(Spi::new_blocking(
+                p.SPI0,
+                p.PIN_38,
+                p.PIN_39,
+                p.PIN_32,
+                display_config,
+            ))),
+        )
+        .unwrap(),
         button::Button::new(p.PIN_28),
         crate::device::CdcSend,
-        crate::device::SystemRequestHandler
-    ).await;
+        crate::device::SystemRequestHandler,
+    )
+    .await;
 }

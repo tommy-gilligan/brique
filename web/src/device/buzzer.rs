@@ -1,7 +1,5 @@
 use std::rc::Rc;
 
-use wasm_bindgen::prelude::*;
-
 impl shared::Buzzer for super::Device {
     type Error = ();
 
@@ -20,7 +18,7 @@ impl shared::Buzzer for super::Device {
             let binding = Rc::clone(&self.oscillator);
             let mut oscillator = binding.lock().unwrap();
             if let Some(o) = oscillator.as_mut() {
-                o.start();
+                o.start().unwrap();
             }
         }
         Ok(())

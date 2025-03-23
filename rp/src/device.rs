@@ -1,9 +1,13 @@
 use core::cell::RefCell;
-use embassy_rp::pwm::PwmError;
-use embassy_rp::peripherals::{
-    PIN_2, PIN_4, PIN_5, PIN_6, PIN_7, PIN_8, PIN_9, PIN_10, PIN_11, PIN_12, PIN_13, PIN_14,
-    PIN_15, PIN_16, PIN_17, PIN_18, PIN_19, PIN_20, PIN_21, PIN_33, PIN_36, PIN_37, PWM_SLICE2,
-    SPI0, WATCHDOG
+
+use embassy_rp::{
+    peripherals::{
+        PIN_2, PIN_4, PIN_5, PIN_6, PIN_7, PIN_8, PIN_9, PIN_10, PIN_11, PIN_12, PIN_13, PIN_14,
+        PIN_15, PIN_16, PIN_17, PIN_18, PIN_19, PIN_20, PIN_21, PIN_33, PIN_36, PIN_37, PWM_SLICE2,
+        SPI0, WATCHDOG,
+    },
+    pwm::PwmError,
+    watchdog::Watchdog,
 };
 use embassy_sync::blocking_mutex::raw::NoopRawMutex;
 use embedded_graphics_core::{
@@ -12,7 +16,6 @@ use embedded_graphics_core::{
     prelude::{Dimensions, DrawTarget},
     primitives::Rectangle,
 };
-use embassy_rp::watchdog::Watchdog;
 mod backlight;
 mod buzzer;
 mod display;
@@ -25,7 +28,7 @@ pub struct Device<'a> {
     vibration_motor: vibration_motor::Motor<'a>,
     buzzer: buzzer::Beeper<'a>,
     display: display::Display<'a>,
-    watchdog: Watchdog
+    watchdog: Watchdog,
 }
 
 unsafe impl Send for Device<'_> {}
@@ -62,19 +65,17 @@ impl<'a> Device<'a> {
             RefCell<embassy_rp::spi::Spi<'a, SPI0, embassy_rp::spi::Blocking>>,
         >,
     ) -> Result<Self, display_interface::DisplayError> {
-        Ok(
-            Self {
-                keypad: keypad::ContactKeypad::new(
-                    pin_16, pin_12, pin_9, pin_8, pin_17, pin_13, pin_7, pin_18, pin_14, pin_6, pin_19,
-                    pin_11, pin_5, pin_20, pin_10, pin_4,
-                ),
-                backlight: backlight::Light::new(pin_15),
-                vibration_motor: vibration_motor::Motor::new(pin_2),
-                buzzer: buzzer::Beeper::new(pwm_slice2, pin_21),
-                display: display::Display::new(spi_bus, pin_37, pin_36, pin_33)?,
-                watchdog
-            }
-        )
+        Ok(Self {
+            keypad: keypad::ContactKeypad::new(
+                pin_16, pin_12, pin_9, pin_8, pin_17, pin_13, pin_7, pin_18, pin_14, pin_6, pin_19,
+                pin_11, pin_5, pin_20, pin_10, pin_4,
+            ),
+            backlight: backlight::Light::new(pin_15),
+            vibration_motor: vibration_motor::Motor::new(pin_2),
+            buzzer: buzzer::Beeper::new(pwm_slice2, pin_21),
+            display: display::Display::new(spi_bus, pin_37, pin_36, pin_33)?,
+            watchdog,
+        })
     }
 }
 

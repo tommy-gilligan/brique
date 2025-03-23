@@ -15,6 +15,7 @@ pub enum Event {
     Tentative(Char),
     Decided(Char),
     Case(Case),
+    ShowSpecialCharacters
 }
 
 pub struct Last {
@@ -78,6 +79,9 @@ impl MultiTap {
         }
 
         match self.held_key.event(keypad).await {
+            Some(crate::held_key::Event::Down(Key::Asterisk)) => {
+                Some(Event::ShowSpecialCharacters)
+            }
             Some(crate::held_key::Event::Down(Key::Hash)) => {
                 self.case_state.cycle_case();
                 Some(Event::Case(self.case()))
@@ -95,7 +99,6 @@ impl MultiTap {
                 self.last.clear();
                 Some(Event::Decided(digit(d)))
             }
-
             Some(crate::held_key::Event::Down(d)) => {
                 if self.case() == Case::Number {
                     Some(Event::Decided(digit(d)))

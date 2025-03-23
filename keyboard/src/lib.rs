@@ -28,11 +28,10 @@ impl Application for Keyboard<'_> {
         device: &mut impl shared::Device,
         _system_response: Option<[u8; 64]>,
     ) -> Result<Option<shared::SystemRequest>, ()> {
-        Ok(
-            self.0
-                .process(device)
-                .await
-                .map(|c| shared::SystemRequest::UsbTx(shared::UsbTx::HidChar(shared::build_report(c))))
-        )
+        Ok(self
+            .0
+            .process(device)
+            .await
+            .map(|c| shared::SystemRequest::UsbTx(shared::UsbTx::HidChar(shared::build_report(c)))))
     }
 }

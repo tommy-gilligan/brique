@@ -1,9 +1,8 @@
 use embassy_rp::{
     peripherals::{PIN_21, PWM_SLICE2},
-    pwm::{Config, Pwm, SetDutyCycle},
+    pwm::{Config, Pwm, PwmError, SetDutyCycle},
 };
 use shared::Buzzer;
-use embassy_rp::pwm::PwmError;
 
 pub struct Beeper<'a>(Pwm<'a>, u16);
 

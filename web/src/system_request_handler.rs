@@ -41,9 +41,8 @@ impl shared::SystemRequestHandler for Handler {
                 let window = web_sys::window().expect("no global `window` exists");
                 let location = window.location();
                 location.reload().unwrap();
-            },
-            shared::SystemRequest::SetTime(time) => {
             }
+            shared::SystemRequest::SetTime(_time) => {}
         }
     }
 }

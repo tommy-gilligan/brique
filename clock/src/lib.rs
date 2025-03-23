@@ -1,17 +1,15 @@
 #![no_std]
 
-use chrono::Timelike;
+use chrono::{Datelike, Timelike};
 use embedded_graphics::{
     mono_font::{MonoTextStyle, ascii::FONT_10X20},
     pixelcolor::BinaryColor,
     prelude::*,
-    primitives::PrimitiveStyle,
+    primitives::{PrimitiveStyle, Rectangle},
     text::{Alignment, Text},
 };
+use enum_iterator::{Sequence, first, next};
 use shared::Application;
-use chrono::Datelike;
-use enum_iterator::{all, cardinality, first, last, next, previous, reverse_all, Sequence, next_cycle};
-use embedded_graphics::primitives::Rectangle;
 
 #[derive(Sequence, Debug, PartialEq, Clone)]
 enum Setting {
@@ -20,21 +18,21 @@ enum Setting {
     Second,
     Day,
     Month,
-    Year
+    Year,
 }
 
 pub struct Clock {
-    setting: Option<Setting>,
-    new_time: Option<i64>,
-    clock_view: ClockView
+    _setting: Option<Setting>,
+    _new_time: Option<i64>,
+    clock_view: ClockView,
 }
 
 impl Clock {
     pub fn new() -> Self {
         Self {
-            setting: None,
-            new_time: None,
-            clock_view: ClockView::new()
+            _setting: None,
+            _new_time: None,
+            clock_view: ClockView::new(),
         }
     }
 }
@@ -42,9 +40,9 @@ impl Clock {
 impl Default for Clock {
     fn default() -> Self {
         Self {
-            setting: None,
-            new_time: None,
-            clock_view: ClockView::new()
+            _setting: None,
+            _new_time: None,
+            clock_view: ClockView::new(),
         }
     }
 }
@@ -73,7 +71,7 @@ struct ClockView {
     day: u32,
     month: u32,
     year: u32,
-    selected: Option<Setting>
+    selected: Option<Setting>,
 }
 
 impl ClockView {
@@ -85,45 +83,25 @@ impl ClockView {
             day: 1,
             month: 2,
             year: 2025,
-            selected: None
+            selected: None,
         }
     }
 
     fn draw_separators(&mut self, device: &mut impl shared::Device) {
         let character_style = MonoTextStyle::new(&FONT_10X20, BinaryColor::Off);
-        Text::with_alignment(
-            ":",
-            Point::new(28, 20),
-            character_style,
-            Alignment::Center,
-        )
-        .draw(device)
-        .unwrap();
-        Text::with_alignment(
-            ":",
-            Point::new(56, 20),
-            character_style,
-            Alignment::Center,
-        )
-        .draw(device)
-        .unwrap();
+        Text::with_alignment(":", Point::new(28, 20), character_style, Alignment::Center)
+            .draw(device)
+            .unwrap();
+        Text::with_alignment(":", Point::new(56, 20), character_style, Alignment::Center)
+            .draw(device)
+            .unwrap();
 
-        Text::with_alignment(
-            "/",
-            Point::new(28, 40),
-            character_style,
-            Alignment::Center,
-        )
-        .draw(device)
-        .unwrap();
-        Text::with_alignment(
-            "/",
-            Point::new(56, 40),
-            character_style,
-            Alignment::Center,
-        )
-        .draw(device)
-        .unwrap();
+        Text::with_alignment("/", Point::new(28, 40), character_style, Alignment::Center)
+            .draw(device)
+            .unwrap();
+        Text::with_alignment("/", Point::new(56, 40), character_style, Alignment::Center)
+            .draw(device)
+            .unwrap();
     }
 
     fn increase_seconds(&mut self) {
@@ -248,23 +226,18 @@ impl ClockView {
         };
 
         let character_style = MonoTextStyle::new(&FONT_10X20, foreground);
-        Rectangle::new(
-            point - Point::new(9, 13),
-            Size::new(20, 15)
-        ).into_styled(PrimitiveStyle::with_fill(background)).draw(device).unwrap();
+        Rectangle::new(point - Point::new(9, 13), Size::new(20, 15))
+            .into_styled(PrimitiveStyle::with_fill(background))
+            .draw(device)
+            .unwrap();
 
-        Text::with_alignment(
-            &text,
-            point,
-            character_style,
-            Alignment::Center,
-        )
-        .draw(device)
-        .unwrap();
+        Text::with_alignment(&text, point, character_style, Alignment::Center)
+            .draw(device)
+            .unwrap();
     }
 
     fn draw(&mut self, device: &mut impl shared::Device) {
-        device.clear(BinaryColor::On);
+        device.clear(BinaryColor::On).unwrap();
         self.draw_separators(device);
         self.draw_segment(device, Setting::Hour);
         self.draw_segment(device, Setting::Minute);
@@ -326,7 +299,7 @@ impl ClockView {
         match device.event().await {
             shared::KeyEvent::Down(shared::Key::Select) => {
                 self.selected = match &self.selected {
-                    Some(selected) => next::<Setting>(&self.selected.clone().unwrap()),
+                    Some(selected) => next::<Setting>(&selected.clone()),
                     None => Some(first::<Setting>().unwrap()),
                 };
                 if self.selected.is_none() {
@@ -344,13 +317,48 @@ impl ClockView {
         false
     }
 
-    fn set_time(&mut self, time: chrono::DateTime::<chrono::Utc>) {
+    fn set_time(&mut self, time: chrono::DateTime<chrono::Utc>) {
         self.hour = time.hour();
         self.minute = time.minute();
         self.second = time.second();
         self.day = time.day();
         self.month = time.month();
         self.year = time.year().try_into().unwrap();
+    }
+
+    fn format(&self) -> heapless::String<25> {
+        let mut result = heapless::String::<25>::new();
+        result.push('2').unwrap();
+        result.push('0').unwrap();
+        result.push(to_char(((self.year) % 100) / 10)).unwrap();
+        result.push(to_char(self.year % 10)).unwrap();
+        result.push('-').unwrap();
+        result.push(to_char(self.month / 10)).unwrap();
+        result.push(to_char(self.month % 10)).unwrap();
+        result.push('-').unwrap();
+        result.push(to_char(self.day / 10)).unwrap();
+        result.push(to_char(self.day % 10)).unwrap();
+        result.push('T').unwrap();
+        result.push(to_char(self.hour / 10)).unwrap();
+        result.push(to_char(self.hour % 10)).unwrap();
+        result.push(':').unwrap();
+        result.push(to_char(self.minute / 10)).unwrap();
+        result.push(to_char(self.minute % 10)).unwrap();
+        result.push(':').unwrap();
+        result.push(to_char(self.second / 10)).unwrap();
+        result.push(to_char(self.second % 10)).unwrap();
+        result.push('Z').unwrap();
+        result
+    }
+
+    fn chrono(&self) -> chrono::DateTime<chrono::Utc> {
+        chrono::DateTime::<chrono::Utc>::from_naive_utc_and_offset(
+            chrono::NaiveDate::from_ymd_opt(self.year.try_into().unwrap(), self.month, self.day)
+                .unwrap()
+                .and_hms_milli_opt(self.hour, self.minute, self.second, 0)
+                .unwrap(),
+            chrono::Utc,
+        )
     }
 }
 
@@ -360,18 +368,17 @@ impl Application for Clock {
         device: &mut impl shared::Device,
         _system_response: Option<[u8; 64]>,
     ) -> Result<Option<shared::SystemRequest>, ()> {
-        device.clear(BinaryColor::Off);
+        device.clear(BinaryColor::Off).unwrap();
 
         let timestamp = device.timestamp().unwrap();
         if self.clock_view.selected.is_none() {
-            self.clock_view.set_time(
-                chrono::DateTime::<chrono::Utc>::from_timestamp(timestamp, 0).unwrap()
-            )
+            self.clock_view
+                .set_time(chrono::DateTime::<chrono::Utc>::from_timestamp(timestamp, 0).unwrap());
+            log::info!("{}", self.clock_view.format());
         };
         self.clock_view.draw(device);
         if self.clock_view.update(device).await {
-            // chrono::DateTime::<chrono::Utc>::new(
-            // )
+            device.set_timestamp(self.clock_view.chrono().timestamp());
         }
 
         embassy_time::Timer::after_millis(10).await;

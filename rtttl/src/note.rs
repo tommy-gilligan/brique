@@ -49,11 +49,16 @@ pub struct Note {
     duration: u32,
     octave: u32,
     tripled: bool,
-    beats_per_minute: u32
+    beats_per_minute: u32,
 }
 
 impl Note {
-    pub fn new(text: &str, default_octave: u32, default_duration: u32, beats_per_minute: u32) -> Self {
+    pub fn new(
+        text: &str,
+        default_octave: u32,
+        default_duration: u32,
+        beats_per_minute: u32,
+    ) -> Self {
         let n = text.trim();
         let mut not_digit = n.match_indices(|c: char| c.is_ascii_alphabetic());
         let (name_start_index, _) = not_digit.next().unwrap();
@@ -65,14 +70,16 @@ impl Note {
         if n.ends_with(".") {
             end -= 1;
         }
-        let octave = n[name_end_index..end.max(name_end_index)].parse().unwrap_or(default_octave);
+        let octave = n[name_end_index..end.max(name_end_index)]
+            .parse()
+            .unwrap_or(default_octave);
 
         Self {
             octave,
             name: n[name_start_index..name_end_index].parse().unwrap(),
             duration: n[..name_start_index].parse().unwrap_or(default_duration),
             tripled: n.ends_with("."),
-            beats_per_minute
+            beats_per_minute,
         }
     }
 
@@ -135,7 +142,7 @@ impl Note {
             (6, NoteName::A) => Some(Ok(1760)),
             (6, NoteName::ASharp) => Some(Ok(1864)),
             (6, NoteName::B) => Some(Ok(1975)),
-            (o, n) => Some(Err(())),
+            (_o, _n) => Some(Err(())),
         }
     }
 }
@@ -146,45 +153,57 @@ mod test {
 
     #[test]
     fn test_note() {
-        assert_eq!(Note::new("2a3", 5, 4, 108), Note {
-            name: NoteName::A,
-            octave: 3,
-            duration: 2,
-            tripled: false,
-            beats_per_minute: 108
-        });
+        assert_eq!(
+            Note::new("2a3", 5, 4, 108),
+            Note {
+                name: NoteName::A,
+                octave: 3,
+                duration: 2,
+                tripled: false,
+                beats_per_minute: 108
+            }
+        );
     }
 
     #[test]
     fn test_note_tripled() {
-        assert_eq!(Note::new("2a3.", 5, 4, 100), Note {
-            name: NoteName::A,
-            octave: 3,
-            duration: 2,
-            tripled: true,
-            beats_per_minute: 100
-        });
+        assert_eq!(
+            Note::new("2a3.", 5, 4, 100),
+            Note {
+                name: NoteName::A,
+                octave: 3,
+                duration: 2,
+                tripled: true,
+                beats_per_minute: 100
+            }
+        );
     }
 
     #[test]
     fn test_note_sharp() {
-        assert_eq!(Note::new("32d#", 5, 4, 104), Note {
-            name: NoteName::DSharp,
-            octave: 5,
-            duration: 32,
-            tripled: false,
-            beats_per_minute: 104
-        });
+        assert_eq!(
+            Note::new("32d#", 5, 4, 104),
+            Note {
+                name: NoteName::DSharp,
+                octave: 5,
+                duration: 32,
+                tripled: false,
+                beats_per_minute: 104
+            }
+        );
     }
 
     #[test]
     fn test_note_sharp_tripled() {
-        assert_eq!(Note::new("32d#.", 5, 4, 2), Note {
-            name: NoteName::DSharp,
-            octave: 5,
-            duration: 32,
-            tripled: true,
-            beats_per_minute: 102
-        });
+        assert_eq!(
+            Note::new("32d#.", 5, 4, 2),
+            Note {
+                name: NoteName::DSharp,
+                octave: 5,
+                duration: 32,
+                tripled: true,
+                beats_per_minute: 102
+            }
+        );
     }
 }

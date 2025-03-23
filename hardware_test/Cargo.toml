@@ -9,5 +9,6 @@ embassy-time = { workspace = true }
 embedded-graphics = "0.8"
 embedded-text = "0.7.2"
 enum-iterator = "2.1.0"
+log = "0.4.26"
 shared = { path = "../shared" }
 usbd-hid = "*"

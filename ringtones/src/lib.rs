@@ -8,12 +8,8 @@ use shared::Application;
 pub struct Ringtones<'a> {
     menu: shared::menu::Menu<'a>,
     song: Option<rtttl::Song<'a>>,
-    song_index: Option<usize>
+    song_index: Option<usize>,
 }
-
-use core::fmt::Debug;
-
-use embedded_graphics::{draw_target::DrawTarget, pixelcolor::BinaryColor};
 
 const HAUNTED_HOUSE: &str = "HauntHouse: d=4,o=5,b=108: 2a4, 2e, 2d#, 2b4, 2a4, 2c, 2d, 2a#4, 2e., e, 1f4, 1a4, 1d#, 2e., d, 2c., b4, 1a4, 1p, 2a4, 2e, 2d#, 2b4, 2a4, 2c, 2d, 2a#4, 2e., e, 1f4, 1a4, 1d#, 2e., d, 2c., b4, 1a4";
 const COUNTDOWN: &str = "countdown:d=4, o=5, b=125:p, 8p, 16b, 16a, b, e, p, 8p, 16c6, 16b, 8c6, 8b, a, p, 8p, 16c6, 16b, c6, e, p, 8p, 16a, 16g, 8a, 8g, 8f#, 8a, g., 16f#, 16g, a., 16g, 16a, 8b, 8a, 8g, 8f#, e, c6, 2b., 16b, 16c6, 16b, 16a, 1b";
@@ -28,24 +24,28 @@ const SONGS: [&str; 6] = [
     BARBIE_GIRL,
     HAUNTED_HOUSE,
     COUNTDOWN,
-    MISSION
+    MISSION,
 ];
 
-impl <'a>Ringtones<'a> {
+impl Default for Ringtones<'_> {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
+impl Ringtones<'_> {
     pub fn new() -> Self {
         Self {
-            menu: shared::menu::Menu::new(
-                &[
-                    WANNABE,
-                    RICH_MAN,
-                    BARBIE_GIRL,
-                    HAUNTED_HOUSE,
-                    COUNTDOWN,
-                    MISSION
-                ]
-            ),
+            menu: shared::menu::Menu::new(&[
+                WANNABE,
+                RICH_MAN,
+                BARBIE_GIRL,
+                HAUNTED_HOUSE,
+                COUNTDOWN,
+                MISSION,
+            ]),
             song: None,
-            song_index: None
+            song_index: None,
         }
     }
 }
@@ -56,32 +56,30 @@ impl Application for Ringtones<'_> {
         device: &mut impl shared::Device,
         _system_response: Option<[u8; 64]>,
     ) -> Result<Option<shared::SystemRequest>, ()> {
-
         match &mut self.song {
             None => {
-                match embassy_time::with_timeout(
+                if let Ok(Some(i)) = embassy_time::with_timeout(
                     embassy_time::Duration::from_millis(1000),
                     self.menu.process(device, "Pause"),
-                ).await {
-                    Ok(Some(i)) => {
-                        log::debug!("Selected ringtone {}", i);
-                        self.song = Some(rtttl::Song::new(SONGS[i]));
-                    },
-                    _ => {}
+                )
+                .await
+                {
+                    log::debug!("Selected ringtone {}", i);
+                    self.song = Some(rtttl::Song::new(SONGS[i]));
                 }
-            },
+            }
             Some(song) => {
                 if let Some(note) = song.next() {
                     if let Some(frequency) = note.frequency() {
-                        device.unmute_buzzer();
+                        device.unmute_buzzer().unwrap();
                         log::debug!("Playing {}Hz", frequency.unwrap());
-                        device.set_frequency(frequency.unwrap() as u16);
+                        device.set_frequency(frequency.unwrap() as u16).unwrap();
                     } else {
-                        device.mute_buzzer();
+                        device.mute_buzzer().unwrap();
                     }
                     embassy_time::Timer::after_millis(note.duration().into()).await
                 } else {
-                    device.mute_buzzer();
+                    device.mute_buzzer().unwrap();
                     self.song = None;
                     self.song_index = None;
                 }

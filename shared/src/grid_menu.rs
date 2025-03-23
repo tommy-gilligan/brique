@@ -5,6 +5,7 @@ use embedded_graphics::{
     primitives::{PrimitiveStyle, Rectangle},
     text::{Alignment, Text},
 };
+use embedded_graphics::mono_font::ascii::FONT_6X9;
 
 use crate::held_key::HeldKey;
 
@@ -27,12 +28,21 @@ impl<'a> GridMenu<'a> {
         }
     }
 
-    pub fn draw<D>(&mut self, draw_target: &mut D)
+    pub fn draw<D>(&mut self, draw_target: &mut D, text: &str)
     where
         D: DrawTarget<Color = BinaryColor>,
     {
         let top_left = draw_target.bounding_box().top_left;
         let _ = draw_target.clear(BinaryColor::On);
+        let _ = Text::with_alignment(
+            text,
+            Point::new(42, 45),
+            MonoTextStyle::new(&FONT_6X9, BinaryColor::Off),
+            Alignment::Center,
+        )
+        .draw(draw_target);
+
+        let mut clipped = draw_target.clipped(&Rectangle::new(Point::new(0, 0), Size::new(84, 40)));
 
         for (row_index, row) in self.items.chunks(ROW_LENGTH).enumerate() {
             for (column_index, cell) in row.iter().enumerate() {
@@ -45,14 +55,14 @@ impl<'a> GridMenu<'a> {
                         Size::new(9, 10),
                     )
                     .into_styled(PrimitiveStyle::with_fill(BinaryColor::Off))
-                    .draw(draw_target);
+                    .draw(&mut clipped);
                     let _ = Text::with_alignment(
                         cell,
                         top_left + Point::new(6, 10) + Point::new(x_offset, y_offset),
                         MonoTextStyle::new(&FONT_6X10, BinaryColor::On),
                         Alignment::Center,
                     )
-                    .draw(draw_target);
+                    .draw(&mut clipped);
                 } else {
                     let _ = Text::with_alignment(
                         cell,
@@ -60,7 +70,7 @@ impl<'a> GridMenu<'a> {
                         MonoTextStyle::new(&FONT_6X10, BinaryColor::Off),
                         Alignment::Center,
                     )
-                    .draw(draw_target);
+                    .draw(&mut clipped);
                 }
             }
         }
@@ -90,9 +100,9 @@ impl<'a> GridMenu<'a> {
         }
     }
 
-    pub async fn run(&mut self, device: &mut impl crate::Device) -> &'a str {
+    pub async fn run(&mut self, device: &mut impl crate::Device, text: &str) -> &'a str {
         loop {
-            self.draw(device);
+            self.draw(device, text);
 
             match self.held_key.event(device).await {
                 Some(

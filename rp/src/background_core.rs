@@ -1,12 +1,10 @@
 use embassy_executor::Spawner;
 
-use crate::{Irqs, Usbs, Flashs};
+use crate::{Irqs, Usbs};
 
 mod usb;
-mod flash;
 
 #[embassy_executor::task]
-pub async fn background(spawner: Spawner, usb: Usbs, flash: Flashs) {
+pub async fn background(spawner: Spawner, usb: Usbs) {
     spawner.spawn(usb::usb_task(spawner, usb)).unwrap();
-    spawner.spawn(flash::flash_task(spawner, flash)).unwrap();
 }

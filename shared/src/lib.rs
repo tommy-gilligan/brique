@@ -16,14 +16,15 @@ pub mod menu;
 pub mod multitap;
 pub mod textbox;
 pub mod time;
+pub mod new_menu;
 
 use core::{ascii::Char, future::Future};
 
+use embassy_time::Duration;
 use embedded_graphics_core::{draw_target::DrawTarget, pixelcolor::BinaryColor};
 use enum_iterator::Sequence;
 use strum_macros::IntoStaticStr;
 use usbd_hid::descriptor::KeyboardUsage;
-use embassy_time::Duration;
 
 pub trait SystemResponse {
     fn take(&mut self) -> Option<[u8; 64]>;
@@ -54,13 +55,14 @@ pub enum ButtonEvent {
 }
 
 pub trait PowerButton {
-    fn was_pressed(&mut self) -> impl core::future::Future<Output = bool> + core::marker::Send;
+    fn clear(&mut self);
 }
 
 pub trait Rtc {
     type Error: core::fmt::Debug;
 
     fn timestamp(&mut self) -> Result<i64, Self::Error>;
+    fn set_timestamp(&mut self, time: i64);
 }
 
 #[derive(Clone, IntoStaticStr, Sequence, PartialEq)]
@@ -114,6 +116,8 @@ pub enum KeyEvent {
 
 pub trait Keypad {
     fn event(&mut self) -> impl core::future::Future<Output = KeyEvent> + core::marker::Send;
+
+    fn last_pressed(&mut self) -> Option<embassy_time::Duration>;
 }
 
 pub trait Application {
@@ -138,7 +142,7 @@ pub enum UsbTx {
 pub enum SystemRequest {
     UsbTx(UsbTx),
     ResetToBoot,
-    SetTime(i64)
+    SetTime(i64),
 }
 
 pub trait SystemRequestHandler {
@@ -160,6 +164,7 @@ fn prepare_for_app(device: &mut impl Device) {
     device.clear(BinaryColor::On).unwrap();
     device.mute_buzzer().unwrap();
     device.stop_vibrating();
+    device.on();
 }
 
 pub async fn run_app(
@@ -170,8 +175,22 @@ pub async fn run_app(
     system_request_handler: &mut impl SystemRequestHandler,
 ) {
     prepare_for_app(device);
+
     loop {
         device.start_watchdog(Duration::from_millis(2200));
+        match device.last_pressed() {
+            Some(last_pressed) if last_pressed > embassy_time::Duration::from_secs(5) => {
+                device.off();
+            }
+            _ => device.on(),
+        }
+        match device.last_pressed() {
+            Some(last_pressed) if last_pressed > embassy_time::Duration::from_secs(15) => {
+                power.clear();
+                device.off();
+            }
+            _ => {}
+        }
         match embassy_time::with_timeout(
             embassy_time::Duration::from_millis(2000),
             app.run(device, system_response.take()),
@@ -183,20 +202,19 @@ pub async fn run_app(
                 log::debug!("Handling system request");
                 system_request_handler.handle_request(e).await;
             }
-            Ok(Err(_)) => {
-            }
+            Ok(Err(_)) => {}
             Err(embassy_time::TimeoutError) => {
                 log::debug!("Timed out while waiting for app to return");
             }
         }
 
-        if power.was_pressed().await {
-            prepare_for_app(device);
-            device.feed_watchdog();
-            return;
-        } else {
-            device.feed_watchdog();
-        }
+        // if power.was_pressed().await {
+        //     prepare_for_app(device);
+        //     device.feed_watchdog();
+        //     return;
+        // } else {
+        //     device.feed_watchdog();
+        // }
     }
 }
 

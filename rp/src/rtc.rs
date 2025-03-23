@@ -7,20 +7,15 @@ pub struct Clock<'a>(
 );
 
 impl Clock<'_> {
-    pub fn new(i2c: I2C1, sda: PIN_46, scl: PIN_47) -> Result<Self, unofficial_piicodev::OutOfRange> {
-        Ok(
-            Self(
-                unofficial_piicodev::p19::P19::new(
-                    embassy_rp::i2c::I2c::new_blocking(
-                        i2c,
-                        scl,
-                        sda,
-                        embassy_rp::i2c::Config::default(),
-                    ),
-                    0x52,
-                )?
-            )
-        )
+    pub fn new(
+        i2c: I2C1,
+        sda: PIN_46,
+        scl: PIN_47,
+    ) -> Result<Self, unofficial_piicodev::OutOfRange> {
+        Ok(Self(unofficial_piicodev::p19::P19::new(
+            embassy_rp::i2c::I2c::new_blocking(i2c, scl, sda, embassy_rp::i2c::Config::default()),
+            0x52,
+        )?))
     }
 }
 

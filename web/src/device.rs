@@ -7,7 +7,6 @@ use wasm_bindgen::prelude::*;
 use web_sys::{AudioContext, Element, GainNode, OscillatorNode, OscillatorType};
 
 use crate::DomB;
-use js_sys::Date;
 
 mod backlight;
 mod buzzer;
@@ -41,7 +40,8 @@ pub struct Device {
     gain: Rc<Mutex<Option<GainNode>>>,
     closure: RefCell<Option<Closure<dyn FnMut()>>>,
     offset: i64,
-    mute: bool
+    mute: bool,
+    last_time_pressed: Option<embassy_time::Instant>,
 }
 
 impl Device {
@@ -102,7 +102,8 @@ impl Device {
             hash: crate::DomB::new(hash_id),
             vibration_element,
             offset: 0,
-            mute: true
+            mute: true,
+            last_time_pressed: None,
         };
 
         let o = Rc::clone(&result.oscillator);
@@ -143,16 +144,10 @@ impl Device {
 
         result
     }
-
-    fn set_time(&mut self, time: i64) {
-        self.offset = time - ((Date::now() / 1000.0) as i64);
-    }
 }
 
 impl shared::Device for Device {
-    fn start_watchdog(&mut self, duration: embassy_time::Duration) {
-    }
+    fn start_watchdog(&mut self, _duration: embassy_time::Duration) {}
 
-    fn feed_watchdog(&mut self) {
-    }
+    fn feed_watchdog(&mut self) {}
 }

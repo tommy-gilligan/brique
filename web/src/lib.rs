@@ -76,14 +76,20 @@ async fn main(_spawner: Spawner) {
         document.get_element_by_id("svg1").unwrap(),
     );
 
-    let power_button = power::DomPower::new("power");
+    let power_button = power::DomPower::new();
     let hid_console = document.get_element_by_id("hid-console").unwrap();
     let cdc_console = document.get_element_by_id("cdc-console").unwrap();
     let system_request_handler = system_request_handler::Handler::new(hid_console, cdc_console);
 
     let system_response = CdcSend::new(document.get_element_by_id("cdc-console-rx").unwrap());
 
-    main_menu::main_menu(device, power_button, system_response, system_request_handler).await
+    main_menu::main_menu(
+        device,
+        power_button,
+        system_response,
+        system_request_handler,
+    )
+    .await
 }
 
 use core::cell::RefCell;

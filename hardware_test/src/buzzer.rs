@@ -15,7 +15,8 @@ impl BuzzerTest<'_> {
                 "Yes",
                 "No",
                 false,
-            ),)
+            ),
+        )
     }
 }
 

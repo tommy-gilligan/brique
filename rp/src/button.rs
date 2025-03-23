@@ -1,19 +1,19 @@
 use embassy_rp::{
-    gpio::{Input, Pull},
+    gpio::{Level, Output},
     peripherals::PIN_28,
 };
 use shared::PowerButton;
 
-pub struct Button<'a>(Input<'a>);
+pub struct Button<'a>(Output<'a>);
 
 impl Button<'_> {
     pub fn new(pin: PIN_28) -> Self {
-        Self(Input::new(pin, Pull::Up))
+        Self(Output::new(pin, Level::Low))
     }
 }
 
 impl PowerButton for Button<'_> {
-    async fn was_pressed(&mut self) -> bool {
-        self.0.is_low()
+    fn clear(&mut self) {
+        self.0.set_high();
     }
 }

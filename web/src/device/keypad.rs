@@ -3,8 +3,8 @@ use shared::{Key, Keypad};
 
 unsafe impl Send for super::Device {}
 
-impl Keypad for super::Device {
-    async fn event(&mut self) -> shared::KeyEvent {
+impl super::Device {
+    async fn base_event(&mut self) -> shared::KeyEvent {
         loop {
             Timer::after_millis(30).await;
             if let Some(e) = (*self.cancel).borrow_mut().check() {
@@ -105,5 +105,20 @@ impl Keypad for super::Device {
                 };
             }
         }
+    }
+}
+
+impl Keypad for super::Device {
+    async fn event(&mut self) -> shared::KeyEvent {
+        let result = self.base_event().await;
+        self.last_time_pressed.replace(embassy_time::Instant::now());
+        result
+    }
+
+    fn last_pressed(&mut self) -> Option<embassy_time::Duration> {
+        if let Some(last_time_pressed) = self.last_time_pressed {
+            return Some(embassy_time::Instant::now() - last_time_pressed);
+        }
+        None
     }
 }

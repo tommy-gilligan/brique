@@ -9,7 +9,7 @@ pub struct Song<'a> {
     octave: u32,
     pub beats_per_minute: u32,
     notes: core::iter::Peekable<core::str::Split<'a, &'a str>>,
-    time: u32,
+    _time: u32,
 }
 
 impl<'a> Song<'a> {
@@ -41,12 +41,14 @@ impl<'a> Song<'a> {
             octave,
             beats_per_minute,
             notes,
-            time: 0,
+            _time: 0,
         }
     }
 
     pub fn next(&mut self) -> Option<note::Note> {
-        self.notes.next().map(|n| crate::note::Note::new(n, self.octave, self.duration, self.beats_per_minute))
+        self.notes
+            .next()
+            .map(|n| crate::note::Note::new(n, self.octave, self.duration, self.beats_per_minute))
     }
 
     // pub fn note_at(&mut self, time_ms: u32) -> Option<note::Note> {
