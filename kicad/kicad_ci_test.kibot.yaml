@@ -1,0 +1,130 @@
+kibot:
+  version: 1
+
+import:
+  - file: 3DRender_top
+
+preflight:
+  erc: true
+  drc: true
+  filters:
+  - filter: 'Zone clearance'
+    error: 'clearance'
+    regex: 'Clearance violation \(zone clearance'
+  - filter: 'Netclass clearance'
+    error: 'clearance'
+    regex: 'Clearance violation \(netclass'
+  - filter: 'Hole clearance'
+    error: 'hole_clearance'
+    regex: 'Hole clearance violation'
+  - filter: 'Power pin not driven'
+    error: 'power_pin_not_driven'
+    regex: 'Input Power pin not driven by any Output Power pins'
+
+outputs:
+  - name: 'print_sch'
+    comment: "Print schematic (PDF)"
+    type: pdf_sch_print
+    dir: .
+    options:
+      output: schematic.pdf
+
+  - name: 'print_front'
+    comment: "Print B.Cu+Dwgs.User like a transparent core"
+    type: pcb_print
+    dir: .
+    options:
+      output_name: pcb_top.pdf
+      scaling: 6
+      pages:
+        - sheet: Bottom from top
+          layers:
+            - layer: Edge.Cuts
+            - B.Cu
+            - layer: F.Mask
+              color: '#14332440'
+            - layer: F.SilkS
+
+  - name: 'gerbers'
+    type: gerber
+    options:
+      exclude_edge_layer: true
+      exclude_pads_from_silkscreen: false
+      use_aux_axis_as_origin: false
+      plot_sheet_reference: false
+      plot_footprint_refs: true
+      plot_footprint_values: false
+      force_plot_invisible_refs_vals: false
+      tent_vias: true
+      line_width: 0.1
+      subtract_mask_from_silk: true
+      use_protel_extensions: true
+      gerber_precision: 4.6
+      create_gerber_job_file: false
+      use_gerber_x2_attributes: false
+      use_gerber_net_attributes: false
+    layers:
+      - F.Cu
+      - In1.Cu
+      - In2.Cu
+      - B.Cu
+      - F.Paste
+      - B.Paste
+      - F.Silkscreen
+      - B.Silkscreen
+      - F.Mask
+      - B.Mask
+      - Edge.Cuts
+
+  - name: 'gerb_drill'
+    type: excellon
+    options:
+      minimal_header: false
+      route_mode_for_oval_holes: false
+      metric_units: true
+      zeros_format: "DECIMAL_FORMAT"
+      mirror_y_axis: false
+      generate_drill_files: true
+      pth_and_npth_single_file : false
+      map: 'gerber'
+      table:
+        units: millimeters
+
+  - name: 'bom'
+    type: bom
+    options:
+      output: bom.csv
+      csv:
+        hide_pcb_info: true
+        hide_stats_info: true
+      format: CSV
+      normalize_values: true
+      columns:
+        - field: Value
+          name: Comment
+        - field: References
+          name: Designator
+        - Footprint
+        - JLCPCB
+
+  - name: 'position'
+    type: position
+    options:
+      output: cpl.csv
+      separate_files_for_front_and_back: false
+      units: 'millimeters'
+      format: 'CSV'
+      only_smd: true
+      columns:
+        - id: Ref
+          name: Designator
+        - Val
+        - Package
+        - id: PosX
+          name: Mid X
+        - id: PosY
+          name: Mid Y
+        - id: Rot
+          name: Rotation
+        - id: Side
+          name: Layer

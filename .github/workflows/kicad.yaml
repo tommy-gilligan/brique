@@ -2,7 +2,7 @@ name: KiCAD
 
 defaults:
   run:
-    working-directory: ./pcb
+    working-directory: ./kicad
 
 on:
   push:
@@ -15,24 +15,18 @@ permissions:
 jobs:
   ERC:
     runs-on: ubuntu-latest
-    container: ghcr.io/inti-cmnb/kicad8_auto:latest
+    container: ghcr.io/inti-cmnb/kicad9_auto:latest
 
     steps:
     - uses: actions/checkout@v4
 
     - name: Run ERC
       run: |
-        [ -f *.kicad_sch ] && kibot  -d Fabrication -s update_xml,run_drc -i
-
-    - name: Retrieve results
-      uses: actions/upload-artifact@v4
-      with:
-        name: ERC_Output
-        path: pcb/Fabrication
+        kibot  -d jlcpcb -s drc -i -e brique.kicad_sch
 
   DRC:
     runs-on: ubuntu-latest
-    container: ghcr.io/inti-cmnb/kicad8_auto:latest
+    container: ghcr.io/inti-cmnb/kicad9_auto:latest
     needs: ERC
 
     steps:
@@ -40,49 +34,40 @@ jobs:
 
     - name: Run DRC
       run: |
-        [ -f *.kicad_pcb ] && kibot  -d Fabrication -s update_xml,erc -i
+        [ -f *.kicad_pcb ] && kibot  -d jlcpcb -s erc -i -e brique.kicad_sch
 
-    - name: Retrieve results
-      uses: actions/upload-artifact@v4
-      with:
-        name: DRC_Output
-        path: pcb/Fabrication
-
-  Fab:
-    name: Fabrication files
+  JLCPCB:
+    name: JLCPCB Files
     runs-on: ubuntu-latest
-    container: ghcr.io/inti-cmnb/kicad8_auto_full:latest
+    container: ghcr.io/inti-cmnb/kicad9_auto_full:latest
     needs: DRC
   
     steps:
     - uses: actions/checkout@v4
   
-    - name: Run schematic stuff
+    - name: Generate files
       run: |
-        [ -f *.kicad_sch ] && kibot  -d Fabrication -s drc,erc print_sch bom_html
-  
-    - name: Run PCB stuff
-      run: |
-        [ -f *.kicad_pcb ] && kibot  -d Fabrication -s all print_front gerbers _blender_3d_top
-  
-    - name: Retrieve results
+        [ -f *.kicad_pcb ] && kibot  -d jlcpcb -e brique.kicad_sch -s all bom gerbers gerb_drill position
+    
+    - name: Upload Files
       uses: actions/upload-artifact@v4
       with:
-        name: Fab_Output
-        path: pcb/Fabrication
+        name: JLCPCB
+        path: kicad/jlcpcb
+        if-no-files-found: error
+
+    - uses: vimtor/action-zip@v1.2
+      with:
+        files: kicad/jlcpcb
+        dest: gerbers.zip
   
     - name: Release
       uses: softprops/action-gh-release@v2
       if: startsWith(github.ref, 'refs/tags/')
       with:
-        path: pcb/Fabrication/**/*
+        files: |
+          kicad/jlcpcb/bom.csv
+          kicad/jlcpcb/cpl.csv
+          gerbers.zip
         fail_on_unmatched_files: true
-        draft: true
-
-# - name: Zip
-#   run: |
-#     sudo apt update
-#     sudo apt install -y zip
-#     zip Fab *
-# needs: ERC
-# needs: DRC
+        # draft: true

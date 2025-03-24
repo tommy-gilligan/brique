@@ -21,6 +21,17 @@ Because the board would need to fit into the chassis of a Nokia 3310 and because
 ### Manual Test
 ### Install Custom Software
 
+[BOM](https://github.com/tommy-gilligan/brique/releases/latest/download/bom.csv)
+[CPL](https://github.com/tommy-gilligan/brique/releases/latest/download/cpl.csv)
+[Gerbers](https://github.com/tommy-gilligan/brique/releases/latest/download/gerbers.zip)
+
+- placement of some parts is off (rotation for U*)
+- make output file names more generic (for reuse on other projects)
+- exclude files from zip that do not need to be there
+- don't zip BOM/CPL
+- make file names match where they upload
+- make CI outputs -> release outputs
+
 ### TODO
 #### Sooner
 ##### Hardware

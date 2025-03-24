@@ -1,4 +1,4 @@
-23783181189991291
+23786668833244668
 Audio_Module
 Reverb_BTDR-1H
 Digital Reverberation Unit, http://www.belton.co.kr/inc/downfile.php?seq=17&file=pdf (footprint from http://www.uk-electronic.de/PDF/BTDR-1.pdf)
@@ -63510,6 +63510,13 @@ solder jumper open
 0
 5
 3
+Jumper
+thick-pad
+
+
+0
+2
+2
 LED_SMD
 LED-APA102-2020
 http://www.led-color.com/upload/201604/APA102-2020%20SMD%20LED.pdf
@@ -86764,6 +86771,13 @@ Shielding Cabinet
 0
 48
 1
+RF_WiFi
+RM2
+
+
+0
+21
+21
 RF_WiFi
 USR-C322
 https://www.usriot.com/download/WIFI/USR-C322-Hardware-Manual_V1.2.01.pdf
