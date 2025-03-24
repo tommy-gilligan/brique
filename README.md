@@ -21,6 +21,9 @@ Because the board would need to fit into the chassis of a Nokia 3310 and because
 ### Manual Test
 ### Install Custom Software
 
+- RTC
+- supercapacitor
+
 ### TODO
 #### Sooner
 ##### Hardware
