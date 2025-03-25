@@ -63,7 +63,7 @@ pub trait Rtc {
     fn set_timestamp(&mut self, time: i64);
 }
 
-#[derive(Clone, IntoStaticStr, Sequence, PartialEq)]
+#[derive(Debug, Clone, IntoStaticStr, Sequence, PartialEq)]
 pub enum Key {
     Select,
     Cancel,
@@ -106,7 +106,7 @@ impl From<Key> for Char {
     }
 }
 
-#[derive(PartialEq)]
+#[derive(Clone, Debug, PartialEq)]
 pub enum KeyEvent {
     Up(Key),
     Down(Key),

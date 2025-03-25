@@ -3,7 +3,7 @@ use futures::{future, future::Either, pin_mut};
 
 use crate::{Key, KeyEvent};
 
-#[derive(PartialEq)]
+#[derive(Debug, PartialEq)]
 pub enum Event {
     Down(Key),
     Delay(Key),

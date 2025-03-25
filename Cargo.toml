@@ -1,6 +1,6 @@
 [workspace]
 resolver = "2"
-members = ["snake", "ringtones", "rp", "shared", "web", "clock", "hardware_test", "keyboard"]
+members = ["test", "snake", "ringtones", "rp", "shared", "web", "clock", "hardware_test", "keyboard"]
 
 [workspace.dependencies]
 pcd8544 = { path = "./pcd8544" }
