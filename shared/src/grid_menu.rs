@@ -1,11 +1,13 @@
 use embedded_graphics::{
-    mono_font::{MonoTextStyle, ascii::FONT_6X10},
+    mono_font::{
+        MonoTextStyle,
+        ascii::{FONT_6X9, FONT_6X10},
+    },
     pixelcolor::BinaryColor,
     prelude::*,
     primitives::{PrimitiveStyle, Rectangle},
     text::{Alignment, Text},
 };
-use embedded_graphics::mono_font::ascii::FONT_6X9;
 
 use crate::held_key::HeldKey;
 

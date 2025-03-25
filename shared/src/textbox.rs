@@ -18,7 +18,7 @@ pub struct Textbox<'a> {
     buffer: &'a mut [u8],
     index: usize,
     first_draw: bool,
-    grid_menu: Option<crate::grid_menu::GridMenu<'a>>
+    grid_menu: Option<crate::grid_menu::GridMenu<'a>>,
 }
 
 impl<'a> Textbox<'a> {
@@ -35,7 +35,7 @@ impl<'a> Textbox<'a> {
             buffer,
             index: 0,
             first_draw: true,
-            grid_menu: None
+            grid_menu: None,
         }
     }
 
@@ -55,7 +55,6 @@ impl<'a> Textbox<'a> {
             self.first_draw = true;
         } else {
             match self.multitap.event(device).await {
-
                 Some(crate::multitap::Event::Tentative(c)) => {
                     if c == Char::Backspace {
                         self.backspace(device);
@@ -78,11 +77,12 @@ impl<'a> Textbox<'a> {
                 }
                 Some(crate::multitap::Event::ShowSpecialCharacters) => {
                     self.grid_menu = Some(crate::grid_menu::GridMenu::new(&[
-                        "!", "\"", "#", "$", "%", "&", "'", "(", ")", "*", "+", ",", "-", ".", "/", ":", ";", "<", "=", ">", "?", "@",    "[", "\\", "^", "_", "`",    "{", "|", "}", "~",
+                        "!", "\"", "#", "$", "%", "&", "'", "(", ")", "*", "+", ",", "-", ".", "/",
+                        ":", ";", "<", "=", ">", "?", "@", "[", "\\", "^", "_", "`", "{", "|", "}",
+                        "~",
                     ]));
                 }
                 None => {}
-
             }
         }
         None

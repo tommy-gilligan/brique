@@ -838,8 +838,6 @@ dependencies = [
  "js-sys",
  "keyboard",
  "log",
- "main-menu",
- "reset-to-boot",
  "ringtones",
  "shared",
  "ssmarshal",
@@ -1712,22 +1710,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "main-menu"
-version = "0.1.0"
-dependencies = [
- "clock",
- "embassy-time",
- "embedded-graphics",
- "hardware-test",
- "keyboard",
- "log",
- "reset-to-boot",
- "ringtones",
- "shared",
- "snake",
-]
-
-[[package]]
 name = "md5"
 version = "0.7.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2358,15 +2340,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "2b15c43186be67a4fd63bee50d0303afffcef381492ebe2c5d87f324e1b8815c"
 
 [[package]]
-name = "reset-to-boot"
-version = "0.1.0"
-dependencies = [
- "embassy-time",
- "embedded-graphics",
- "shared",
-]
-
-[[package]]
 name = "rgb"
 version = "0.8.50"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2417,10 +2390,8 @@ dependencies = [
  "heapless 0.8.0",
  "keyboard",
  "log",
- "main-menu",
  "panic-probe",
  "pcd8544",
- "reset-to-boot",
  "ringtones",
  "shared",
  "static_cell",

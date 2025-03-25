@@ -10,7 +10,6 @@ license = "MIT OR Apache-2.0"
 pcd8544 = { workspace = true }
 # app = { workspace = true }
 
-main-menu = { path = "../main_menu" }
 embedded-hal = { workspace = true }
 embedded-hal-async = { workspace = true }
 defmt = { workspace = true }
@@ -41,7 +40,6 @@ shared = { path = "../shared" }
 unofficial-piicodev = { git = "https://github.com/tommy-gilligan/piicodev-rs.git" }
 critical-section = "*"
 clock = { path = "../clock" }
-reset-to-boot = { path = "../reset_to_boot" }
 hardware-test = { path = "../hardware_test" }
 keyboard = { path = "../keyboard" }
 ringtones = { path = "../ringtones" }

@@ -23,13 +23,11 @@ shared = { path = "../shared" }
 js-sys = "=0.3.70"
 clock = { path = "../clock" }
 hardware-test = { path = "../hardware_test" }
-reset-to-boot = { path = "../reset_to_boot" }
 keyboard = { path = "../keyboard" }
 ringtones = { path = "../ringtones" }
 ssmarshal = { version = "1.0.0", default-features = false }
 hidreport = "0.5.0"
 usbd-hid = "*"
-main-menu = { path = "../main_menu" }
 
 # [lints.clippy]
 # alloc_instead_of_core = "deny"

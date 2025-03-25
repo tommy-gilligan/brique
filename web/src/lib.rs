@@ -53,7 +53,7 @@ async fn main(_spawner: Spawner) {
     let window = web_sys::window().expect("no global `window` exists");
     let document = window.document().expect("should have a document on window");
 
-    let device = device::Device::new(
+    let mut device = device::Device::new(
         document.get_element_by_id("backlight").unwrap(),
         document.get_element_by_id("body").unwrap(),
         document.get_element_by_id("display").unwrap(),
@@ -76,18 +76,19 @@ async fn main(_spawner: Spawner) {
         document.get_element_by_id("svg1").unwrap(),
     );
 
-    let power_button = power::DomPower::new();
+    let mut power = power::DomPower::new();
     let hid_console = document.get_element_by_id("hid-console").unwrap();
     let cdc_console = document.get_element_by_id("cdc-console").unwrap();
-    let system_request_handler = system_request_handler::Handler::new(hid_console, cdc_console);
+    let mut system_request_handler = system_request_handler::Handler::new(hid_console, cdc_console);
 
-    let system_response = CdcSend::new(document.get_element_by_id("cdc-console-rx").unwrap());
+    let mut system_response = CdcSend::new(document.get_element_by_id("cdc-console-rx").unwrap());
 
-    main_menu::main_menu(
-        device,
-        power_button,
-        system_response,
-        system_request_handler,
+    shared::run_app(
+        keyboard::Keyboard::new(&mut device, &mut [0; 1024]),
+        &mut device,
+        &mut power,
+        &mut system_response,
+        &mut system_request_handler,
     )
     .await
 }
