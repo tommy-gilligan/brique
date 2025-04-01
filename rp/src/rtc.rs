@@ -25,4 +25,5 @@ impl Rtc for Clock<'_> {
     fn timestamp(&mut self) -> Result<i64, Self::Error> {
         Ok(self.0.get_unix_time()?.into())
     }
+    fn set_timestamp(&mut self, _: i64) { todo!() }
 }

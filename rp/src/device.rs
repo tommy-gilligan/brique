@@ -134,6 +134,7 @@ impl Keypad for Device<'_> {
     async fn event(&mut self) -> shared::KeyEvent {
         self.keypad.event().await
     }
+    fn last_pressed(&mut self) -> Option<embassy_time::Duration> { todo!() }
 }
 
 impl DrawTarget for Device<'_> {
@@ -176,4 +177,6 @@ impl Rtc for Device<'_> {
     fn timestamp(&mut self) -> Result<i64, ()> {
         Ok(0)
     }
+
+    fn set_timestamp(&mut self, _: i64) { todo!() }
 }

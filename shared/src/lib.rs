@@ -157,7 +157,7 @@ pub trait Device:
     fn feed_watchdog(&mut self);
 }
 
-fn prepare_for_app(device: &mut impl Device) {
+pub fn prepare_for_app(device: &mut impl Device) {
     log::debug!("Preparing device for app");
     device.clear(BinaryColor::On).unwrap();
     device.mute_buzzer().unwrap();

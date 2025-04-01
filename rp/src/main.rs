@@ -134,49 +134,93 @@ async fn main(spawner: Spawner) {
             });
         },
     );
+    // FIX
     let _clock = rtc::Clock::new(p.I2C1, p.PIN_46, p.PIN_47);
 
     let mut display_config = spi::Config::default();
     display_config.frequency = 4_000_000;
 
-    main_menu::main_menu(
-        device::Device::new(
-            watchdog,
-            p.PIN_2,
-            p.PIN_4,
-            p.PIN_5,
-            p.PIN_6,
-            p.PIN_7,
-            p.PIN_8,
-            p.PIN_9,
-            p.PIN_10,
-            p.PIN_11,
-            p.PIN_12,
-            p.PIN_13,
-            p.PIN_14,
-            p.PIN_15,
-            p.PIN_16,
-            p.PIN_17,
-            p.PIN_18,
-            p.PIN_19,
-            p.PIN_20,
-            p.PIN_21,
-            p.PIN_33,
-            p.PIN_36,
-            p.PIN_37,
-            p.PWM_SLICE2,
-            &Mutex::new(RefCell::new(Spi::new_blocking(
-                p.SPI0,
-                p.PIN_38,
-                p.PIN_39,
-                p.PIN_32,
-                display_config,
-            ))),
-        )
-        .unwrap(),
-        button::Button::new(p.PIN_28),
-        crate::device::CdcSend,
-        crate::device::SystemRequestHandler,
+    let display = Mutex::new(RefCell::new(Spi::new_blocking(
+        p.SPI0,
+        p.PIN_38,
+        p.PIN_39,
+        p.PIN_32,
+        display_config,
+    )));
+    let device = device::Device::new(
+        watchdog,
+        p.PIN_2,
+        p.PIN_4,
+        p.PIN_5,
+        p.PIN_6,
+        p.PIN_7,
+        p.PIN_8,
+        p.PIN_9,
+        p.PIN_10,
+        p.PIN_11,
+        p.PIN_12,
+        p.PIN_13,
+        p.PIN_14,
+        p.PIN_15,
+        p.PIN_16,
+        p.PIN_17,
+        p.PIN_18,
+        p.PIN_19,
+        p.PIN_20,
+        p.PIN_21,
+        p.PIN_33,
+        p.PIN_36,
+        p.PIN_37,
+        p.PWM_SLICE2,
+        &display,
     )
-    .await;
+    .unwrap();
+    loop {}
+
+    // prepare_for_app(device);
+
+    // loop {
+    //     // device.start_watchdog(Duration::from_millis(2200));
+    //     match device.last_pressed() {
+    //         Some(last_pressed) if last_pressed > embassy_time::Duration::from_secs(5) => {
+    //             device.off();
+    //         }
+    //         _ => device.on(),
+    //     }
+    //     match device.last_pressed() {
+    //         Some(last_pressed) if last_pressed > embassy_time::Duration::from_secs(15) => {
+    //             power.clear();
+    //             device.off();
+    //         }
+    //         _ => {}
+    //     }
+    //     match embassy_time::with_timeout(
+    //         embassy_time::Duration::from_millis(2000),
+    //         app.run(device, system_response.take()),
+    //     )
+    //     .await
+    //     {
+    //         Ok(Ok(None)) => {}
+    //         Ok(Ok(Some(e))) => {
+    //             log::debug!("Handling system request");
+    //             system_request_handler.handle_request(e).await;
+    //         }
+    //         Ok(Err(_)) => {}
+    //         Err(embassy_time::TimeoutError) => {
+    //             log::debug!("Timed out while waiting for app to return");
+    //         }
+    //     }
+
+    //     // if power.was_pressed().await {
+    //     //     prepare_for_app(device);
+    //     //     device.feed_watchdog();
+    //     //     return;
+    //     // } else {
+    //     //     device.feed_watchdog();
+    //     // }
+    // }
+
+    // // button::Button::new(p.PIN_28),
+    // // crate::device::CdcSend,
+    // // crate::device::SystemRequestHandler,
 }
