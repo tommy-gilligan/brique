@@ -8,7 +8,6 @@ Because the board would need to fit into the chassis of a Nokia 3310 and because
 
 ![3D render of front of adapter board](./front.jpg)
 ![3D render of back of adapter board](./back.jpg)
-
 ## [Simulation](https://tommy-gilligan.github.io/brique/simulation)
 ## [API](https://tommy-gilligan.github.io/brique/doc/shared)
 
@@ -28,6 +27,29 @@ Because the board would need to fit into the chassis of a Nokia 3310 and because
 focus on single app binaries for now?
 don't worry about main menu and preemption.  put everything on device &mut instead of transfering control all around the place.  eventually i want a nicer system but it's an unnecessary complexity right now.  very hard to know which way of doing syscalls is the right way.  a way that will continue to work in the future?  i'm very bad at planning apis.  i design them by making them and seeing how they feel.  should probably try to change this.
 
+### Install Custom Software
+
+[BOM](https://github.com/tommy-gilligan/brique/releases/latest/download/bom.csv)
+[CPL](https://github.com/tommy-gilligan/brique/releases/latest/download/cpl.csv)
+[Gerbers](https://github.com/tommy-gilligan/brique/releases/latest/download/gerbers.zip)
+
+- placement of some parts is off (rotation for U*)
+- make output file names more generic (for reuse on other projects)
+- exclude files from zip that do not need to be there
+- don't zip BOM/CPL
+- make file names match where they upload
+- make CI outputs -> release outputs
+
+### TODO
+#### Sooner
+##### Hardware
+- dress up repo
+- Come up with better name
+- add back supercap rtc
+- double check power regulation
+- add jlcpcb part numbers, 3d models
+
+##### Software
 - create example that plays RTTTL (and writes it to screen)
 - Snake
 - give more control over display flushing, keep track of what needs updating, what needs flushing
@@ -84,5 +106,6 @@ power button should turn on device but also function as gpio?
 - flex pcb for keypad?
 - LTE modem?
 - e-ink display?
+- power button used for BOOT/RUN?
 
 https://serdisplib.sourceforge.net/ser/pcd8544.html
