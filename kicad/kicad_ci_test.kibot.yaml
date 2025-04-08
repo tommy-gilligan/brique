@@ -22,31 +22,23 @@ preflight:
     regex: 'Input Power pin not driven by any Output Power pins'
 
 outputs:
-  - name: 'print_sch'
-    comment: "Print schematic (PDF)"
+  - name: 'pdf_sch_print'
     type: pdf_sch_print
     dir: .
     options:
       output: schematic.pdf
 
-  - name: 'print_front'
-    comment: "Print B.Cu+Dwgs.User like a transparent core"
+  - name: 'pcb_print'
     type: pcb_print
-    dir: .
     options:
-      output_name: pcb_top.pdf
-      scaling: 6
       pages:
-        - sheet: Bottom from top
-          layers:
-            - layer: Edge.Cuts
-            - B.Cu
-            - layer: F.Mask
-              color: '#14332440'
-            - layer: F.SilkS
+        - layers: all
+      format: SVG
+      output: pcb.svg
 
   - name: 'gerbers'
     type: gerber
+    dir: gerber
     options:
       exclude_edge_layer: true
       exclude_pads_from_silkscreen: false
@@ -78,6 +70,7 @@ outputs:
 
   - name: 'gerb_drill'
     type: excellon
+    dir: gerber
     options:
       minimal_header: false
       route_mode_for_oval_holes: false
@@ -128,3 +121,23 @@ outputs:
           name: Rotation
         - id: Side
           name: Layer
+
+  - name: 'blender_export'
+    type: blender_export
+    options:
+      pcb3d:
+        download_lcsc: true
+      render_options:
+        transparent_background: true
+        samples: 20
+        auto_crop: true
+      point_of_view:
+        - rotate_x: 160
+          rotate_z: 160
+          file_id: front
+        - rotate_x: 30
+          rotate_z: -20
+          file_id: back
+      outputs:
+        - type: render
+          output: '%i.%x'

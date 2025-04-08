@@ -512,7 +512,7 @@
       "plot": "plots/",
       "pos_files": "plots/",
       "specctra_dsn": "",
-      "step": "",
+      "step": "brique.stl",
       "svg": "",
       "vrml": "brique.wrl"
     },

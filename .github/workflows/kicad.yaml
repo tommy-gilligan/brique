@@ -47,8 +47,8 @@ jobs:
   
     - name: Generate files
       run: |
-        [ -f *.kicad_pcb ] && kibot  -d jlcpcb -e brique.kicad_sch -s all bom gerbers gerb_drill position
-    
+        [ -f *.kicad_pcb ] && kibot  -d jlcpcb -e brique.kicad_sch -s all bom gerbers gerb_drill position blender_export pdf_sch_print pcb_print
+
     - name: Upload Files
       uses: actions/upload-artifact@v4
       with:
@@ -58,7 +58,7 @@ jobs:
 
     - uses: vimtor/action-zip@v1.2
       with:
-        files: kicad/jlcpcb
+        files: kicad/jlcpcb/gerber
         dest: gerbers.zip
   
     - name: Release
@@ -68,6 +68,10 @@ jobs:
         files: |
           kicad/jlcpcb/bom.csv
           kicad/jlcpcb/cpl.csv
+          kicad/jlcpcb/schematic.pdf
+          kicad/jlcpcb/pcb.svg
+          kicad/jlcpcb/3D_blenderback.png
+          kicad/jlcpcb/3D_blenderfront.png
           gerbers.zip
         fail_on_unmatched_files: true
         # draft: true
