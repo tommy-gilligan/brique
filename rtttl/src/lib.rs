@@ -2,7 +2,7 @@
 
 pub mod note;
 
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub struct Song<'a> {
     pub title: &'a str,
     duration: u32,
@@ -60,6 +60,12 @@ impl<'a> Song<'a> {
 
     //     None
     // }
+}
+
+impl <'a>core::convert::AsRef<str> for Song<'a> {
+    fn as_ref(&self) -> &str { 
+        self.title
+    }
 }
 
 #[cfg(test)]

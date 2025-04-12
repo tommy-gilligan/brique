@@ -839,6 +839,7 @@ dependencies = [
  "keyboard",
  "log",
  "ringtones",
+ "rtttl",
  "shared",
  "ssmarshal",
  "usbd-hid",
@@ -943,6 +944,27 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "3ff09972d4073aa8c299395be75161d582e7629cd663171d62af73c8d50dba3f"
 dependencies = [
  "embedded-io",
+]
+
+[[package]]
+name = "embedded-layout"
+version = "0.4.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "bd38d6d83acd193889e7fbdffc9d16bb82d4328d372c7c75826619a8eb8cbcda"
+dependencies = [
+ "embedded-graphics",
+ "embedded-layout-macros",
+]
+
+[[package]]
+name = "embedded-layout-macros"
+version = "0.3.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "4f6e621fe4c7e05b695274b722dc0a60bacd1c8696b58191baa0154713d52400"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn 2.0.100",
 ]
 
 [[package]]
@@ -2636,6 +2658,7 @@ dependencies = [
  "embassy-time",
  "embedded-graphics",
  "embedded-graphics-core",
+ "embedded-layout",
  "embedded-text",
  "enum-iterator",
  "enum-iterator-derive",
@@ -2643,6 +2666,7 @@ dependencies = [
  "futures",
  "heapless 0.8.0",
  "log",
+ "rtttl",
  "strum 0.27.1",
  "strum_macros 0.27.1",
  "usbd-hid",

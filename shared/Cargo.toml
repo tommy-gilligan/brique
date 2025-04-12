@@ -20,3 +20,5 @@ strum = { version = "0.27.1", features = ["derive"], default-features = false }
 strum_macros = "0.27.1"
 usbd-hid.workspace = true
 fastrand = { version = "2.1.1", default-features = false }
+embedded-layout = "0.4.1"
+rtttl = { version = "0.1.0", path = "../rtttl" }
