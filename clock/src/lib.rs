@@ -363,11 +363,7 @@ impl ClockView {
 }
 
 impl Application for Clock {
-    async fn run(
-        &mut self,
-        device: &mut impl shared::Device,
-        _system_response: Option<[u8; 64]>,
-    ) -> Result<Option<shared::SystemRequest>, ()> {
+    async fn run(&mut self, device: &mut impl shared::Device) -> Result<(), ()> {
         device.clear(BinaryColor::Off).unwrap();
 
         let timestamp = device.timestamp().unwrap();
@@ -383,6 +379,6 @@ impl Application for Clock {
 
         embassy_time::Timer::after_millis(10).await;
 
-        Ok(None)
+        Ok(())
     }
 }

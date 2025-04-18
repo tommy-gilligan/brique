@@ -21,9 +21,9 @@ wasm-logger = "0.2.0"
 web-sys = { version = "0.3", features = ["DomException", "DomTokenList", "AudioParam", "OscillatorNode", "GainNode", "AudioContext", "Document", "Element", "HtmlElement", "Node", "EventListener", "EventTarget", "MouseEvent", "Window", "OscillatorType", "AudioDestinationNode", "HtmlInputElement", "Location" ] }
 shared = { path = "../shared" }
 js-sys = "=0.3.70"
-clock = { path = "../clock" }
-hardware-test = { path = "../hardware_test" }
-keyboard = { path = "../keyboard" }
+# clock = { path = "../clock" }
+# hardware-test = { path = "../hardware_test" }
+# keyboard = { path = "../keyboard" }
 ringtones = { path = "../ringtones" }
 ssmarshal = { version = "1.0.0", default-features = false }
 hidreport = "0.5.0"

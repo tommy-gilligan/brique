@@ -1,8 +1,7 @@
-use defmt::*;
 use defmt_rtt as _;
 use embassy_executor::Spawner;
 use embassy_rp::{
-    flash::{Async, ERASE_SIZE, FLASH_BASE},
+    flash::{Async, ERASE_SIZE},
     peripherals::FLASH,
 };
 use embassy_time::Timer;

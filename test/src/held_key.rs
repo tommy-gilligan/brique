@@ -8,9 +8,8 @@ mod test {
         let f = async {
             let driver = embassy_time::MockDriver::get();
             driver.reset();
-            let mut keypad = crate::keypad::Keypad::new(&[
-                shared::KeyEvent::Down(shared::Key::Two),
-            ]);
+            let mut keypad =
+                crate::keypad::Keypad::new(&[shared::KeyEvent::Down(shared::Key::Two)]);
             let mut held_key = shared::held_key::HeldKey::new(500, 100);
 
             assert_eq!(
@@ -20,7 +19,6 @@ mod test {
             driver.advance(embassy_time::Duration::from_millis(100));
             keypad.pending();
             held_key.event(&mut keypad).await;
-
 
             driver.advance(embassy_time::Duration::from_millis(401));
             // assert_eq!(

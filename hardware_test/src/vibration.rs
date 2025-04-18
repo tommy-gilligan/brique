@@ -22,11 +22,7 @@ impl Default for VibrationTest<'_> {
 }
 
 impl VibrationTest<'_> {
-    pub async fn run(
-        &mut self,
-        device: &mut impl shared::Device,
-        _system_response: Option<[u8; 64]>,
-    ) -> Status {
+    pub async fn run(&mut self, device: &mut impl shared::Device) -> Status {
         device.start_vibrating();
         match self.1.run(device).await {
             None => Status::InProgress(None),

@@ -13,10 +13,6 @@ mod buzzer;
 use buzzer::*;
 mod backlight;
 use backlight::*;
-mod cdc;
-use cdc::*;
-mod hid;
-use hid::*;
 
 #[derive(Clone, PartialEq)]
 pub enum Status {
@@ -31,8 +27,6 @@ enum Test<'a> {
     Vibration(VibrationTest<'a>),
     Buzzer(BuzzerTest<'a>),
     Backlight(BacklightTest<'a>),
-    Cdc(CdcTest<'a>),
-    Hid(HidTest<'a>),
 }
 
 pub struct HardwareTest<'a>(Status, shared::console::Console<'a>, Test<'a>);
@@ -58,12 +52,6 @@ impl HardwareTest<'_> {
                 self.2 = Test::Backlight(Default::default());
             }
             Test::Backlight(_) => {
-                self.2 = Test::Cdc(Default::default());
-            }
-            Test::Cdc(_) => {
-                self.2 = Test::Hid(Default::default());
-            }
-            Test::Hid(_) => {
                 self.2 = Test::Keypad(Default::default());
             }
         }
@@ -77,96 +65,68 @@ impl Default for HardwareTest<'_> {
 }
 
 impl Application for HardwareTest<'_> {
-    async fn run(
-        &mut self,
-        device: &mut impl shared::Device,
-        system_response: Option<[u8; 64]>,
-    ) -> Result<Option<shared::SystemRequest>, ()> {
+    async fn run(&mut self, device: &mut impl shared::Device) -> Result<(), ()> {
         match self.0.clone() {
             Status::InProgress(_) => match self.2 {
-                Test::Keypad(ref mut test) => match test.run(device, system_response).await {
+                Test::Keypad(ref mut test) => match test.run(device).await {
                     Status::Passed => {
                         log::info!("Passed keypad");
                         self.next();
-                        Ok(None)
+                        Ok(())
                     }
                     Status::Failed => {
                         self.0 = Status::Failed;
-                        Ok(None)
+                        Ok(())
                     }
-                    _ => Ok(None),
+                    _ => Ok(()),
                 },
-                Test::Vibration(ref mut test) => match test.run(device, system_response).await {
+                Test::Vibration(ref mut test) => match test.run(device).await {
                     Status::Passed => {
                         log::info!("Passed vibration");
                         self.next();
-                        Ok(None)
+                        Ok(())
                     }
                     Status::Failed => {
                         self.0 = Status::Failed;
-                        Ok(None)
+                        Ok(())
                     }
-                    _ => Ok(None),
+                    _ => Ok(()),
                 },
-                Test::Buzzer(ref mut test) => match test.run(device, system_response).await {
+                Test::Buzzer(ref mut test) => match test.run(device).await {
                     Status::Passed => {
                         log::info!("Passed buzzer");
                         self.next();
-                        Ok(None)
+                        Ok(())
                     }
                     Status::Failed => {
                         self.0 = Status::Failed;
-                        Ok(None)
+                        Ok(())
                     }
-                    _ => Ok(None),
+                    _ => Ok(()),
                 },
-                Test::Backlight(ref mut test) => match test.run(device, system_response).await {
+                Test::Backlight(ref mut test) => match test.run(device).await {
                     Status::Passed => {
                         log::info!("Passed backlight");
                         self.next();
-                        Ok(None)
+                        Ok(())
                     }
                     Status::Failed => {
                         self.0 = Status::Failed;
-                        Ok(None)
+                        Ok(())
                     }
-                    _ => Ok(None),
-                },
-                Test::Cdc(ref mut test) => match test.run(device, system_response).await {
-                    Status::Passed => {
-                        log::info!("Passed CDC");
-                        self.next();
-                        Ok(None)
-                    }
-                    Status::Failed => {
-                        self.0 = Status::Failed;
-                        Ok(None)
-                    }
-                    Status::InProgress(system_request) => Ok(system_request),
-                },
-                Test::Hid(ref mut test) => match test.run(device, system_response).await {
-                    Status::Passed => {
-                        log::info!("Passed HID");
-                        self.0 = Status::Passed;
-                        Ok(None)
-                    }
-                    Status::Failed => {
-                        self.0 = Status::Failed;
-                        Ok(None)
-                    }
-                    Status::InProgress(system_request) => Ok(system_request),
+                    _ => Ok(()),
                 },
             },
             Status::Passed => {
                 log::info!("Passed all tests");
                 self.1.draw(device, "Passed");
                 embassy_time::Timer::after_millis(10).await;
-                Ok(None)
+                Ok(())
             }
             Status::Failed => {
                 log::info!("Failed");
                 self.1.draw(device, "Failed");
-                Ok(None)
+                Ok(())
             }
         }
     }

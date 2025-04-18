@@ -9,3 +9,4 @@ embedded-graphics = "0.8"
 shared = { path = "../shared" }
 rtttl = { path = "../rtttl" }
 log = "0.4.26"
+embassy-futures.workspace = true

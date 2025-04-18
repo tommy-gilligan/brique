@@ -8,7 +8,8 @@ pub struct Song<'a> {
     duration: u32,
     octave: u32,
     pub beats_per_minute: u32,
-    notes: core::iter::Peekable<core::str::Split<'a, &'a str>>,
+    note_source: &'a str,
+    notes: Option<core::iter::Peekable<core::str::Split<'a, &'a str>>>,
     _time: u32,
 }
 
@@ -20,7 +21,7 @@ impl<'a> Song<'a> {
             let s = setting.split_once("=").unwrap();
             Some((s.0.trim(), s.1.trim()))
         });
-        let notes = split.next().unwrap().trim().split(",").peekable();
+
         let mut duration = 4;
         let mut octave = 5;
         let mut beats_per_minute = 108;
@@ -40,13 +41,23 @@ impl<'a> Song<'a> {
             duration,
             octave,
             beats_per_minute,
-            notes,
+            note_source: split.next().unwrap().trim(),
+            notes: None,
             _time: 0,
         }
     }
 
+    pub fn reset(&mut self) {
+        self.notes = Some(self.note_source.split(",").peekable());
+    }
+
     pub fn next(&mut self) -> Option<note::Note> {
+        if self.notes.is_none() {
+            self.reset();
+        }
         self.notes
+            .as_mut()
+            .unwrap()
             .next()
             .map(|n| crate::note::Note::new(n, self.octave, self.duration, self.beats_per_minute))
     }
@@ -57,13 +68,12 @@ impl<'a> Song<'a> {
     //     if self.time > time_ms {
     //         return Some(note);
     //     }
-
     //     None
     // }
 }
 
-impl <'a>core::convert::AsRef<str> for Song<'a> {
-    fn as_ref(&self) -> &str { 
+impl<'a> core::convert::AsRef<str> for Song<'a> {
+    fn as_ref(&self) -> &str {
         self.title
     }
 }

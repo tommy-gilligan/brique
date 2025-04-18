@@ -637,7 +637,7 @@
       "include_excluded_from_bom": false,
       "name": "",
       "sort_asc": true,
-      "sort_field": "Value"
+      "sort_field": "JLCPCB"
     },
     "connection_grid_size": 50.0,
     "drawing": {

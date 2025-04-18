@@ -1,6 +1,6 @@
 use embassy_executor::Spawner;
 
-use crate::{Irqs, Usbs};
+use crate::Usbs;
 
 mod usb;
 

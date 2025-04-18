@@ -37,6 +37,7 @@ impl HeldKey {
             result.map(Event::Repeat)
         } else {
             self.repeating = true;
+            self.timer = Some(embassy_time::Timer::after_millis(self.repeat_period));
             result.map(Event::Delay)
         }
     }

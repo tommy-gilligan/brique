@@ -18,7 +18,7 @@ pub struct Textbox<'a> {
     buffer: &'a mut [u8],
     index: usize,
     first_draw: bool,
-    grid_menu: Option<crate::grid_menu::GridMenu<'a>>,
+    // grid_menu: Option<crate::grid_menu::GridMenu<'a>>,
 }
 
 impl<'a> Textbox<'a> {
@@ -35,7 +35,7 @@ impl<'a> Textbox<'a> {
             buffer,
             index: 0,
             first_draw: true,
-            grid_menu: None,
+            // grid_menu: None,
         }
     }
 
@@ -47,44 +47,45 @@ impl<'a> Textbox<'a> {
             self.draw_border(device);
         }
 
-        if let Some(grid_menu) = &mut self.grid_menu {
-            let c = grid_menu.run(device, "Use").await.chars().next().unwrap();
-            log::info!("{}", c);
-            self.grid_menu = None;
-            self.push(device, c);
-            self.first_draw = true;
-        } else {
-            match self.multitap.event(device).await {
-                Some(crate::multitap::Event::Tentative(c)) => {
-                    if c == Char::Backspace {
-                        self.backspace(device);
-                        return Some(c);
-                    } else {
-                        self.push_tentative(device, c.into());
-                    }
+        // if let Some(grid_menu) = &mut self.grid_menu {
+        //     let c = grid_menu.run(device, "Use").await.chars().next().unwrap();
+        //     log::info!("{}", c);
+        //     self.grid_menu = None;
+        //     self.push(device, c);
+        //     self.first_draw = true;
+        // } else {
+        match self.multitap.event(device).await {
+            Some(crate::multitap::Event::Tentative(c)) => {
+                if c == Char::Backspace {
+                    self.backspace(device);
+                    return Some(c);
+                } else {
+                    self.push_tentative(device, c.into());
                 }
-                Some(crate::multitap::Event::Decided(c)) => {
-                    if c != Char::Backspace {
-                        self.push(device, c.into());
-                        return Some(c);
-                    } else {
-                        self.backspace(device);
-                        return Some(c);
-                    }
-                }
-                Some(crate::multitap::Event::Case(c)) => {
-                    self.draw_case_icon(device, c);
-                }
-                Some(crate::multitap::Event::ShowSpecialCharacters) => {
-                    self.grid_menu = Some(crate::grid_menu::GridMenu::new(&[
-                        "!", "\"", "#", "$", "%", "&", "'", "(", ")", "*", "+", ",", "-", ".", "/",
-                        ":", ";", "<", "=", ">", "?", "@", "[", "\\", "^", "_", "`", "{", "|", "}",
-                        "~",
-                    ]));
-                }
-                None => {}
             }
+            Some(crate::multitap::Event::Decided(c)) => {
+                if c != Char::Backspace {
+                    self.push(device, c.into());
+                    return Some(c);
+                } else {
+                    self.backspace(device);
+                    return Some(c);
+                }
+            }
+            Some(crate::multitap::Event::Case(c)) => {
+                self.draw_case_icon(device, c);
+            }
+            Some(crate::multitap::Event::ShowSpecialCharacters) => {
+                // self.grid_menu = Some(crate::grid_menu::GridMenu::new(&[
+                //     "!", "\"", "#", "$", "%", "&", "'", "(", ")", "*", "+", ",", "-", ".", "/",
+                //     ":", ";", "<", "=", ">", "?", "@", "[", "\\", "^", "_", "`", "{", "|", "}",
+                //     "~",
+                // ]));
+            }
+            None => {}
         }
+
+        // }
         None
     }
 

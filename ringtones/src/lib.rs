@@ -3,12 +3,19 @@
 #![feature(ascii_char)]
 #![feature(iter_advance_by)]
 
+use embassy_futures::select::Either;
+use embedded_graphics::{
+    Drawable,
+    mono_font::ascii::{FONT_6X9, FONT_6X10},
+    pixelcolor::BinaryColor,
+    prelude::Point,
+    primitives::{Primitive, PrimitiveStyle},
+    text::Text,
+};
 use shared::Application;
 
 pub struct Ringtones<'a> {
-    menu: shared::menu::Menu<'a>,
-    song: Option<rtttl::Song<'a>>,
-    song_index: Option<usize>,
+    songs: [rtttl::Song<'a>; 6],
 }
 
 const HAUNTED_HOUSE: &str = "HauntHouse: d=4,o=5,b=108: 2a4, 2e, 2d#, 2b4, 2a4, 2c, 2d, 2a#4, 2e., e, 1f4, 1a4, 1d#, 2e., d, 2c., b4, 1a4, 1p, 2a4, 2e, 2d#, 2b4, 2a4, 2c, 2d, 2a#4, 2e., e, 1f4, 1a4, 1d#, 2e., d, 2c., b4, 1a4";
@@ -17,15 +24,6 @@ const MISSION: &str = "Mission:d=4, o=6, b=100:32d, 32d#, 32d, 32d#, 32d, 32d#, 
 const BARBIE_GIRL: &str = "Barbie Girl:o=5,d=8,b=125,b=125:g#,e,g#,c#6,4a,4p,f#,d#,f#,b,4g#,f#,e,4p,e,c#,4f#,4c#,4p,f#,e,4g#,4f#";
 const RICH_MAN: &str = "Rich Man's World:o=6,d=8,b=112,b=112:e,e,e,e,e,e,16e5,16a5,16c,16e,d#,d#,d#,d#,d#,d#,16f5,16a5,16c,16d#,4d,c,a5,c,4c,2a5,32a5,32c,32e,a6";
 const WANNABE: &str = "Wannabe:o=5,d=8,b=125,b=125:16g,16g,16g,16g,g,a,g,e,p,16c,16d,16c,d,d,c,4e,4p,g,g,g,a,g,e,p,4c6,c6,b,g,a,16b,16a,4g";
-
-const SONGS: [&str; 6] = [
-    WANNABE,
-    RICH_MAN,
-    BARBIE_GIRL,
-    HAUNTED_HOUSE,
-    COUNTDOWN,
-    MISSION,
-];
 
 impl Default for Ringtones<'_> {
     fn default() -> Self {
@@ -36,56 +34,102 @@ impl Default for Ringtones<'_> {
 impl Ringtones<'_> {
     pub fn new() -> Self {
         Self {
-            menu: shared::menu::Menu::new(&[
-                WANNABE,
-                RICH_MAN,
-                BARBIE_GIRL,
-                HAUNTED_HOUSE,
-                COUNTDOWN,
-                MISSION,
-            ]),
-            song: None,
-            song_index: None,
+            songs: [
+                rtttl::Song::new(WANNABE),
+                rtttl::Song::new(RICH_MAN),
+                rtttl::Song::new(BARBIE_GIRL),
+                rtttl::Song::new(HAUNTED_HOUSE),
+                rtttl::Song::new(COUNTDOWN),
+                rtttl::Song::new(MISSION),
+            ],
         }
     }
 }
 
 impl Application for Ringtones<'_> {
-    async fn run(
-        &mut self,
-        device: &mut impl shared::Device,
-        _system_response: Option<[u8; 64]>,
-    ) -> Result<Option<shared::SystemRequest>, ()> {
-        match &mut self.song {
-            None => {
-                if let Ok(Some(i)) = embassy_time::with_timeout(
-                    embassy_time::Duration::from_millis(1000),
-                    self.menu.process(device, "Pause"),
+    async fn run(&mut self, device: &mut impl shared::Device) -> Result<(), ()> {
+        let mut menu = shared::menu::Menu::new(&mut self.songs, Some("PLAY"));
+        loop {
+            if let Some(song) = menu.process(device).await {
+                let _ = device
+                    .bounding_box()
+                    .into_styled(PrimitiveStyle::with_fill(BinaryColor::On))
+                    .draw(device);
+
+                let text_style = embedded_graphics::text::TextStyleBuilder::new()
+                    .alignment(embedded_graphics::text::Alignment::Center)
+                    .baseline(embedded_graphics::text::Baseline::Top)
+                    .build();
+
+                let _ = Text::with_text_style(
+                    "Playing",
+                    Point::new(42, 0),
+                    embedded_graphics::mono_font::MonoTextStyleBuilder::new()
+                        .text_color(BinaryColor::Off)
+                        .font(&FONT_6X10)
+                        .build(),
+                    text_style,
                 )
-                .await
-                {
-                    log::debug!("Selected ringtone {}", i);
-                    self.song = Some(rtttl::Song::new(SONGS[i]));
-                }
-            }
-            Some(song) => {
-                if let Some(note) = song.next() {
-                    if let Some(frequency) = note.frequency() {
-                        device.unmute_buzzer().unwrap();
-                        log::debug!("Playing {}Hz", frequency.unwrap());
-                        device.set_frequency(frequency.unwrap() as u16).unwrap();
+                .draw(device);
+
+                let _ = Text::with_text_style(
+                    song.title,
+                    Point::new(42, 10),
+                    embedded_graphics::mono_font::MonoTextStyleBuilder::new()
+                        .text_color(BinaryColor::Off)
+                        .font(&FONT_6X10)
+                        .build(),
+                    text_style,
+                )
+                .draw(device);
+
+                let text_style = embedded_graphics::text::TextStyleBuilder::new()
+                    .alignment(embedded_graphics::text::Alignment::Center)
+                    .baseline(embedded_graphics::text::Baseline::Bottom)
+                    .build();
+                let _ = Text::with_text_style(
+                    "STOP",
+                    Point::new(42, 47),
+                    embedded_graphics::mono_font::MonoTextStyleBuilder::new()
+                        .text_color(BinaryColor::Off)
+                        .font(&FONT_6X9)
+                        .build(),
+                    text_style,
+                )
+                .draw(device);
+
+                loop {
+                    if let Some(note) = song.next() {
+                        if let Some(frequency) = note.frequency() {
+                            match frequency {
+                                Ok(f) => {
+                                    let _ = device.unmute_buzzer();
+                                    let _ = device.set_frequency(f as u16);
+                                }
+                                _ => {}
+                            }
+                        } else {
+                            let _ = device.mute_buzzer();
+                        }
+
+                        match embassy_futures::select::select(
+                            device.event(),
+                            embassy_time::Timer::after_millis(note.duration().into()),
+                        )
+                        .await
+                        {
+                            Either::First(shared::KeyEvent::Down(_)) => {
+                                let _ = device.mute_buzzer();
+                                break;
+                            }
+                            _ => {}
+                        }
                     } else {
-                        device.mute_buzzer().unwrap();
+                        let _ = device.mute_buzzer();
+                        break;
                     }
-                    embassy_time::Timer::after_millis(note.duration().into()).await
-                } else {
-                    device.mute_buzzer().unwrap();
-                    self.song = None;
-                    self.song_index = None;
                 }
             }
         }
-
-        Ok(None)
     }
 }

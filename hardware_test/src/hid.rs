@@ -80,7 +80,6 @@ impl HidTest<'_> {
     pub async fn run(
         &mut self,
         device: &mut impl shared::Device,
-        _system_response: Option<[u8; 64]>,
     ) -> Status {
         match (self.1.run(device).await, self.2, self.3) {
             (None, ..) => Status::InProgress(None),

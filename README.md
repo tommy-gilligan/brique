@@ -44,39 +44,21 @@ Because the board would need to fit into the chassis of a Nokia 3310 and because
     - Install Custom Software
 
 ### TODO
-#### Sooner
 
 - terse, unfriendly instructions (ie. README)
 - give more control over display flushing, keep track of what needs updating, what needs flushing
 	- display can do 90deg rotated addressing
 - allow setting time
 - grid menu from keyboard
-- copious debuggin statements
-- options label for select button in keyboard
 - document app API
-
-#### Later
-- watchdog should involve both cores
 - rp2350 very low power state
-- UI component model?
 - make all system work live on primary core.  give apps dedicated secondary core.
-- use text_input for inputing secret for TOTP (drives the need for inputting numeric digits easily and RTC)
-- how should software versions synchronize with hardware versions. what level of compatibility should be supported.
-- connection plate for 3d printing
 - 'pre-emption'
 - priveledged, background blocking system calls  
-- charging IC should communicate state with rp2350 (charging, full, should be able to just sense 'LED' outputs)
-- power button should turn on device but also function as gpio?
 - defmt should be used if possible (instead of log).  currently it is used for uart/rtt but for usb i'm using log.  is there a way to use usb logging from defmt?  will probably require a bit of a bit deep dive
-- 3d models
 - placement of some parts is off (rotation for U*)
-
-- detect battery type to refuse NiMH
-- battery gauge
 - switch off after 5 minutes idle (switching on takes no time)
 - power button: can this be triggered by 'any key'?  ie. any keypad press turns the device on.  there's enough GPIO to spare that we should have a dedicated GPIO for any key too)
-
-#### Much Later
-- power button used for BOOT/RUN?
+- power button should turn on device but also function as gpio?
 
 https://serdisplib.sourceforge.net/ser/pcd8544.html

@@ -97,7 +97,9 @@ impl ContactKeypad<'_> {
 unsafe impl Send for ContactKeypad<'_> {}
 
 impl Keypad for ContactKeypad<'_> {
-    fn last_pressed(&mut self) -> Option<embassy_time::Duration> { todo!() }
+    fn last_pressed(&mut self) -> Option<embassy_time::Duration> {
+        todo!()
+    }
 
     async fn event(&mut self) -> shared::KeyEvent {
         Timer::after_millis(30).await;

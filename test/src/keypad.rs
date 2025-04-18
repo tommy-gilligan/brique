@@ -1,16 +1,12 @@
 pub struct Keypad<'a>(
     core::slice::Iter<'a, shared::KeyEvent>,
     Option<embassy_time::Instant>,
-    bool
+    bool,
 );
 
-impl <'a>Keypad<'a> {
+impl<'a> Keypad<'a> {
     pub fn new(events: &'a [shared::KeyEvent]) -> Self {
-        Self(
-            events.iter(),
-            None,
-            false
-        )
+        Self(events.iter(), None, false)
     }
 
     pub fn pending(&mut self) {
@@ -18,7 +14,7 @@ impl <'a>Keypad<'a> {
     }
 }
 
-impl <'a>shared::Keypad for Keypad<'a> {
+impl<'a> shared::Keypad for Keypad<'a> {
     async fn event(&mut self) -> shared::KeyEvent {
         if self.2 {
             core::future::pending().await
@@ -41,8 +37,9 @@ impl <'a>shared::Keypad for Keypad<'a> {
 #[cfg(test)]
 mod test {
     use futures_executor::block_on;
-    use super::*;
     use shared::Keypad;
+
+    use super::*;
 
     #[test]
     fn test_keypad() {
@@ -53,10 +50,7 @@ mod test {
                 shared::KeyEvent::Down(shared::Key::Two),
                 shared::KeyEvent::Down(shared::Key::Three),
             ]);
-            assert_eq!(
-                keypad.last_pressed(),
-                None
-            );
+            assert_eq!(keypad.last_pressed(), None);
             assert_eq!(
                 keypad.event().await,
                 shared::KeyEvent::Down(shared::Key::Two)

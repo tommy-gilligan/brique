@@ -4,7 +4,7 @@ use embassy_rp::{
     peripherals::{
         PIN_2, PIN_4, PIN_5, PIN_6, PIN_7, PIN_8, PIN_9, PIN_10, PIN_11, PIN_12, PIN_13, PIN_14,
         PIN_15, PIN_16, PIN_17, PIN_18, PIN_19, PIN_20, PIN_21, PIN_33, PIN_36, PIN_37, PWM_SLICE2,
-        SPI0, WATCHDOG,
+        SPI0,
     },
     pwm::PwmError,
     watchdog::Watchdog,
@@ -134,7 +134,9 @@ impl Keypad for Device<'_> {
     async fn event(&mut self) -> shared::KeyEvent {
         self.keypad.event().await
     }
-    fn last_pressed(&mut self) -> Option<embassy_time::Duration> { todo!() }
+    fn last_pressed(&mut self) -> Option<embassy_time::Duration> {
+        todo!()
+    }
 }
 
 impl DrawTarget for Device<'_> {
@@ -178,5 +180,7 @@ impl Rtc for Device<'_> {
         Ok(0)
     }
 
-    fn set_timestamp(&mut self, _: i64) { todo!() }
+    fn set_timestamp(&mut self, _: i64) {
+        todo!()
+    }
 }

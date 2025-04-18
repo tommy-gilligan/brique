@@ -4,14 +4,14 @@
 use core::cell::RefCell;
 
 use assign_resources::assign_resources;
-use defmt::{info, unwrap};
+use defmt::unwrap;
 use defmt_rtt as _;
 use embassy_executor::{Executor, Spawner};
 use embassy_rp::{
     bind_interrupts,
     block::{
-        ImageDef, Link, Partition, PartitionFlag, PartitionTableBlock, Permission,
-        UnpartitionedFlag, UnpartitionedSpace,
+        Link, Partition, PartitionFlag, PartitionTableBlock, Permission, UnpartitionedFlag,
+        UnpartitionedSpace,
     },
     multicore::{Stack, spawn_core1},
     peripherals,
@@ -19,7 +19,6 @@ use embassy_rp::{
     spi,
     spi::Spi,
     usb::InterruptHandler,
-    watchdog::*,
 };
 use embassy_sync::blocking_mutex::Mutex;
 use panic_probe as _;
@@ -88,7 +87,6 @@ pub static PICOTOOL_ENTRIES: [embassy_rp::binary_info::EntryAddr; 6] = [
 ];
 
 mod background_core;
-mod button;
 mod device;
 mod flash;
 mod rtc;
@@ -109,14 +107,13 @@ bind_interrupts!(struct Irqs {
 
 static mut CORE1_STACK: Stack<4096> = Stack::new();
 static EXECUTOR1: StaticCell<Executor> = StaticCell::new();
-const WATCHDOG_MARKER: u32 = 0xB000DEAD;
 
 #[embassy_executor::main]
 async fn main(spawner: Spawner) {
     let p = embassy_rp::init(Default::default());
     defmt::println!("HEY");
     let r = split_resources!(p);
-    let mut watchdog = embassy_rp::watchdog::Watchdog::new(p.WATCHDOG);
+    let watchdog = embassy_rp::watchdog::Watchdog::new(p.WATCHDOG);
     // if watchdog.get_scratch(0) == WATCHDOG_MARKER {
     //     defmt::error!("Reset due to watchdog");
     // }
@@ -147,7 +144,7 @@ async fn main(spawner: Spawner) {
         p.PIN_32,
         display_config,
     )));
-    let device = device::Device::new(
+    let _device = device::Device::new(
         watchdog,
         p.PIN_2,
         p.PIN_4,
@@ -175,52 +172,7 @@ async fn main(spawner: Spawner) {
         &display,
     )
     .unwrap();
-    loop {}
-
-    // prepare_for_app(device);
-
-    // loop {
-    //     // device.start_watchdog(Duration::from_millis(2200));
-    //     match device.last_pressed() {
-    //         Some(last_pressed) if last_pressed > embassy_time::Duration::from_secs(5) => {
-    //             device.off();
-    //         }
-    //         _ => device.on(),
-    //     }
-    //     match device.last_pressed() {
-    //         Some(last_pressed) if last_pressed > embassy_time::Duration::from_secs(15) => {
-    //             power.clear();
-    //             device.off();
-    //         }
-    //         _ => {}
-    //     }
-    //     match embassy_time::with_timeout(
-    //         embassy_time::Duration::from_millis(2000),
-    //         app.run(device, system_response.take()),
-    //     )
-    //     .await
-    //     {
-    //         Ok(Ok(None)) => {}
-    //         Ok(Ok(Some(e))) => {
-    //             log::debug!("Handling system request");
-    //             system_request_handler.handle_request(e).await;
-    //         }
-    //         Ok(Err(_)) => {}
-    //         Err(embassy_time::TimeoutError) => {
-    //             log::debug!("Timed out while waiting for app to return");
-    //         }
-    //     }
-
-    //     // if power.was_pressed().await {
-    //     //     prepare_for_app(device);
-    //     //     device.feed_watchdog();
-    //     //     return;
-    //     // } else {
-    //     //     device.feed_watchdog();
-    //     // }
-    // }
-
-    // // button::Button::new(p.PIN_28),
-    // // crate::device::CdcSend,
-    // // crate::device::SystemRequestHandler,
+    loop {
+        log::info!("looping");
+    }
 }

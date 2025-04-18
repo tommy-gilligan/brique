@@ -27,11 +27,7 @@ impl Default for BuzzerTest<'_> {
 }
 
 impl BuzzerTest<'_> {
-    pub async fn run(
-        &mut self,
-        device: &mut impl shared::Device,
-        _system_response: Option<[u8; 64]>,
-    ) -> Status {
+    pub async fn run(&mut self, device: &mut impl shared::Device) -> Status {
         if let Err(_e) = device.unmute_buzzer() {
             return Status::Failed;
         }

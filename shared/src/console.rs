@@ -5,7 +5,6 @@ use embedded_graphics::{
     mono_font::{MonoTextStyle, ascii::FONT_6X10},
     pixelcolor::BinaryColor,
     prelude::*,
-    primitives::Rectangle,
 };
 use embedded_text::{
     TextBox,
@@ -14,7 +13,7 @@ use embedded_text::{
 };
 
 #[derive(Clone, PartialEq)]
-pub struct Console<'a>(Rectangle, MonoTextStyle<'a, BinaryColor>, TextBoxStyle);
+pub struct Console<'a>(MonoTextStyle<'a, BinaryColor>, TextBoxStyle);
 
 impl Default for Console<'_> {
     fn default() -> Self {
@@ -25,7 +24,6 @@ impl Default for Console<'_> {
 impl<'a> Console<'a> {
     pub fn new() -> Self {
         Self(
-            Rectangle::new(Point::zero(), Size::new(84, 48)),
             MonoTextStyle::new(&FONT_6X10, BinaryColor::Off),
             TextBoxStyleBuilder::new()
                 .height_mode(HeightMode::FitToText)
@@ -40,7 +38,7 @@ impl<'a> Console<'a> {
         <D as DrawTarget>::Error: Debug,
     {
         draw_target.clear(BinaryColor::On).unwrap();
-        TextBox::with_textbox_style(text, self.0, self.1, self.2)
+        TextBox::with_textbox_style(text, draw_target.bounding_box(), self.0, self.1)
             .draw(draw_target)
             .unwrap();
     }

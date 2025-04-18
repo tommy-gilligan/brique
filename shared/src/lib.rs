@@ -8,11 +8,9 @@
 pub mod confirmation;
 pub mod console;
 pub mod grid;
-pub mod grid_menu;
 pub mod held_key;
 pub mod menu;
 pub mod multitap;
-pub mod new_menu;
 pub mod textbox;
 pub mod time;
 
@@ -122,11 +120,7 @@ pub trait Application {
     // should record:
     // how long this takes
     // how long between calls
-    fn run(
-        &mut self,
-        device: &mut impl Device,
-        system_response: Option<[u8; 64]>,
-    ) -> impl Future<Output = Result<Option<SystemRequest>, ()>>;
+    fn run(&mut self, device: &mut impl Device) -> impl Future<Output = Result<(), ()>>;
 }
 
 pub type UsbRx = [u8; 64];
@@ -155,65 +149,6 @@ pub trait Device:
 {
     fn start_watchdog(&mut self, duration: Duration);
     fn feed_watchdog(&mut self);
-}
-
-pub fn prepare_for_app(device: &mut impl Device) {
-    log::debug!("Preparing device for app");
-    device.clear(BinaryColor::On).unwrap();
-    device.mute_buzzer().unwrap();
-    device.stop_vibrating();
-    device.on();
-}
-
-pub async fn run_app(
-    mut app: impl Application,
-    device: &mut impl Device,
-    power: &mut impl PowerButton,
-    system_response: &mut impl SystemResponse,
-    system_request_handler: &mut impl SystemRequestHandler,
-) {
-    prepare_for_app(device);
-
-    loop {
-        device.start_watchdog(Duration::from_millis(2200));
-        match device.last_pressed() {
-            Some(last_pressed) if last_pressed > embassy_time::Duration::from_secs(5) => {
-                device.off();
-            }
-            _ => device.on(),
-        }
-        match device.last_pressed() {
-            Some(last_pressed) if last_pressed > embassy_time::Duration::from_secs(15) => {
-                power.clear();
-                device.off();
-            }
-            _ => {}
-        }
-        match embassy_time::with_timeout(
-            embassy_time::Duration::from_millis(2000),
-            app.run(device, system_response.take()),
-        )
-        .await
-        {
-            Ok(Ok(None)) => {}
-            Ok(Ok(Some(e))) => {
-                log::debug!("Handling system request");
-                system_request_handler.handle_request(e).await;
-            }
-            Ok(Err(_)) => {}
-            Err(embassy_time::TimeoutError) => {
-                log::debug!("Timed out while waiting for app to return");
-            }
-        }
-
-        // if power.was_pressed().await {
-        //     prepare_for_app(device);
-        //     device.feed_watchdog();
-        //     return;
-        // } else {
-        //     device.feed_watchdog();
-        // }
-    }
 }
 
 pub fn build_report(c: Char) -> usbd_hid::descriptor::KeyboardReport {

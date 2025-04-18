@@ -23,15 +23,12 @@ impl<'a> Keyboard<'a> {
 }
 
 impl Application for Keyboard<'_> {
-    async fn run(
-        &mut self,
-        device: &mut impl shared::Device,
-        _system_response: Option<[u8; 64]>,
-    ) -> Result<Option<shared::SystemRequest>, ()> {
-        Ok(self
-            .0
+    async fn run(&mut self, device: &mut impl shared::Device) -> Result<(), ()> {
+        self.0
             .process(device)
             .await
-            .map(|c| shared::SystemRequest::UsbTx(shared::UsbTx::HidChar(shared::build_report(c)))))
+            .map(|c| shared::SystemRequest::UsbTx(shared::UsbTx::HidChar(shared::build_report(c))));
+
+        Ok(())
     }
 }
