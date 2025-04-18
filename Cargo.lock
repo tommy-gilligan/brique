@@ -827,17 +827,21 @@ dependencies = [
 name = "embassy-wasm-example"
 version = "0.1.0"
 dependencies = [
+ "clock",
  "embassy-executor",
  "embassy-sync",
  "embassy-time",
  "embedded-graphics",
  "embedded-graphics-web-simulator",
+ "hardware-test",
  "hidreport",
  "js-sys",
+ "keyboard",
  "log",
  "ringtones",
  "rtttl",
  "shared",
+ "snake",
  "ssmarshal",
  "usbd-hid",
  "wasm-bindgen",

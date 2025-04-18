@@ -4,6 +4,7 @@ pub struct Keypad<'a>(
     bool,
 );
 
+#[cfg(test)]
 impl<'a> Keypad<'a> {
     pub fn new(events: &'a [shared::KeyEvent]) -> Self {
         Self(events.iter(), None, false)
@@ -39,8 +40,6 @@ mod test {
     use futures_executor::block_on;
     use shared::Keypad;
 
-    use super::*;
-
     #[test]
     fn test_keypad() {
         let f = async {
@@ -59,7 +58,6 @@ mod test {
                 keypad.last_pressed(),
                 Some(embassy_time::Duration::from_secs(0))
             );
-            let instant = embassy_time::Instant::now();
             assert_eq!(
                 keypad.event().await,
                 shared::KeyEvent::Down(shared::Key::Three)

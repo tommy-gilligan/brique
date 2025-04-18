@@ -129,8 +129,9 @@ outputs:
         download_lcsc: true
       render_options:
         transparent_background: true
-        samples: 20
+        samples: 100
         auto_crop: true
+        width: 200
       point_of_view:
         - rotate_x: 160
           rotate_z: 160

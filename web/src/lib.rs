@@ -65,8 +65,9 @@ async fn main(_spawner: Spawner) {
         document.get_element_by_id("svg1").unwrap(),
     );
 
-    let mut ringtones = ringtones::Ringtones::new();
-    let _ = ringtones.run(&mut device).await;
+    let mut buf: [u8; 10] = [0; 10];
+    let mut keyboard = keyboard::Keyboard::new(&mut device, &mut buf);
+    let _ = keyboard.run(&mut device).await;
 }
 
 use core::cell::RefCell;

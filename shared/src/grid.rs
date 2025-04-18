@@ -252,11 +252,13 @@ mod test {
             let raw: ImageRaw<BinaryColor> = ImageRaw::new(DATA, 8);
             match self {
                 Cell::Nought => {
-                    raw.sub_image(&Rectangle::new(Point::new(0, 0), Size::new(4, 4)))
+                    let _ = raw
+                        .sub_image(&Rectangle::new(Point::new(0, 0), Size::new(4, 4)))
                         .draw(display);
                 }
                 Cell::Cross => {
-                    raw.sub_image(&Rectangle::new(Point::new(4, 0), Size::new(4, 4)))
+                    let _ = raw
+                        .sub_image(&Rectangle::new(Point::new(4, 0), Size::new(4, 4)))
                         .draw(display);
                 }
             }
@@ -289,7 +291,7 @@ mod test {
         grid[(0, 1)] = Some(Cell::Nought);
 
         let mut display = MockDisplay::new();
-        grid.draw(&mut display);
+        let _ = grid.draw(&mut display);
 
         display.assert_pattern(&[
             ".##.#..#####",

@@ -28,4 +28,20 @@ jobs:
         working-directory: web
       - run: cargo clippy --no-deps
         working-directory: shared
+      - run: cargo test
+        working-directory: shared
+      - run: cargo clippy --no-deps
+        working-directory: snake
+      - run: cargo test
+        working-directory: snake
+      - run: cargo clippy --no-deps
+        working-directory: keyboard
+      - run: cargo test
+        working-directory: keyboard
+      - run: cargo clippy --no-deps
+        working-directory: ringtones
+      - run: cargo test
+        working-directory: ringtones
+      - run: cargo test
+        working-directory: test
       - run: cargo fmt --check

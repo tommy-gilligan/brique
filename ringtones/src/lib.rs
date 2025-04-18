@@ -101,28 +101,23 @@ impl Application for Ringtones<'_> {
                 loop {
                     if let Some(note) = song.next() {
                         if let Some(frequency) = note.frequency() {
-                            match frequency {
-                                Ok(f) => {
-                                    let _ = device.unmute_buzzer();
-                                    let _ = device.set_frequency(f as u16);
-                                }
-                                _ => {}
+                            if let Ok(f) = frequency {
+                                let _ = device.unmute_buzzer();
+                                let _ = device.set_frequency(f as u16);
                             }
                         } else {
                             let _ = device.mute_buzzer();
                         }
 
-                        match embassy_futures::select::select(
-                            device.event(),
-                            embassy_time::Timer::after_millis(note.duration().into()),
-                        )
-                        .await
+                        if let Either::First(shared::KeyEvent::Down(_)) =
+                            embassy_futures::select::select(
+                                device.event(),
+                                embassy_time::Timer::after_millis(note.duration().into()),
+                            )
+                            .await
                         {
-                            Either::First(shared::KeyEvent::Down(_)) => {
-                                let _ = device.mute_buzzer();
-                                break;
-                            }
-                            _ => {}
+                            let _ = device.mute_buzzer();
+                            break;
                         }
                     } else {
                         let _ = device.mute_buzzer();

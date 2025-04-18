@@ -46,11 +46,11 @@ Because the board would need to fit into the chassis of a Nokia 3310 and because
 ### TODO
 
 - terse, unfriendly instructions (ie. README)
+- document app API
+
 - give more control over display flushing, keep track of what needs updating, what needs flushing
 	- display can do 90deg rotated addressing
 - allow setting time
-- grid menu from keyboard
-- document app API
 - rp2350 very low power state
 - make all system work live on primary core.  give apps dedicated secondary core.
 - 'pre-emption'
