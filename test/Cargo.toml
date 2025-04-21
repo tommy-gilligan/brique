@@ -6,6 +6,7 @@ edition = "2024"
 [dependencies]
 critical-section = { version = "1.2.0", features = ["std"] }
 embassy-time = { no-default-features = true, workspace = true, features = ["mock-driver", "generic-queue-8"] }
+embedded-graphics.workspace = true
 shared = { path = "../shared" }
 
 [dev-dependencies]

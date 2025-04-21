@@ -15,7 +15,7 @@ use embedded_graphics::{
 use shared::Application;
 
 pub struct Ringtones<'a> {
-    songs: [rtttl::Song<'a>; 6],
+    songs: [rtttl::Song<'a>; 7],
 }
 
 const HAUNTED_HOUSE: &str = "HauntHouse: d=4,o=5,b=108: 2a4, 2e, 2d#, 2b4, 2a4, 2c, 2d, 2a#4, 2e., e, 1f4, 1a4, 1d#, 2e., d, 2c., b4, 1a4, 1p, 2a4, 2e, 2d#, 2b4, 2a4, 2c, 2d, 2a#4, 2e., e, 1f4, 1a4, 1d#, 2e., d, 2c., b4, 1a4";
@@ -24,6 +24,7 @@ const MISSION: &str = "Mission:d=4, o=6, b=100:32d, 32d#, 32d, 32d#, 32d, 32d#, 
 const BARBIE_GIRL: &str = "Barbie Girl:o=5,d=8,b=125,b=125:g#,e,g#,c#6,4a,4p,f#,d#,f#,b,4g#,f#,e,4p,e,c#,4f#,4c#,4p,f#,e,4g#,4f#";
 const RICH_MAN: &str = "Rich Man's World:o=6,d=8,b=112,b=112:e,e,e,e,e,e,16e5,16a5,16c,16e,d#,d#,d#,d#,d#,d#,16f5,16a5,16c,16d#,4d,c,a5,c,4c,2a5,32a5,32c,32e,a6";
 const WANNABE: &str = "Wannabe:o=5,d=8,b=125,b=125:16g,16g,16g,16g,g,a,g,e,p,16c,16d,16c,d,d,c,4e,4p,g,g,g,a,g,e,p,4c6,c6,b,g,a,16b,16a,4g";
+const NOKIA: &str = "NokiaTun:d=4,o=5,b=225:8e6,8d6,f#,g#,8c#6,8b,d,e,8b,8a,c#,e,2a";
 
 impl Default for Ringtones<'_> {
     fn default() -> Self {
@@ -41,6 +42,7 @@ impl Ringtones<'_> {
                 rtttl::Song::new(HAUNTED_HOUSE),
                 rtttl::Song::new(COUNTDOWN),
                 rtttl::Song::new(MISSION),
+                rtttl::Song::new(NOKIA),
             ],
         }
     }
@@ -48,9 +50,11 @@ impl Ringtones<'_> {
 
 impl Application for Ringtones<'_> {
     async fn run(&mut self, device: &mut impl shared::Device) -> Result<(), ()> {
-        let mut menu = shared::menu::Menu::new(&mut self.songs, Some("PLAY"));
+        let mut menu = shared::menu::Menu::new(&mut self.songs, Some("PLAY"), |a, b, c, d, e| {
+            shared::menu::row_render(a, b, c, d, e)
+        });
         loop {
-            if let Some(song) = menu.process(device).await {
+            if let Some(mut song) = menu.process(device).await {
                 let _ = device
                     .bounding_box()
                     .into_styled(PrimitiveStyle::with_fill(BinaryColor::On))

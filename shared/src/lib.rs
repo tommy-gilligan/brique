@@ -5,6 +5,7 @@
 #![feature(associated_type_defaults)]
 #![no_std]
 
+pub mod character_select;
 pub mod confirmation;
 pub mod console;
 pub mod grid;

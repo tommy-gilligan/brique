@@ -94,6 +94,30 @@ impl Note {
     pub fn frequency(&self) -> Option<Result<u32, ()>> {
         match (self.octave, self.name) {
             (_, NoteName::Pause) => None,
+            (1, NoteName::C) => Some(Ok(33)),
+            (1, NoteName::CSharp) => Some(Ok(35)),
+            (1, NoteName::D) => Some(Ok(37)),
+            (1, NoteName::DSharp) => Some(Ok(39)),
+            (1, NoteName::E) => Some(Ok(42)),
+            (1, NoteName::F) => Some(Ok(44)),
+            (1, NoteName::FSharp) => Some(Ok(46)),
+            (1, NoteName::G) => Some(Ok(49)),
+            (1, NoteName::GSharp) => Some(Ok(52)),
+            (1, NoteName::A) => Some(Ok(55)),
+            (1, NoteName::ASharp) => Some(Ok(58)),
+            (1, NoteName::B) => Some(Ok(61)),
+            (2, NoteName::C) => Some(Ok(65)),
+            (2, NoteName::CSharp) => Some(Ok(69)),
+            (2, NoteName::D) => Some(Ok(73)),
+            (2, NoteName::DSharp) => Some(Ok(78)),
+            (2, NoteName::E) => Some(Ok(82)),
+            (2, NoteName::F) => Some(Ok(87)),
+            (2, NoteName::FSharp) => Some(Ok(92)),
+            (2, NoteName::G) => Some(Ok(98)),
+            (2, NoteName::GSharp) => Some(Ok(104)),
+            (2, NoteName::A) => Some(Ok(110)),
+            (2, NoteName::ASharp) => Some(Ok(117)),
+            (2, NoteName::B) => Some(Ok(123)),
             (3, NoteName::C) => Some(Ok(130)),
             (3, NoteName::CSharp) => Some(Ok(138)),
             (3, NoteName::D) => Some(Ok(146)),
@@ -142,6 +166,18 @@ impl Note {
             (6, NoteName::A) => Some(Ok(1760)),
             (6, NoteName::ASharp) => Some(Ok(1864)),
             (6, NoteName::B) => Some(Ok(1975)),
+            (7, NoteName::C) => Some(Ok(2093)),
+            (7, NoteName::CSharp) => Some(Ok(2217)),
+            (7, NoteName::D) => Some(Ok(2349)),
+            (7, NoteName::DSharp) => Some(Ok(2489)),
+            (7, NoteName::E) => Some(Ok(2637)),
+            (7, NoteName::F) => Some(Ok(2794)),
+            (7, NoteName::FSharp) => Some(Ok(2960)),
+            (7, NoteName::G) => Some(Ok(3136)),
+            (7, NoteName::GSharp) => Some(Ok(3322)),
+            (7, NoteName::A) => Some(Ok(3520)),
+            (7, NoteName::ASharp) => Some(Ok(3729)),
+            (7, NoteName::B) => Some(Ok(3951)),
             (_o, _n) => Some(Err(())),
         }
     }
@@ -196,7 +232,7 @@ mod test {
     #[test]
     fn test_note_sharp_tripled() {
         assert_eq!(
-            Note::new("32d#.", 5, 4, 2),
+            Note::new("32d#.", 5, 4, 102),
             Note {
                 name: NoteName::DSharp,
                 octave: 5,

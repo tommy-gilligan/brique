@@ -67,7 +67,11 @@ async fn main(_spawner: Spawner) {
 
     let mut buf: [u8; 10] = [0; 10];
     let mut keyboard = keyboard::Keyboard::new(&mut device, &mut buf);
+    loop {
     let _ = keyboard.run(&mut device).await;
+    }
+    // let mut ringtones = ringtones::Ringtones::new();
+    // let _ = ringtones.run(&mut device).await;
 }
 
 use core::cell::RefCell;

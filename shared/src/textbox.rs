@@ -18,7 +18,6 @@ pub struct Textbox<'a> {
     buffer: &'a mut [u8],
     index: usize,
     first_draw: bool,
-    // grid_menu: Option<crate::grid_menu::GridMenu<'a>>,
 }
 
 impl<'a> Textbox<'a> {
@@ -35,25 +34,38 @@ impl<'a> Textbox<'a> {
             buffer,
             index: 0,
             first_draw: true,
-            // grid_menu: None,
+        }
+    }
+
+    fn draw_buffer(&mut self, device: &mut impl crate::Device) {
+        let renderer = MonoTextStyle::new(&FONT_6X9, BinaryColor::Off);
+        let mut cursor = Point::new(0, 10);
+        let mut b = [0; 4];
+        for c in self.buffer.into_iter().map(|byte| char::from(*byte)) {
+            if c == '\0' {
+                return;
+            }
+            if let Ok(g) = renderer.draw_string(
+                c.encode_utf8(&mut b),
+                cursor,
+                embedded_graphics::text::Baseline::Top,
+                device,
+            ) {
+                if g.x >= 80 {
+                    cursor = Point::new(0, g.y + 9);
+                } else {
+                    cursor = g;
+                }
+            }
         }
     }
 
     // should return emitted characters
     pub async fn process(&mut self, device: &mut impl crate::Device) -> Option<Char> {
-        if self.first_draw {
-            self.first_draw = false;
-            device.clear(BinaryColor::On).unwrap();
-            self.draw_border(device);
-        }
+        device.clear(BinaryColor::On).unwrap();
+        self.draw_border(device);
+        self.draw_buffer(device);
 
-        // if let Some(grid_menu) = &mut self.grid_menu {
-        //     let c = grid_menu.run(device, "Use").await.chars().next().unwrap();
-        //     log::info!("{}", c);
-        //     self.grid_menu = None;
-        //     self.push(device, c);
-        //     self.first_draw = true;
-        // } else {
         match self.multitap.event(device).await {
             Some(crate::multitap::Event::Tentative(c)) => {
                 if c == Char::Backspace {
@@ -64,11 +76,11 @@ impl<'a> Textbox<'a> {
                 }
             }
             Some(crate::multitap::Event::Decided(c)) => {
-                if c != Char::Backspace {
-                    self.push(device, c.into());
+                if c == Char::Backspace {
+                    self.backspace(device);
                     return Some(c);
                 } else {
-                    self.backspace(device);
+                    self.push(device, c.into());
                     return Some(c);
                 }
             }
@@ -76,16 +88,17 @@ impl<'a> Textbox<'a> {
                 self.draw_case_icon(device, c);
             }
             Some(crate::multitap::Event::ShowSpecialCharacters) => {
-                // self.grid_menu = Some(crate::grid_menu::GridMenu::new(&[
-                //     "!", "\"", "#", "$", "%", "&", "'", "(", ")", "*", "+", ",", "-", ".", "/",
-                //     ":", ";", "<", "=", ">", "?", "@", "[", "\\", "^", "_", "`", "{", "|", "}",
-                //     "~",
-                // ]));
+                let characters = crate::character_select::process(device).await;
+                if let Some(c) = characters {
+                    let character = c.chars().next().unwrap();
+                    self.push(device, character);
+
+                    return Some(Char::from_u8(character as u8).unwrap());
+                }
             }
             None => {}
         }
 
-        // }
         None
     }
 

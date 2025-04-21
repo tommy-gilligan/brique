@@ -28,7 +28,6 @@ impl Application for Keyboard<'_> {
             .process(device)
             .await
             .map(|c| shared::SystemRequest::UsbTx(shared::UsbTx::HidChar(shared::build_report(c))));
-
         Ok(())
     }
 }
