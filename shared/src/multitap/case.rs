@@ -5,6 +5,7 @@ pub enum Case {
     Number,
 }
 
+#[derive(Debug)]
 pub struct CaseState {
     case: Case,
     prev_case: Case,

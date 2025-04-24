@@ -12,6 +12,7 @@ pub mod grid;
 pub mod held_key;
 pub mod menu;
 pub mod multitap;
+pub mod test;
 pub mod textbox;
 pub mod time;
 

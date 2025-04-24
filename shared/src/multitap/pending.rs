@@ -1,3 +1,4 @@
+#[derive(Debug)]
 pub struct Pending<EVENT> {
     event: Option<EVENT>,
 }

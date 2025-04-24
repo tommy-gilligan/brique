@@ -2,7 +2,6 @@
 use core::ascii::Char;
 
 use defmt::Format;
-use embassy_time::Timer;
 
 use crate::{Key, held_key::HeldKey};
 mod case;
@@ -18,31 +17,130 @@ pub enum Event {
     ShowSpecialCharacters,
 }
 
+impl Event {
+    fn decide(self) -> Option<Self> {
+        match self {
+            Self::Tentative(c) => Some(Self::Decided(c)),
+            _ => None,
+        }
+    }
+
+    fn next_char(self) -> Option<Self> {
+        match self {
+            Self::Tentative(c) => {
+                let result = match c {
+                    Char::CapitalA => Char::CapitalB,
+                    Char::CapitalB => Char::CapitalC,
+                    Char::CapitalC => Char::CapitalA,
+                    Char::CapitalD => Char::CapitalE,
+                    Char::CapitalE => Char::CapitalF,
+                    Char::CapitalF => Char::CapitalD,
+                    Char::CapitalG => Char::CapitalH,
+                    Char::CapitalH => Char::CapitalI,
+                    Char::CapitalI => Char::CapitalG,
+                    Char::CapitalJ => Char::CapitalK,
+                    Char::CapitalK => Char::CapitalL,
+                    Char::CapitalL => Char::CapitalJ,
+                    Char::CapitalM => Char::CapitalN,
+                    Char::CapitalN => Char::CapitalO,
+                    Char::CapitalO => Char::CapitalM,
+                    Char::CapitalP => Char::CapitalQ,
+                    Char::CapitalQ => Char::CapitalR,
+                    Char::CapitalR => Char::CapitalS,
+                    Char::CapitalS => Char::CapitalP,
+                    Char::CapitalT => Char::CapitalU,
+                    Char::CapitalU => Char::CapitalV,
+                    Char::CapitalV => Char::CapitalT,
+                    Char::CapitalW => Char::CapitalX,
+                    Char::CapitalX => Char::CapitalY,
+                    Char::CapitalY => Char::CapitalZ,
+                    Char::CapitalZ => Char::CapitalW,
+                    Char::SmallA => Char::SmallB,
+                    Char::SmallB => Char::SmallC,
+                    Char::SmallC => Char::SmallA,
+                    Char::SmallD => Char::SmallE,
+                    Char::SmallE => Char::SmallF,
+                    Char::SmallF => Char::SmallD,
+                    Char::SmallG => Char::SmallH,
+                    Char::SmallH => Char::SmallI,
+                    Char::SmallI => Char::SmallG,
+                    Char::SmallJ => Char::SmallK,
+                    Char::SmallK => Char::SmallL,
+                    Char::SmallL => Char::SmallJ,
+                    Char::SmallM => Char::SmallN,
+                    Char::SmallN => Char::SmallO,
+                    Char::SmallO => Char::SmallM,
+                    Char::SmallP => Char::SmallQ,
+                    Char::SmallQ => Char::SmallR,
+                    Char::SmallR => Char::SmallS,
+                    Char::SmallS => Char::SmallP,
+                    Char::SmallT => Char::SmallU,
+                    Char::SmallU => Char::SmallV,
+                    Char::SmallV => Char::SmallT,
+                    Char::SmallW => Char::SmallX,
+                    Char::SmallX => Char::SmallY,
+                    Char::SmallY => Char::SmallZ,
+                    Char::SmallZ => Char::SmallW,
+                    Char::Digit1 => Char::Digit2,
+                    Char::Digit2 => Char::Digit3,
+                    Char::Digit3 => Char::Digit4,
+                    Char::Digit4 => Char::Digit5,
+                    Char::Digit5 => Char::Digit6,
+                    Char::Digit6 => Char::Digit7,
+                    Char::Digit7 => Char::Digit8,
+                    Char::Digit8 => Char::Digit9,
+                    Char::Digit9 => Char::Digit0,
+                    Char::Digit0 => Char::Digit1,
+                    e => e,
+                };
+                Some(Self::Tentative(result))
+            }
+            _ => None,
+        }
+    }
+}
+
+#[derive(Debug)]
 pub struct Last {
-    last_down: Option<Key>,
-    last_tentative: Option<Char>,
+    held_key_event: Option<crate::held_key::Event>,
+    event: Option<Event>,
 }
 
 impl Last {
     fn new() -> Self {
         Self {
-            last_down: None,
-            last_tentative: None,
+            held_key_event: None,
+            event: None,
         }
     }
 
     fn clear(&mut self) {
-        self.last_down = None;
-        self.last_tentative = None;
+        self.held_key_event = None;
+        self.event = None;
+    }
+
+    fn set_held_key_event(
+        &mut self,
+        held_key_event: Option<crate::held_key::Event>,
+    ) -> Option<crate::held_key::Event> {
+        let result = self.held_key_event.clone();
+        self.held_key_event = held_key_event;
+        result
+    }
+
+    fn set_event(&mut self, event: Option<Event>) -> Option<Event> {
+        let result = self.event;
+        self.event = event;
+        result
     }
 }
 
+#[derive(Debug)]
 pub struct MultiTap {
     case_state: CaseState,
     last: Last,
     pending: Pending<Event>,
     held_key: HeldKey,
-    timer: Option<Timer>,
     duration: u64,
 }
 
@@ -56,9 +154,8 @@ impl MultiTap {
             case_state,
             last: Last::new(),
             pending,
-            held_key: HeldKey::new(1500, 500),
+            held_key: HeldKey::new(15000, 5000),
             duration,
-            timer: None,
         }
     }
 
@@ -66,46 +163,50 @@ impl MultiTap {
         self.case_state.case()
     }
 
-    fn key_to_char(&mut self, d: Key) -> Char {
-        match self.case() {
-            Case::Upper => d.clone().into(),
-            _ => lowercase(d.clone().into()),
-        }
-    }
-
     pub async fn event(&mut self, keypad: &mut impl crate::Keypad) -> Option<Event> {
         if let Some(pending) = self.pending.dequeue() {
+            self.last.set_event(Some(pending));
             return Some(pending);
         }
 
-        match self.held_key.event(keypad).await {
+        let key = self.held_key.event(keypad).await;
+        let last_key = self.last.set_held_key_event(key.clone());
+
+        let result = match key {
             Some(crate::held_key::Event::Down(Key::Asterisk)) => Some(Event::ShowSpecialCharacters),
             Some(crate::held_key::Event::Down(Key::Hash)) => {
                 self.case_state.cycle_case();
                 Some(Event::Case(self.case()))
             }
+            Some(crate::held_key::Event::Down(Key::Cancel)) => {
+                Some(Event::Decided(core::ascii::Char::Backspace))
+            }
             Some(crate::held_key::Event::Delay(Key::Hash)) => {
                 self.case_state.enable_numeric_case();
                 Some(Event::Case(self.case()))
             }
-            Some(crate::held_key::Event::Down(Key::Cancel)) => {
-                Some(Event::Decided(core::ascii::Char::Backspace))
-            }
             Some(crate::held_key::Event::Delay(Key::Cancel)) => None,
-
             Some(crate::held_key::Event::Delay(d)) => {
                 self.last.clear();
                 Some(Event::Decided(digit(d)))
             }
-            Some(crate::held_key::Event::Down(d)) => {
-                if self.case() == Case::Number {
-                    Some(Event::Decided(digit(d)))
+            Some(crate::held_key::Event::Down(ref now)) => {
+                if key == last_key {
+                    self.last.event.unwrap().next_char()
+                } else if last_key.is_some() {
+                    let result = self.last.event.unwrap().decide();
+                    self.pending
+                        .enqueue(Event::Tentative(lowercase(now.clone().into())));
+                    result
                 } else {
-                    None
+                    Some(Event::Tentative(lowercase(now.clone().into())))
                 }
             }
             None | Some(crate::held_key::Event::Repeat(_)) => None,
-        }
+        };
+
+        self.last.set_event(result);
+        result
     }
 }
 
@@ -157,218 +258,79 @@ fn lowercase(c: Char) -> Char {
     }
 }
 
-pub fn next_char(c: Char) -> Char {
-    match c {
-        Char::CapitalA => Char::CapitalB,
-        Char::CapitalB => Char::CapitalC,
-        Char::CapitalC => Char::CapitalA,
-        Char::CapitalD => Char::CapitalE,
-        Char::CapitalE => Char::CapitalF,
-        Char::CapitalF => Char::CapitalD,
-        Char::CapitalG => Char::CapitalH,
-        Char::CapitalH => Char::CapitalI,
-        Char::CapitalI => Char::CapitalG,
-        Char::CapitalJ => Char::CapitalK,
-        Char::CapitalK => Char::CapitalL,
-        Char::CapitalL => Char::CapitalJ,
-        Char::CapitalM => Char::CapitalN,
-        Char::CapitalN => Char::CapitalO,
-        Char::CapitalO => Char::CapitalM,
-        Char::CapitalP => Char::CapitalQ,
-        Char::CapitalQ => Char::CapitalR,
-        Char::CapitalR => Char::CapitalS,
-        Char::CapitalS => Char::CapitalP,
-        Char::CapitalT => Char::CapitalU,
-        Char::CapitalU => Char::CapitalV,
-        Char::CapitalV => Char::CapitalT,
-        Char::CapitalW => Char::CapitalX,
-        Char::CapitalX => Char::CapitalY,
-        Char::CapitalY => Char::CapitalZ,
-        Char::CapitalZ => Char::CapitalW,
-        Char::SmallA => Char::SmallB,
-        Char::SmallB => Char::SmallC,
-        Char::SmallC => Char::SmallA,
-        Char::SmallD => Char::SmallE,
-        Char::SmallE => Char::SmallF,
-        Char::SmallF => Char::SmallD,
-        Char::SmallG => Char::SmallH,
-        Char::SmallH => Char::SmallI,
-        Char::SmallI => Char::SmallG,
-        Char::SmallJ => Char::SmallK,
-        Char::SmallK => Char::SmallL,
-        Char::SmallL => Char::SmallJ,
-        Char::SmallM => Char::SmallN,
-        Char::SmallN => Char::SmallO,
-        Char::SmallO => Char::SmallM,
-        Char::SmallP => Char::SmallQ,
-        Char::SmallQ => Char::SmallR,
-        Char::SmallR => Char::SmallS,
-        Char::SmallS => Char::SmallP,
-        Char::SmallT => Char::SmallU,
-        Char::SmallU => Char::SmallV,
-        Char::SmallV => Char::SmallT,
-        Char::SmallW => Char::SmallX,
-        Char::SmallX => Char::SmallY,
-        Char::SmallY => Char::SmallZ,
-        Char::SmallZ => Char::SmallW,
-        Char::Digit1 => Char::Digit2,
-        Char::Digit2 => Char::Digit3,
-        Char::Digit3 => Char::Digit4,
-        Char::Digit4 => Char::Digit5,
-        Char::Digit5 => Char::Digit6,
-        Char::Digit6 => Char::Digit7,
-        Char::Digit7 => Char::Digit8,
-        Char::Digit8 => Char::Digit9,
-        Char::Digit9 => Char::Digit0,
-        Char::Digit0 => Char::Digit1,
-        e => e,
+#[cfg(test)]
+mod test {
+    use futures_executor::block_on;
+
+    #[test]
+    fn test_tentative() {
+        block_on(async {
+            let mut keypad = crate::test::Keypad::new(&[crate::KeyEvent::Down(crate::Key::Two)]);
+            let mut multitap = super::MultiTap::new(1000);
+            assert_eq!(
+                multitap.event(&mut keypad).await,
+                Some(super::Event::Case(super::Case::Lower))
+            );
+            assert_eq!(
+                multitap.event(&mut keypad).await,
+                Some(super::Event::Tentative(core::ascii::Char::SmallA))
+            );
+        });
+    }
+
+    #[test]
+    fn test_tentative_next() {
+        block_on(async {
+            let mut keypad = crate::test::Keypad::new(&[
+                crate::KeyEvent::Down(crate::Key::Two),
+                crate::KeyEvent::Down(crate::Key::Two),
+            ]);
+            let mut multitap = super::MultiTap::new(1000);
+            assert_eq!(
+                multitap.event(&mut keypad).await,
+                Some(super::Event::Case(super::Case::Lower))
+            );
+            assert_eq!(
+                multitap.event(&mut keypad).await,
+                Some(super::Event::Tentative(core::ascii::Char::SmallA))
+            );
+            assert_eq!(
+                multitap.event(&mut keypad).await,
+                Some(super::Event::Tentative(core::ascii::Char::SmallB))
+            );
+        });
+    }
+
+    #[test]
+    fn test_decided_by_timeout() {}
+
+    #[test]
+    fn test_hold_for_number() {}
+
+    #[test]
+    fn test_decided_by_other() {
+        block_on(async {
+            let mut keypad = crate::test::Keypad::new(&[
+                crate::KeyEvent::Down(crate::Key::Two),
+                crate::KeyEvent::Down(crate::Key::Three),
+            ]);
+            let mut multitap = super::MultiTap::new(1000);
+            assert_eq!(
+                multitap.event(&mut keypad).await,
+                Some(super::Event::Case(super::Case::Lower))
+            );
+            assert_eq!(
+                multitap.event(&mut keypad).await,
+                Some(super::Event::Tentative(core::ascii::Char::SmallA))
+            );
+            assert_eq!(
+                multitap.event(&mut keypad).await,
+                Some(super::Event::Decided(core::ascii::Char::SmallA))
+            );
+            assert_eq!(
+                multitap.event(&mut keypad).await,
+                Some(super::Event::Tentative(core::ascii::Char::SmallD))
+            );
+        });
     }
 }
-
-// #[cfg(test)]
-// mod test {
-//     use core::time::Duration;
-//     use tokio::time::sleep;
-//     use super::*;
-//
-//     #[derive(Debug, PartialEq, Format, Copy, Clone)]
-//     pub enum Key {
-//         One,
-//         Two,
-//     }
-//
-//     impl From<Key> for Char {
-//         fn from(key: Key) -> Char {
-//             match key {
-//                 Key::One => Char::Digit1,
-//                 Key::Two => Char::CapitalA,
-//             }
-//         }
-//     }
-//
-//     struct TwoKeys<'a>(&'a [Key], usize);
-//
-//     impl<'a> TwoKeys<'a> {
-//         fn new(presses: &'a [Key]) -> Self {
-//             TwoKeys(presses, 0)
-//         }
-//     }
-//
-//     impl Keypad for TwoKeys<'_> {
-//         type Button = Key;
-//
-//         async fn event(&mut self) -> crate::keypad::Event<Self::Button> {
-//             let result = self.0[self.1];
-//             self.1 += 1;
-//             crate::keypad::Event::Down(result)
-//         }
-//     }
-//
-//     #[tokio::test]
-//     #[should_panic]
-//     async fn test_timeout() {
-//         let presses = [];
-//         let mut multi_tap = MultiTap::new(TwoKeys::new(&presses));
-//         multi_tap.event(async {}).await;
-//     }
-//
-//     #[tokio::test]
-//     async fn test_one() {
-//         let presses = [Key::One];
-//         let mut multi_tap = MultiTap::new(TwoKeys::new(&presses));
-//         assert_eq!(
-//             multi_tap.event(sleep(Duration::from_secs(100))).await,
-//             Event::Tentative(Char::Digit1)
-//         )
-//     }
-//
-//     #[tokio::test]
-//     async fn test_one_two() {
-//         let presses = [Key::One, Key::Two];
-//         let mut multi_tap = MultiTap::new(TwoKeys::new(&presses));
-//
-//         assert_eq!(
-//             multi_tap.event(sleep(Duration::from_secs(100))).await,
-//             Event::Tentative(Char::Digit1)
-//         );
-//         assert_eq!(
-//             multi_tap.event(sleep(Duration::from_secs(100))).await,
-//             Event::Decided(Char::Digit1)
-//         );
-//         assert_eq!(
-//             multi_tap.event(sleep(Duration::from_secs(100))).await,
-//             Event::Tentative(Char::CapitalA)
-//         );
-//     }
-//
-//     #[tokio::test]
-//     async fn test_one_one() {
-//         let presses = [Key::One, Key::One];
-//         let mut multi_tap = MultiTap::new(TwoKeys::new(&presses));
-//
-//         assert_eq!(
-//             multi_tap.event(sleep(Duration::from_secs(100))).await,
-//             Event::Tentative(Char::Digit1)
-//         );
-//         assert_eq!(
-//             multi_tap.event(sleep(Duration::from_secs(100))).await,
-//             Event::Tentative(Char::Digit2)
-//         );
-//     }
-//
-//     #[tokio::test]
-//     async fn test_one_timeout() {
-//         let presses = [Key::One];
-//         let mut multi_tap = MultiTap::new(TwoKeys::new(&presses));
-//         assert_eq!(
-//             multi_tap.event(sleep(Duration::from_secs(100))).await,
-//             Event::Tentative(Char::Digit1)
-//         );
-//         assert_eq!(
-//             multi_tap.event(async {}).await,
-//             Event::Decided(Char::Digit1)
-//         );
-//     }
-//
-//     #[tokio::test]
-//     async fn test_one_two_timeout() {
-//         let presses = [Key::One, Key::Two];
-//         let mut multi_tap = MultiTap::new(TwoKeys::new(&presses));
-//
-//         assert_eq!(
-//             multi_tap.event(sleep(Duration::from_secs(100))).await,
-//             Event::Tentative(Char::Digit1)
-//         );
-//         assert_eq!(
-//             multi_tap.event(sleep(Duration::from_secs(100))).await,
-//             Event::Decided(Char::Digit1)
-//         );
-//         assert_eq!(
-//             multi_tap.event(sleep(Duration::from_secs(100))).await,
-//             Event::Tentative(Char::CapitalA)
-//         );
-//         assert_eq!(
-//             multi_tap.event(async {}).await,
-//             Event::Decided(Char::CapitalA)
-//         );
-//     }
-//
-//     #[tokio::test]
-//     async fn test_one_one_timeout() {
-//         let presses = [Key::One, Key::One];
-//         let mut multi_tap = MultiTap::new(TwoKeys::new(&presses));
-//
-//         assert_eq!(
-//             multi_tap.event(sleep(Duration::from_secs(100))).await,
-//             Event::Tentative(Char::Digit1)
-//         );
-//         assert_eq!(
-//             multi_tap.event(sleep(Duration::from_secs(100))).await,
-//             Event::Tentative(Char::Digit2)
-//         );
-//         assert_eq!(
-//             multi_tap.event(async {}).await,
-//             Event::Decided(Char::Digit2)
-//         );
-//     }
-// }

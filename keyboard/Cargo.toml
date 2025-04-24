@@ -6,6 +6,8 @@ edition = "2024"
 [dependencies]
 embassy-time = { workspace = true }
 embedded-graphics = "0.8"
+heapless = "0.8.0"
+log = "0.4.27"
 shared = { path = "../shared" }
 ssmarshal = { version = "1.0.0", default-features = false }
 usbd-hid.workspace = true

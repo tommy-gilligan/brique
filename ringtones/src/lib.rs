@@ -6,10 +6,11 @@
 use embassy_futures::select::Either;
 use embedded_graphics::{
     Drawable,
+    draw_target::DrawTargetExt,
     mono_font::ascii::{FONT_6X9, FONT_6X10},
     pixelcolor::BinaryColor,
-    prelude::Point,
-    primitives::{Primitive, PrimitiveStyle},
+    prelude::*,
+    primitives::{Primitive, PrimitiveStyle, Rectangle},
     text::Text,
 };
 use shared::Application;
@@ -86,7 +87,6 @@ impl Application for Ringtones<'_> {
                     text_style,
                 )
                 .draw(device);
-
                 let text_style = embedded_graphics::text::TextStyleBuilder::new()
                     .alignment(embedded_graphics::text::Alignment::Center)
                     .baseline(embedded_graphics::text::Baseline::Bottom)
@@ -102,8 +102,15 @@ impl Application for Ringtones<'_> {
                 )
                 .draw(device);
 
+                let mut textbox = shared::textbox::Textbox::new(song.note_source);
                 loop {
                     if let Some(note) = song.next() {
+                        let mut clipped =
+                            device.clipped(&Rectangle::new(Point::zero(), Size::new(84, 40)));
+                        textbox.draw(&mut clipped, None, false);
+
+                        textbox.highlight(&mut clipped, note.range.clone());
+
                         if let Some(frequency) = note.frequency() {
                             if let Ok(f) = frequency {
                                 let _ = device.unmute_buzzer();
@@ -112,7 +119,6 @@ impl Application for Ringtones<'_> {
                         } else {
                             let _ = device.mute_buzzer();
                         }
-
                         if let Either::First(shared::KeyEvent::Down(_)) =
                             embassy_futures::select::select(
                                 device.event(),

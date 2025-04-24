@@ -6,7 +6,7 @@ use embedded_graphics_web_simulator::{
 use wasm_bindgen::prelude::*;
 use web_sys::{AudioContext, Element, GainNode, OscillatorNode, OscillatorType};
 
-use crate::DomB;
+use crate::{DomB, DomK};
 
 mod backlight;
 mod buzzer;
@@ -42,6 +42,7 @@ pub struct Device {
     offset: i64,
     mute: bool,
     last_time_pressed: Option<embassy_time::Instant>,
+    keyboard: Rc<RefCell<DomK>>,
 }
 
 impl Device {
@@ -104,6 +105,7 @@ impl Device {
             offset: 0,
             mute: true,
             last_time_pressed: None,
+            keyboard: crate::DomK::new(),
         };
 
         let o = Rc::clone(&result.oscillator);

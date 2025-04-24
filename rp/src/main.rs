@@ -3,18 +3,14 @@
 
 use core::cell::RefCell;
 
-use assign_resources::assign_resources;
-use defmt::unwrap;
 use defmt_rtt as _;
-use embassy_executor::{Executor, Spawner};
+use embassy_executor::Spawner;
 use embassy_rp::{
     bind_interrupts,
     block::{
         Link, Partition, PartitionFlag, PartitionTableBlock, Permission, UnpartitionedFlag,
         UnpartitionedSpace,
     },
-    multicore::{Stack, spawn_core1},
-    peripherals,
     peripherals::USB,
     spi,
     spi::Spi,
@@ -22,7 +18,6 @@ use embassy_rp::{
 };
 use embassy_sync::blocking_mutex::Mutex;
 use panic_probe as _;
-use static_cell::StaticCell;
 
 #[unsafe(link_section = ".start_block")]
 #[used]
@@ -86,33 +81,33 @@ pub static PICOTOOL_ENTRIES: [embassy_rp::binary_info::EntryAddr; 6] = [
     ),
 ];
 
-mod background_core;
+// mod background_core;
 mod device;
-mod flash;
+// mod flash;
 mod rtc;
 
-assign_resources! {
-    usbs: Usbs{
-        usb: USB,
-    },
-    flashs: Flashs {
-        flash: FLASH,
-        dma_0: DMA_CH0
-    }
-}
+// assign_resources! {
+//     usbs: Usbs{
+//         usb: USB,
+//     },
+//     // flashs: Flashs {
+//     //     flash: FLASH,
+//     //     dma_0: DMA_CH0
+//     // }
+// }
 
 bind_interrupts!(struct Irqs {
     USBCTRL_IRQ => InterruptHandler<USB>;
 });
 
-static mut CORE1_STACK: Stack<4096> = Stack::new();
-static EXECUTOR1: StaticCell<Executor> = StaticCell::new();
+// static mut CORE1_STACK: Stack<4096> = Stack::new();
+// static EXECUTOR1: StaticCell<Executor> = StaticCell::new();
 
 #[embassy_executor::main]
-async fn main(spawner: Spawner) {
+async fn main(_spawner: Spawner) {
     let p = embassy_rp::init(Default::default());
-    defmt::println!("HEY");
-    let r = split_resources!(p);
+
+    // let r = split_resources!(p);
     let watchdog = embassy_rp::watchdog::Watchdog::new(p.WATCHDOG);
     // if watchdog.get_scratch(0) == WATCHDOG_MARKER {
     //     defmt::error!("Reset due to watchdog");
@@ -120,17 +115,17 @@ async fn main(spawner: Spawner) {
     // watchdog.set_scratch(0, WATCHDOG_MARKER);
     embassy_time::Timer::after_millis(10).await;
 
-    spawner.spawn(flash::flash_task(spawner, r.flashs)).unwrap();
-    spawn_core1(
-        p.CORE1,
-        unsafe { &mut *core::ptr::addr_of_mut!(CORE1_STACK) },
-        move || {
-            let executor1 = EXECUTOR1.init(Executor::new());
-            executor1.run(|spawner| {
-                unwrap!(spawner.spawn(background_core::background(spawner, r.usbs)))
-            });
-        },
-    );
+    // spawner.spawn(flash::flash_task(spawner, r.flashs)).unwrap();
+    // spawn_core1(
+    //     p.CORE1,
+    //     unsafe { &mut *core::ptr::addr_of_mut!(CORE1_STACK) },
+    //     move || {
+    //         let executor1 = EXECUTOR1.init(Executor::new());
+    //         executor1.run(|spawner| {
+    //             unwrap!(spawner.spawn(background_core::background(spawner, r.usbs)))
+    //         });
+    //     },
+    // );
     // FIX
     let _clock = rtc::Clock::new(p.I2C1, p.PIN_46, p.PIN_47);
 

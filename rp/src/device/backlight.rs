@@ -1,4 +1,5 @@
 use embassy_rp::{
+    Peri,
     gpio::{Level, Output},
     peripherals::PIN_15,
 };
@@ -6,8 +7,8 @@ use shared::Backlight;
 
 pub struct Light<'a>(Output<'a>);
 
-impl Light<'_> {
-    pub fn new(pin: PIN_15) -> Self {
+impl<'a> Light<'a> {
+    pub fn new(pin: Peri<'a, PIN_15>) -> Self {
         Self(Output::new(pin, Level::Low))
     }
 }

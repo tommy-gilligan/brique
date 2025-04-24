@@ -6,8 +6,10 @@ use shared::VibrationMotor;
 
 pub struct Motor<'a>(Output<'a>);
 
-impl Motor<'_> {
-    pub fn new(pin: PIN_2) -> Self {
+use embassy_rp::Peri;
+
+impl<'a> Motor<'a> {
+    pub fn new(pin: Peri<'a, PIN_2>) -> Self {
         Self(Output::new(pin, Level::Low))
     }
 }

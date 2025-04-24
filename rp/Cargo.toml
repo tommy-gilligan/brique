@@ -25,13 +25,13 @@ display-interface-spi = { workspace = true }
 display-interface = { workspace = true }
 
 embassy-embedded-hal = { workspace = true }
-embassy-rp = { git = "https://github.com/embassy-rs/embassy.git", features = ["defmt", "unstable-pac", "time-driver", "critical-section-impl", "rp235xb", "binary-info"] }
+embassy-rp = { workspace = true, features = ["defmt", "unstable-pac", "time-driver", "critical-section-impl", "rp235xb", "binary-info"] }
+embassy-executor = { git = "https://github.com/embassy-rs/embassy.git", features = ["arch-cortex-m", "executor-thread", "executor-interrupt", "defmt"] }
 embassy-usb = { workspace = true }
 embassy-futures = { workspace = true }
 embassy-usb-logger = { workspace = true }
 
 embassy-sync = { workspace = true, features = ["defmt"] }
-embassy-executor = { git = "https://github.com/embassy-rs/embassy.git", features = ["task-arena-size-98304", "arch-cortex-m", "executor-thread", "executor-interrupt", "defmt"] }
 embassy-time = { workspace = true, features = ["defmt", "defmt-timestamp-uptime"] }
 chrono = { version = "0.4", default-features = false }
 heapless = "0.8"

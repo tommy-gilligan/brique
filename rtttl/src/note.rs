@@ -43,13 +43,14 @@ impl FromStr for NoteName {
     }
 }
 
-#[derive(Debug, PartialEq, Copy, Clone)]
+#[derive(Debug, PartialEq, Clone)]
 pub struct Note {
     name: NoteName,
     duration: u32,
     octave: u32,
     tripled: bool,
     beats_per_minute: u32,
+    pub range: core::ops::Range<usize>,
 }
 
 impl Note {
@@ -58,6 +59,7 @@ impl Note {
         default_octave: u32,
         default_duration: u32,
         beats_per_minute: u32,
+        range: core::ops::Range<usize>,
     ) -> Self {
         let n = text.trim();
         let mut not_digit = n.match_indices(|c: char| c.is_ascii_alphabetic());
@@ -80,6 +82,7 @@ impl Note {
             duration: n[..name_start_index].parse().unwrap_or(default_duration),
             tripled: n.ends_with("."),
             beats_per_minute,
+            range,
         }
     }
 
@@ -190,13 +193,14 @@ mod test {
     #[test]
     fn test_note() {
         assert_eq!(
-            Note::new("2a3", 5, 4, 108),
+            Note::new("2a3", 5, 4, 108, 0..0),
             Note {
                 name: NoteName::A,
                 octave: 3,
                 duration: 2,
                 tripled: false,
-                beats_per_minute: 108
+                beats_per_minute: 108,
+                range: 0..0
             }
         );
     }
@@ -204,13 +208,14 @@ mod test {
     #[test]
     fn test_note_tripled() {
         assert_eq!(
-            Note::new("2a3.", 5, 4, 100),
+            Note::new("2a3.", 5, 4, 100, 0..0),
             Note {
                 name: NoteName::A,
                 octave: 3,
                 duration: 2,
                 tripled: true,
-                beats_per_minute: 100
+                beats_per_minute: 100,
+                range: 0..0
             }
         );
     }
@@ -218,13 +223,14 @@ mod test {
     #[test]
     fn test_note_sharp() {
         assert_eq!(
-            Note::new("32d#", 5, 4, 104),
+            Note::new("32d#", 5, 4, 104, 0..0),
             Note {
                 name: NoteName::DSharp,
                 octave: 5,
                 duration: 32,
                 tripled: false,
-                beats_per_minute: 104
+                beats_per_minute: 104,
+                range: 0..0
             }
         );
     }
@@ -232,13 +238,14 @@ mod test {
     #[test]
     fn test_note_sharp_tripled() {
         assert_eq!(
-            Note::new("32d#.", 5, 4, 102),
+            Note::new("32d#.", 5, 4, 102, 0..0),
             Note {
                 name: NoteName::DSharp,
                 octave: 5,
                 duration: 32,
                 tripled: true,
-                beats_per_minute: 102
+                beats_per_minute: 102,
+                range: 0..0
             }
         );
     }

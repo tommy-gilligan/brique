@@ -2,6 +2,7 @@ use core::cell::RefCell;
 
 use display_interface_spi::SPIInterface;
 use embassy_rp::{
+    Peri,
     gpio::{Level, Output},
     peripherals::{PIN_33, PIN_36, PIN_37, SPI0},
     spi,
@@ -36,9 +37,9 @@ impl<'a> Display<'a> {
             NoopRawMutex,
             RefCell<embassy_rp::spi::Spi<'a, SPI0, embassy_rp::spi::Blocking>>,
         >,
-        thirty_seven: PIN_37,
-        thirty_six: PIN_36,
-        thirty_three: PIN_33,
+        thirty_seven: Peri<'a, PIN_37>,
+        thirty_six: Peri<'a, PIN_36>,
+        thirty_three: Peri<'a, PIN_33>,
     ) -> Result<Self, display_interface::DisplayError> {
         let mut display_config = spi::Config::default();
         display_config.frequency = 4_000_000;

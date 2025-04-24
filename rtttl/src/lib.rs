@@ -8,9 +8,9 @@ pub struct Song<'a> {
     duration: u32,
     octave: u32,
     pub beats_per_minute: u32,
-    note_source: &'a str,
-    notes: Option<core::iter::Peekable<core::str::Split<'a, &'a str>>>,
-    _time: u32,
+    pub note_source: &'a str,
+    notes: Option<core::str::Split<'a, &'a str>>,
+    index: usize,
 }
 
 impl<'a> Song<'a> {
@@ -43,23 +43,31 @@ impl<'a> Song<'a> {
             beats_per_minute,
             note_source: split.next().unwrap().trim(),
             notes: None,
-            _time: 0,
+            index: 0,
         }
     }
 
     pub fn reset(&mut self) {
-        self.notes = Some(self.note_source.split(",").peekable());
+        self.index = 0;
+        self.notes = Some(self.note_source.split(","));
     }
 
     pub fn next(&mut self) -> Option<note::Note> {
         if self.notes.is_none() {
             self.reset();
         }
-        self.notes
-            .as_mut()
-            .unwrap()
-            .next()
-            .map(|n| crate::note::Note::new(n, self.octave, self.duration, self.beats_per_minute))
+        if let Some(n) = self.notes.as_mut().unwrap().next() {
+            let note = crate::note::Note::new(
+                n,
+                self.octave,
+                self.duration,
+                self.beats_per_minute,
+                self.index..(self.index + n.len() + 1),
+            );
+            self.index += n.len() + 1;
+            return Some(note);
+        }
+        None
     }
 
     // pub fn note_at(&mut self, time_ms: u32) -> Option<note::Note> {

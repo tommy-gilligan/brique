@@ -1,5 +1,5 @@
 use embassy_rp::{
-    Peripheral,
+    Peri,
     gpio::{Input, Pin, Pull},
     peripherals::{
         PIN_4, PIN_5, PIN_6, PIN_7, PIN_8, PIN_9, PIN_10, PIN_11, PIN_12, PIN_13, PIN_14, PIN_16,
@@ -16,8 +16,10 @@ enum ButtonEvent {
     Down,
 }
 
+// Peri<'a, PIN_33>
+
 impl<'a> Button<'a> {
-    fn new(pin: impl Peripheral<P = impl Pin> + 'a) -> Self {
+    fn new(pin: Peri<'a, impl Pin>) -> Self {
         Self(Input::new(pin, Pull::Up), false)
     }
 
@@ -53,25 +55,25 @@ pub struct ContactKeypad<'a> {
     hash: Button<'a>,
 }
 
-impl ContactKeypad<'_> {
+impl<'a> ContactKeypad<'a> {
     #[allow(clippy::too_many_arguments)]
     pub fn new(
-        cancel: PIN_16,
-        select: PIN_12,
-        up: PIN_9,
-        down: PIN_8,
-        one: PIN_17,
-        two: PIN_13,
-        three: PIN_7,
-        four: PIN_18,
-        five: PIN_14,
-        six: PIN_6,
-        seven: PIN_19,
-        eight: PIN_11,
-        nine: PIN_5,
-        asterisk: PIN_20,
-        zero: PIN_10,
-        hash: PIN_4,
+        cancel: Peri<'a, PIN_16>,
+        select: Peri<'a, PIN_12>,
+        up: Peri<'a, PIN_9>,
+        down: Peri<'a, PIN_8>,
+        one: Peri<'a, PIN_17>,
+        two: Peri<'a, PIN_13>,
+        three: Peri<'a, PIN_7>,
+        four: Peri<'a, PIN_18>,
+        five: Peri<'a, PIN_14>,
+        six: Peri<'a, PIN_6>,
+        seven: Peri<'a, PIN_19>,
+        eight: Peri<'a, PIN_11>,
+        nine: Peri<'a, PIN_5>,
+        asterisk: Peri<'a, PIN_20>,
+        zero: Peri<'a, PIN_10>,
+        hash: Peri<'a, PIN_4>,
     ) -> Self {
         Self {
             cancel: Button::new(cancel),

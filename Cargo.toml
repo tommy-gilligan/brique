@@ -1,6 +1,6 @@
 [workspace]
 resolver = "2"
-members = ["test", "snake", "ringtones", "rp", "shared", "web", "clock", "hardware_test", "keyboard"]
+members = ["snake", "ringtones", "rp", "shared", "web", "clock", "hardware_test", "keyboard"]
 
 [workspace.dependencies]
 pcd8544 = { path = "./pcd8544" }
@@ -10,9 +10,10 @@ embassy-embedded-hal = { version = "*", git = "https://github.com/embassy-rs/emb
 embassy-executor = { git = "https://github.com/embassy-rs/embassy.git", features = ["executor-thread", "integrated-timers"] }
 embassy-futures = { git = "https://github.com/embassy-rs/embassy.git", version = "*" }
 embassy-sync = { git = "https://github.com/embassy-rs/embassy.git", version = "*" }
-embassy-time = { git = "https://github.com/embassy-rs/embassy.git", version = "*" }
 embassy-usb = { git = "https://github.com/embassy-rs/embassy.git", version = "*", features = ["defmt", "max-interface-count-6"] }
 embassy-usb-logger = { git = "https://github.com/embassy-rs/embassy.git", version = "*" }
+embassy-rp = { git = "https://github.com/embassy-rs/embassy.git", version = "*" }
+embassy-time = { git = "https://github.com/embassy-rs/embassy.git", version = "*" }
 
 embedded-graphics = "*"
 embedded-hal = { version = "1.0" }

@@ -1,4 +1,5 @@
 use embassy_rp::{
+    Peri,
     peripherals::{PIN_21, PWM_SLICE2},
     pwm::{Config, Pwm, PwmError, SetDutyCycle},
 };
@@ -6,8 +7,8 @@ use shared::Buzzer;
 
 pub struct Beeper<'a>(Pwm<'a>, u16);
 
-impl Beeper<'_> {
-    pub fn new(slice: PWM_SLICE2, pin: PIN_21) -> Self {
+impl<'a> Beeper<'a> {
+    pub fn new(slice: Peri<'a, PWM_SLICE2>, pin: Peri<'a, PIN_21>) -> Self {
         Self(Pwm::new_output_b(slice, pin, Config::default()), 0)
     }
 

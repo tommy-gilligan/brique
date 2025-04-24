@@ -3,7 +3,7 @@ use futures::{future, future::Either, pin_mut};
 
 use crate::{Key, KeyEvent};
 
-#[derive(Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq)]
 pub enum Event {
     Down(Key),
     Delay(Key),
@@ -16,6 +16,39 @@ pub struct HeldKey {
     delay_duration: u64,
     repeat_period: u64,
     repeating: bool,
+}
+
+use core::fmt;
+
+impl fmt::Debug for HeldKey {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> Result<(), fmt::Error> {
+        #[allow(dead_code)]
+        #[derive(Debug)]
+        struct MySettings {
+            down: Option<Key>,
+            delay_duration: u64,
+            repeat_period: u64,
+            repeating: bool,
+        }
+
+        let Self {
+            down,
+            delay_duration,
+            repeat_period,
+            repeating,
+            ..
+        } = self;
+
+        fmt::Debug::fmt(
+            &MySettings {
+                down: down.clone(),
+                delay_duration: *delay_duration,
+                repeat_period: *repeat_period,
+                repeating: *repeating,
+            },
+            f,
+        )
+    }
 }
 
 impl HeldKey {

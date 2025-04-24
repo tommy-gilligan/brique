@@ -103,6 +103,43 @@ impl super::Device {
                 } else {
                     shared::KeyEvent::Up(Key::Hash)
                 };
+            } else if let Some(e) = (*self.keyboard).borrow_mut().check() {
+                return match e {
+                    crate::KeyEvent::Down('0') => shared::KeyEvent::Down(Key::Zero),
+                    crate::KeyEvent::Down('1') => shared::KeyEvent::Down(Key::One),
+                    crate::KeyEvent::Down('2') => shared::KeyEvent::Down(Key::Two),
+                    crate::KeyEvent::Down('3') => shared::KeyEvent::Down(Key::Three),
+                    crate::KeyEvent::Down('4') => shared::KeyEvent::Down(Key::Four),
+                    crate::KeyEvent::Down('5') => shared::KeyEvent::Down(Key::Five),
+                    crate::KeyEvent::Down('6') => shared::KeyEvent::Down(Key::Six),
+                    crate::KeyEvent::Down('7') => shared::KeyEvent::Down(Key::Seven),
+                    crate::KeyEvent::Down('8') => shared::KeyEvent::Down(Key::Eight),
+                    crate::KeyEvent::Down('9') => shared::KeyEvent::Down(Key::Nine),
+                    crate::KeyEvent::Down('*') => shared::KeyEvent::Down(Key::Asterisk),
+                    crate::KeyEvent::Down('#') => shared::KeyEvent::Down(Key::Hash),
+                    crate::KeyEvent::Down('u') => shared::KeyEvent::Down(Key::Up),
+                    crate::KeyEvent::Down('d') => shared::KeyEvent::Down(Key::Down),
+                    crate::KeyEvent::Down('E') => shared::KeyEvent::Down(Key::Select),
+                    crate::KeyEvent::Down('e') => shared::KeyEvent::Down(Key::Cancel),
+                    crate::KeyEvent::Up('0') => shared::KeyEvent::Up(Key::Zero),
+                    crate::KeyEvent::Up('1') => shared::KeyEvent::Up(Key::One),
+                    crate::KeyEvent::Up('2') => shared::KeyEvent::Up(Key::Two),
+                    crate::KeyEvent::Up('3') => shared::KeyEvent::Up(Key::Three),
+                    crate::KeyEvent::Up('4') => shared::KeyEvent::Up(Key::Four),
+                    crate::KeyEvent::Up('5') => shared::KeyEvent::Up(Key::Five),
+                    crate::KeyEvent::Up('6') => shared::KeyEvent::Up(Key::Six),
+                    crate::KeyEvent::Up('7') => shared::KeyEvent::Up(Key::Seven),
+                    crate::KeyEvent::Up('8') => shared::KeyEvent::Up(Key::Eight),
+                    crate::KeyEvent::Up('9') => shared::KeyEvent::Up(Key::Nine),
+                    crate::KeyEvent::Up('*') => shared::KeyEvent::Up(Key::Asterisk),
+                    crate::KeyEvent::Up('#') => shared::KeyEvent::Up(Key::Hash),
+                    crate::KeyEvent::Up('u') => shared::KeyEvent::Up(Key::Up),
+                    crate::KeyEvent::Up('d') => shared::KeyEvent::Up(Key::Down),
+                    crate::KeyEvent::Up('E') => shared::KeyEvent::Up(Key::Select),
+                    crate::KeyEvent::Up('e') => shared::KeyEvent::Up(Key::Cancel),
+
+                    _ => shared::KeyEvent::Down(Key::Select),
+                };
             }
         }
     }

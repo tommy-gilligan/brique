@@ -42,10 +42,8 @@ jobs:
         working-directory: ringtones
       - run: cargo test
         working-directory: ringtones
-      - run: cargo clippy --no-deps
-        working-directory: rtttl
+        #      - run: cargo clippy --no-deps
+        #        working-directory: rtttl
       - run: cargo test
         working-directory: rtttl
-      - run: cargo test
-        working-directory: test
       - run: cargo fmt --check

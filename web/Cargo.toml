@@ -17,7 +17,7 @@ log = "0.4.11"
 embedded-graphics-web-simulator = { git = "https://github.com/tommy-gilligan/embedded-graphics-web-simulator.git" }
 wasm-bindgen = "=0.2.93"
 wasm-logger = "0.2.0"
-web-sys = { version = "0.3", features = ["DomException", "DomTokenList", "AudioParam", "OscillatorNode", "GainNode", "AudioContext", "Document", "Element", "HtmlElement", "Node", "EventListener", "EventTarget", "MouseEvent", "Window", "OscillatorType", "AudioDestinationNode", "HtmlInputElement", "Location" ] }
+web-sys = { version = "0.3", features = ["DomException", "DomTokenList", "AudioParam", "OscillatorNode", "GainNode", "AudioContext", "Document", "Element", "HtmlElement", "Node", "EventListener", "EventTarget", "KeyEvent", "MouseEvent", "Window", "OscillatorType", "AudioDestinationNode", "HtmlInputElement", "Location", "KeyboardEvent" ] }
 shared = { path = "../shared" }
 js-sys = "=0.3.70"
 clock = { path = "../clock" }
@@ -28,6 +28,7 @@ ssmarshal = { version = "1.0.0", default-features = false }
 hidreport = "0.5.0"
 usbd-hid = "*"
 rtttl = { version = "0.1.0", path = "../rtttl" }
+heapless = "0.8.0"
 
 # [lints.clippy]
 # alloc_instead_of_core = "deny"

@@ -7,7 +7,6 @@ edition = "2024"
 chrono = { version = "0.4.40", default-features = false }
 defmt.workspace = true
 embassy-futures.workspace = true
-embassy-time = { workspace = true }
 embedded-graphics = "0.8"
 embedded-graphics-core = "0.4.0"
 embedded-text = "0.7.2"
@@ -22,3 +21,9 @@ usbd-hid.workspace = true
 fastrand = { version = "2.1.1", default-features = false }
 embedded-layout = "0.4.1"
 rtttl = { version = "0.1.0", path = "../rtttl" }
+embassy-time = { no-default-features = true, workspace = true }
+
+[dev-dependencies]
+futures-executor = "0.3.31"
+critical-section = { version = "1.2.0", features = ["std"] }
+embassy-time = { no-default-features = true, workspace = true, features = ["mock-driver", "generic-queue-8"] }
