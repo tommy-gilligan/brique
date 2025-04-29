@@ -1,8 +1,6 @@
 #![feature(ascii_char)]
 #![feature(ascii_char_variants)]
 #![feature(trivial_bounds)]
-#![feature(let_chains)]
-#![feature(associated_type_defaults)]
 #![no_std]
 
 pub mod character_select;
@@ -23,10 +21,6 @@ use embedded_graphics_core::{draw_target::DrawTarget, pixelcolor::BinaryColor};
 use enum_iterator::Sequence;
 use strum_macros::IntoStaticStr;
 use usbd_hid::descriptor::KeyboardUsage;
-
-pub trait SystemResponse {
-    fn take(&mut self) -> Option<[u8; 64]>;
-}
 
 pub trait Backlight {
     fn on(&mut self);
@@ -119,38 +113,12 @@ pub trait Keypad {
 }
 
 pub trait Application {
-    // should record:
-    // how long this takes
-    // how long between calls
     fn run(&mut self, device: &mut impl Device) -> impl Future<Output = Result<(), ()>>;
-}
-
-pub type UsbRx = [u8; 64];
-#[derive(Clone, PartialEq)]
-pub enum UsbTx {
-    CdcBuffer([u8; 64]),
-    HidChar(usbd_hid::descriptor::KeyboardReport),
-}
-
-#[derive(Clone, PartialEq)]
-pub enum SystemRequest {
-    UsbTx(UsbTx),
-    ResetToBoot,
-    SetTime(i64),
-}
-
-pub trait SystemRequestHandler {
-    fn handle_request(
-        &mut self,
-        system_request: SystemRequest,
-    ) -> impl core::future::Future<Output = ()>;
 }
 
 pub trait Device:
     VibrationMotor + Buzzer + Keypad + Rtc + Backlight + DrawTarget<Color = BinaryColor, Error = ()>
 {
-    fn start_watchdog(&mut self, duration: Duration);
-    fn feed_watchdog(&mut self);
 }
 
 pub fn build_report(c: Char) -> usbd_hid::descriptor::KeyboardReport {

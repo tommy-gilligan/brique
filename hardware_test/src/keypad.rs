@@ -28,10 +28,10 @@ impl KeypadTest<'_> {
                 } else {
                     self.0 = next(&self.0).unwrap();
                 }
-                Status::InProgress(None)
+                Status::InProgress
             }
             KeyEvent::Down(_key) => Status::Failed,
-            _ => Status::InProgress(None),
+            _ => Status::InProgress,
         }
     }
 }

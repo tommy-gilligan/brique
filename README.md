@@ -36,16 +36,12 @@ Because the board would need to fit into the chassis of a Nokia 3310 and because
 - Setting up web environment
 - Setting up rp environment
 - Setting up board
-    - Ordering Board
-    - Disassemble 3310
     - Install Hardware Test Program
     - Reassemble 3310
     - Manual Test
-    - Install Custom Software
 
 ### TODO
 
-- terse, unfriendly instructions (ie. README)
 - document app API
 
 - give more control over display flushing, keep track of what needs updating, what needs flushing

@@ -25,7 +25,7 @@ impl BacklightTest<'_> {
     pub async fn run(&mut self, device: &mut impl shared::Device) -> Status {
         device.on();
         match self.1.run(device).await {
-            None => Status::InProgress(None),
+            None => Status::InProgress,
             Some(true) => {
                 device.off();
                 Status::Passed

@@ -149,7 +149,4 @@ impl Device {
 }
 
 impl shared::Device for Device {
-    fn start_watchdog(&mut self, _duration: embassy_time::Duration) {}
-
-    fn feed_watchdog(&mut self) {}
 }

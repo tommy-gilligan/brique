@@ -35,7 +35,7 @@ impl BuzzerTest<'_> {
             return Status::Failed;
         }
         match self.1.run(device).await {
-            None => Status::InProgress(None),
+            None => Status::InProgress,
             Some(true) => {
                 if let Err(_e) = device.mute_buzzer() {
                     return Status::Failed;

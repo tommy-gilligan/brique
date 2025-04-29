@@ -18,7 +18,7 @@ use backlight::*;
 pub enum Status {
     Passed,
     Failed,
-    InProgress(Option<shared::SystemRequest>),
+    InProgress,
 }
 
 #[derive(Clone, Sequence, PartialEq)]
@@ -60,14 +60,14 @@ impl HardwareTest<'_> {
 
 impl Default for HardwareTest<'_> {
     fn default() -> Self {
-        Self::new(Status::InProgress(None))
+        Self::new(Status::InProgress)
     }
 }
 
 impl Application for HardwareTest<'_> {
     async fn run(&mut self, device: &mut impl shared::Device) -> Result<(), ()> {
         match self.0.clone() {
-            Status::InProgress(_) => match self.2 {
+            Status::InProgress => match self.2 {
                 Test::Keypad(ref mut test) => match test.run(device).await {
                     Status::Passed => {
                         log::info!("Passed keypad");

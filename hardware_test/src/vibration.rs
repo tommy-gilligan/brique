@@ -25,7 +25,7 @@ impl VibrationTest<'_> {
     pub async fn run(&mut self, device: &mut impl shared::Device) -> Status {
         device.start_vibrating();
         match self.1.run(device).await {
-            None => Status::InProgress(None),
+            None => Status::InProgress,
             Some(true) => {
                 device.stop_vibrating();
                 Status::Passed
