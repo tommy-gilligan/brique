@@ -40,6 +40,14 @@ jobs:
         working-directory: keyboard
       - run: cargo clippy --no-deps
         working-directory: ringtones
+      - run: cargo clippy --no-deps
+        working-directory: clock
+      - run: cargo test
+        working-directory: clock
+      - run: cargo clippy --no-deps
+        working-directory: hardware_test
+      - run: cargo test
+        working-directory: hardware_test
       - run: cargo test
         working-directory: ringtones
         #      - run: cargo clippy --no-deps
@@ -47,3 +55,12 @@ jobs:
       - run: cargo test
         working-directory: rtttl
       - run: cargo fmt --check
+
+
+keyboard
+ringtones
+rp
+rtttl
+shared
+snake
+web
