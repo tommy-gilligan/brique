@@ -81,13 +81,6 @@ impl<'a> Device<'a> {
 }
 
 impl shared::Device for Device<'_> {
-    fn start_watchdog(&mut self, duration: embassy_time::Duration) {
-        self.watchdog.start(duration);
-    }
-
-    fn feed_watchdog(&mut self) {
-        self.watchdog.feed();
-    }
 }
 use shared::{Backlight, Buzzer, Keypad, Rtc, VibrationMotor};
 
@@ -157,20 +150,6 @@ impl DrawTarget for Device<'_> {
 impl Dimensions for Device<'_> {
     fn bounding_box(&self) -> Rectangle {
         self.display.bounding_box()
-    }
-}
-
-pub struct SystemRequestHandler;
-
-impl shared::SystemRequestHandler for SystemRequestHandler {
-    async fn handle_request(&mut self, _request: shared::SystemRequest) {}
-}
-
-pub struct CdcSend;
-
-impl shared::SystemResponse for CdcSend {
-    fn take(&mut self) -> Option<[u8; 64]> {
-        None
     }
 }
 

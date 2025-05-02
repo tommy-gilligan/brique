@@ -33,8 +33,18 @@ Because the board would need to fit into the chassis of a Nokia 3310 and because
 ![3D render of front of main board](https://github.com/tommy-gilligan/brique/releases/latest/download/3D_blenderfront.png)
 ![3D render of back of main board](https://github.com/tommy-gilligan/brique/releases/latest/download/3D_blenderback.png)
 
-- Setting up web environment
-- Setting up rp environment
+## Assuming Rustup
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+select nightly
+load into shell
+
+## Setting up web environment
+cargo install --locked trunk
+cd web
+trunk serve
+
+## Setting up rp environment
+
 - Setting up board
     - Install Hardware Test Program
     - Reassemble 3310
