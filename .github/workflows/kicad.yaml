@@ -60,6 +60,19 @@ jobs:
       with:
         files: kicad/jlcpcb/gerber
         dest: gerbers.zip
+
+    - name: Run FCBot
+      uses: asymworks/fcbot@v0
+      with:
+        dir: output
+        config: connection_plate/fcbot.yaml
+        project: connection_plate/hollow.FCStd
+
+    - name: ls
+      run: ls ..
+
+    - name: ls connection_plate
+      run: ls ../connection_plate
   
     - name: Release
       uses: softprops/action-gh-release@v2
@@ -73,5 +86,7 @@ jobs:
           kicad/jlcpcb/3D_blenderback.png
           kicad/jlcpcb/3D_blenderfront.png
           gerbers.zip
+          part.stl
+          part.png
         fail_on_unmatched_files: true
         # draft: true

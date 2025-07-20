@@ -1,0 +1,18 @@
+fcbot:
+    output_dir: "."
+outputs:
+  - name: Mesh
+    type: stl
+    filename: part.stl
+    objects:
+      shapes: all
+  - name: Render
+    type: screenshot
+    filename: part.png
+    objects:
+      shapes: all
+    options:
+      resolution: [2048, 2048]
+      camera: orthographic
+      view: isometric
+      background: transparent
