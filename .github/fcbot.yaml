@@ -1,0 +1,28 @@
+fcbot:
+    output_dir: "."
+outputs:
+  - name: Mesh
+    type: stl
+    filename: connection_plate.stl
+    objects:
+      shapes: all
+  - name: Front
+    type: screenshot
+    filename: front.png
+    objects:
+      shapes: all
+    options:
+      resolution: [2048, 2048]
+      camera: orthographic
+      view: front
+      background: transparent
+  - name: Top
+    type: screenshot
+    filename: top.png
+    objects:
+      shapes: all
+    options:
+      resolution: [2048, 2048]
+      camera: orthographic
+      view: top
+      background: transparent
