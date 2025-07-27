@@ -18,7 +18,7 @@ jobs:
       uses: asymworks/fcbot@v0
       with:
         config: .github/fcbot.yaml
-        project: connection_plate/hollow.FCStd
+        project: connection_plate.FCStd
 
     - name: Slice Mesh
       run: prusa-slicer connection_plate.stl --load .github/prusa.ini -s --output connection_plate.gcode
