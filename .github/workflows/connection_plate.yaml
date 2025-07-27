@@ -1,0 +1,35 @@
+name: Connection Plate
+
+on:
+  push:
+
+jobs:
+  connection_plate:
+    name: Connection Plate
+    runs-on: ubuntu-latest
+  
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install PrusaSlicer
+      run: sudo apt install -y prusa-slicer
+
+    - name: Generate Mesh
+      uses: asymworks/fcbot@v0
+      with:
+        config: .github/fcbot.yaml
+        project: connection_plate/hollow.FCStd
+
+    - name: Slice Mesh
+      run: prusa-slicer connection_plate.stl --load .github/prusa.ini -s --output connection_plate.gcode
+
+    - name: Upload Files
+      uses: actions/upload-artifact@v4
+      with:
+        name: connection_plate
+        path: |
+          front.png
+          top.png
+          connection_plate.stl
+          connection_plate.gcode
+        if-no-files-found: error
