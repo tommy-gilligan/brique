@@ -10002,7 +10002,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
+		(property "Footprint" "Capacitor_SMD:C_0805_2012Metric"
 			(at 386.08 216.2048 0)
 			(effects
 				(font
@@ -10029,7 +10029,7 @@
 				(hide yes)
 			)
 		)
-		(property "JLCPCB" "C1525"
+		(property "JLCPCB" "C49678"
 			(at 382.27 217.17 0)
 			(effects
 				(font
