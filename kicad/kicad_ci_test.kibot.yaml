@@ -91,7 +91,7 @@ outputs:
         hide_pcb_info: true
         hide_stats_info: true
       format: CSV
-      normalize_values: true
+      normalize_values: false
       columns:
         - field: Value
           name: Comment

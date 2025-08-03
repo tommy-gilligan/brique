@@ -95,4 +95,4 @@ Upload bom
 Uplaod cpl
 Click Process BOM & CPL
 Click continue on missing parts (I need to change these to NC: M1 J4 LS1 U2)
-The inclusion of 01005 is limiting me to 'Standard' (part C161362): upsize
+The inclusion of 01005 is limiting me to 'Standard' (part C161362... seems to be something wrong with bom.csv output from kibot): upsize
