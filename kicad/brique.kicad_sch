@@ -9756,7 +9756,7 @@
 		(exclude_from_sim no)
 		(in_bom no)
 		(on_board yes)
-		(dnp no)
+		(dnp yes)
 		(uuid "2b5997fc-1db1-4089-b4b8-a3dbe9c7109e")
 		(property "Reference" "LS1"
 			(at 299.212 121.92 0)
@@ -11933,7 +11933,7 @@
 		(exclude_from_sim no)
 		(in_bom no)
 		(on_board yes)
-		(dnp no)
+		(dnp yes)
 		(uuid "7f99f370-cbdd-4a80-973b-f75f6afc6f7f")
 		(property "Reference" "J4"
 			(at 314.452 62.484 0)
@@ -13605,7 +13605,7 @@
 		(exclude_from_sim no)
 		(in_bom no)
 		(on_board yes)
-		(dnp no)
+		(dnp yes)
 		(uuid "ad222cdc-8ebc-43d6-b47d-8dad8da3a124")
 		(property "Reference" "M1"
 			(at 346.456 104.902 90)

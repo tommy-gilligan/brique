@@ -4879,7 +4879,7 @@
 		(path "/871500b1-9fc3-4f2f-b9e4-0e0c98c14d41/0f7ff79a-d23a-4898-b6b0-a1fbd677cd22")
 		(sheetname "/Wireless/")
 		(sheetfile "wireless.kicad_sch")
-		(attr smd exclude_from_bom)
+		(attr smd exclude_from_pos_files exclude_from_bom dnp)
 		(fp_poly
 			(pts
 				(xy -10.25 6.67) (xy -10.49 7) (xy -10.01 7) (xy -10.25 6.67)
@@ -9809,7 +9809,7 @@
 		(sheetname "/")
 		(sheetfile "brique.kicad_sch")
 		(clearance 0.4)
-		(attr smd exclude_from_bom)
+		(attr smd exclude_from_pos_files exclude_from_bom dnp)
 		(fp_text user "${REFERENCE}"
 			(at -2.921287 12.325 0)
 			(unlocked yes)
@@ -14611,7 +14611,7 @@
 		(sheetname "/")
 		(sheetfile "brique.kicad_sch")
 		(clearance 0.4)
-		(attr smd exclude_from_bom)
+		(attr smd exclude_from_pos_files exclude_from_bom dnp)
 		(fp_text user "${REFERENCE}"
 			(at 0 -2.5 0)
 			(unlocked yes)
@@ -25179,7 +25179,7 @@
 		(sheetname "/")
 		(sheetfile "brique.kicad_sch")
 		(clearance 0.4)
-		(attr smd exclude_from_bom)
+		(attr smd exclude_from_pos_files exclude_from_bom dnp)
 		(fp_text user "${REFERENCE}"
 			(at 0 -2.5 0)
 			(unlocked yes)

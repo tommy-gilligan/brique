@@ -68,3 +68,31 @@ trunk serve
 - power button should turn on device but also function as gpio?
 
 https://serdisplib.sourceforge.net/ser/pcd8544.html
+
+
+
+
+
+Ordering from JLCPCB
+https://github.com/tommy-gilligan/brique/releases/latest
+Download:
+- gerbers.zip
+- cpl.csv
+- bom.csv
+
+Upload gerbers.zip
+Form with many options
+The board needs to be 1mm (this is the thickness of the original board it is replacing)
+Select 1mm thickness
+Select PCB assembly
+Assemble bottom side
+PCB assembly significantly affects price but minimum quantity is 2.  If you are cheap and only need 1 board: select quantity 2
+Select standard assembly (I think currently 
+Click Next
+You'll be taken to PCB tab of a review page
+Click next
+Upload bom
+Uplaod cpl
+Click Process BOM & CPL
+Click continue on missing parts (I need to change these to NC: M1 J4 LS1 U2)
+The inclusion of 01005 is limiting me to 'Standard' (part C161362): upsize
