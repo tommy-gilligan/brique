@@ -9064,7 +9064,7 @@
 				(hide yes)
 			)
 		)
-		(property "JLCPCB" "C77020"
+		(property "JLCPCB" "C1525"
 			(at 240.03 43.18 0)
 			(effects
 				(font
@@ -9416,7 +9416,7 @@
 				(hide yes)
 			)
 		)
-		(property "JLCPCB" "C77020"
+		(property "JLCPCB" "C1525"
 			(at 297.18 43.18 0)
 			(effects
 				(font
@@ -9872,7 +9872,7 @@
 				(hide yes)
 			)
 		)
-		(property "JLCPCB" "C77020"
+		(property "JLCPCB" "C1525"
 			(at 262.89 43.18 0)
 			(effects
 				(font
@@ -10029,7 +10029,7 @@
 				(hide yes)
 			)
 		)
-		(property "JLCPCB" "C77020"
+		(property "JLCPCB" "C1525"
 			(at 382.27 217.17 0)
 			(effects
 				(font
@@ -10708,7 +10708,7 @@
 				(hide yes)
 			)
 		)
-		(property "JLCPCB" "C77020"
+		(property "JLCPCB" "C1525"
 			(at 308.61 43.18 0)
 			(effects
 				(font
@@ -11299,7 +11299,7 @@
 				(hide yes)
 			)
 		)
-		(property "JLCPCB" "C77020"
+		(property "JLCPCB" "C1525"
 			(at 68.58 113.03 0)
 			(effects
 				(font
@@ -12251,7 +12251,7 @@
 				(hide yes)
 			)
 		)
-		(property "JLCPCB" "C77020"
+		(property "JLCPCB" "C1525"
 			(at 285.75 43.18 0)
 			(effects
 				(font
@@ -12394,7 +12394,7 @@
 				(hide yes)
 			)
 		)
-		(property "JLCPCB" "C77020"
+		(property "JLCPCB" "C1525"
 			(at 322.58 143.51 0)
 			(effects
 				(font
@@ -12997,7 +12997,7 @@
 				(hide yes)
 			)
 		)
-		(property "JLCPCB" "C77020"
+		(property "JLCPCB" "C1525"
 			(at 274.32 43.18 0)
 			(effects
 				(font
@@ -13208,7 +13208,7 @@
 				(hide yes)
 			)
 		)
-		(property "JLCPCB" "C77020"
+		(property "JLCPCB" "C1525"
 			(at 355.6 229.87 0)
 			(effects
 				(font
@@ -13429,7 +13429,7 @@
 				(hide yes)
 			)
 		)
-		(property "JLCPCB" "C77020"
+		(property "JLCPCB" "C1525"
 			(at 320.04 43.18 0)
 			(effects
 				(font
@@ -13573,7 +13573,7 @@
 				(hide yes)
 			)
 		)
-		(property "JLCPCB" "C77020"
+		(property "JLCPCB" "C1525"
 			(at 187.96 68.58 0)
 			(effects
 				(font
@@ -14138,7 +14138,7 @@
 				(hide yes)
 			)
 		)
-		(property "JLCPCB" "C77020"
+		(property "JLCPCB" "C1525"
 			(at 251.46 43.18 0)
 			(effects
 				(font
@@ -15106,7 +15106,7 @@
 				(hide yes)
 			)
 		)
-		(property "JLCPCB" "C77020"
+		(property "JLCPCB" "C1525"
 			(at 161.29 68.58 0)
 			(effects
 				(font
@@ -15563,7 +15563,7 @@
 				(hide yes)
 			)
 		)
-		(property "JLCPCB" "C77020"
+		(property "JLCPCB" "C1525"
 			(at 331.47 43.18 0)
 			(effects
 				(font

@@ -5952,7 +5952,7 @@
 				(justify mirror)
 			)
 		)
-		(property "JLCPCB" "C77020"
+		(property "JLCPCB" "C1525"
 			(at 0 0 0)
 			(unlocked yes)
 			(layer "B.Fab")
@@ -8205,7 +8205,7 @@
 				(justify mirror)
 			)
 		)
-		(property "JLCPCB" "C77020"
+		(property "JLCPCB" "C1525"
 			(at 0 0 90)
 			(unlocked yes)
 			(layer "B.Fab")
@@ -8700,7 +8700,7 @@
 				(justify mirror)
 			)
 		)
-		(property "JLCPCB" "C77020"
+		(property "JLCPCB" "C1525"
 			(at 0 0 90)
 			(unlocked yes)
 			(layer "B.Fab")
@@ -9584,7 +9584,7 @@
 				(justify mirror)
 			)
 		)
-		(property "JLCPCB" "C77020"
+		(property "JLCPCB" "C1525"
 			(at 0 0 90)
 			(unlocked yes)
 			(layer "B.Fab")
@@ -10942,7 +10942,7 @@
 				(justify mirror)
 			)
 		)
-		(property "JLCPCB" "C77020"
+		(property "JLCPCB" "C1525"
 			(at 0 0 0)
 			(unlocked yes)
 			(layer "B.Fab")
@@ -11525,7 +11525,7 @@
 				(justify mirror)
 			)
 		)
-		(property "JLCPCB" "C77020"
+		(property "JLCPCB" "C1525"
 			(at 0 0 90)
 			(unlocked yes)
 			(layer "B.Fab")
@@ -15446,7 +15446,7 @@
 				(justify mirror)
 			)
 		)
-		(property "JLCPCB" "C77020"
+		(property "JLCPCB" "C1525"
 			(at 0 0 0)
 			(unlocked yes)
 			(layer "B.Fab")
@@ -16109,7 +16109,7 @@
 				(justify mirror)
 			)
 		)
-		(property "JLCPCB" "C77020"
+		(property "JLCPCB" "C1525"
 			(at 0 0 0)
 			(unlocked yes)
 			(layer "B.Fab")
@@ -16969,7 +16969,7 @@
 				(justify mirror)
 			)
 		)
-		(property "JLCPCB" "C77020"
+		(property "JLCPCB" "C1525"
 			(at 0 0 180)
 			(unlocked yes)
 			(layer "B.Fab")
@@ -17482,7 +17482,7 @@
 				(justify mirror)
 			)
 		)
-		(property "JLCPCB" "C77020"
+		(property "JLCPCB" "C1525"
 			(at 0 0 270)
 			(unlocked yes)
 			(layer "B.Fab")
@@ -19501,7 +19501,7 @@
 				(justify mirror)
 			)
 		)
-		(property "JLCPCB" "C77020"
+		(property "JLCPCB" "C1525"
 			(at 0 0 180)
 			(unlocked yes)
 			(layer "B.Fab")
@@ -20164,7 +20164,7 @@
 				(justify mirror)
 			)
 		)
-		(property "JLCPCB" "C77020"
+		(property "JLCPCB" "C1525"
 			(at 0 0 90)
 			(unlocked yes)
 			(layer "B.Fab")
@@ -26938,7 +26938,7 @@
 				(justify mirror)
 			)
 		)
-		(property "JLCPCB" "C77020"
+		(property "JLCPCB" "C1525"
 			(at 0 0 270)
 			(unlocked yes)
 			(layer "B.Fab")
@@ -28781,7 +28781,7 @@
 				(justify mirror)
 			)
 		)
-		(property "JLCPCB" "C77020"
+		(property "JLCPCB" "C1525"
 			(at 0 0 270)
 			(unlocked yes)
 			(layer "B.Fab")
