@@ -879,34 +879,10 @@
 		)
 	)
 	(junction
-		(at 86.36 143.51)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "07b45dad-05ef-4621-8f21-c5df98923b00")
-	)
-	(junction
-		(at 135.89 85.09)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "09050de5-748e-4877-a986-45dad07f5a19")
-	)
-	(junction
 		(at 86.36 104.14)
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "20c366b6-2c67-4f5b-9100-b08762f6e700")
-	)
-	(junction
-		(at 35.56 125.73)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "23f8dc50-8fd8-4934-bf54-3a41e735b805")
-	)
-	(junction
-		(at 85.09 85.09)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "2bec72c5-02de-4b38-8060-7e992f0baeb5")
 	)
 	(junction
 		(at 59.69 26.67)
@@ -921,82 +897,10 @@
 		(uuid "52d79af7-587f-4a99-9ca5-5feda9a822b6")
 	)
 	(junction
-		(at 35.56 143.51)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "56bbcc84-e29d-4ee2-be8e-539d3e63189b")
-	)
-	(junction
-		(at 35.56 184.15)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "5dc4ab8f-e075-46b2-b22b-c9ee4dea4f8f")
-	)
-	(junction
-		(at 115.57 68.58)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "61c2ff0c-eab4-4639-bc84-287106204d60")
-	)
-	(junction
-		(at 86.36 184.15)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "640c6ef9-cc5e-4c6d-8393-6eb0ef0fa5b7")
-	)
-	(junction
 		(at 86.36 161.29)
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "761fc585-b1a0-4b15-9e73-c581b00ba90c")
-	)
-	(junction
-		(at 44.45 62.23)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "8c09490f-6ebe-439c-a56f-0199ccdcdf98")
-	)
-	(junction
-		(at 138.43 58.42)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "a46d8f7a-5c21-4474-96f8-6b567772dc5c")
-	)
-	(junction
-		(at 135.89 125.73)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "aa6e4039-e85c-4897-9f70-650d5c47d888")
-	)
-	(junction
-		(at 85.09 53.34)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "baef5a0c-23e2-46d1-bbaf-a82cc18390b3")
-	)
-	(junction
-		(at 86.36 125.73)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "cfe604d8-e71e-457e-bcb9-cfce08a52598")
-	)
-	(junction
-		(at 135.89 142.24)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "e46e3e0a-3add-49f2-ac60-e92ce7ba0d53")
-	)
-	(junction
-		(at 36.83 85.09)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "e95286a9-728e-4ea4-8d29-2c21d61d9fe0")
-	)
-	(junction
-		(at 135.89 184.15)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "f37e3d41-5790-483c-bfc3-d20e1a1d6035")
 	)
 	(wire
 		(pts
@@ -1020,16 +924,6 @@
 	)
 	(wire
 		(pts
-			(xy 138.43 57.15) (xy 138.43 58.42)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "1351402a-d6ff-4db9-8839-a16830702b07")
-	)
-	(wire
-		(pts
 			(xy 64.77 104.14) (xy 78.74 104.14)
 		)
 		(stroke
@@ -1047,16 +941,6 @@
 			(type default)
 		)
 		(uuid "1dc65904-7a94-4a1c-ac85-fbe6250b0c25")
-	)
-	(wire
-		(pts
-			(xy 35.56 142.24) (xy 35.56 143.51)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "20c7b50e-1f75-4b66-9863-c8831cba4549")
 	)
 	(wire
 		(pts
@@ -1080,26 +964,6 @@
 	)
 	(wire
 		(pts
-			(xy 86.36 182.88) (xy 86.36 184.15)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "4b9edcbb-9ec5-4c01-8fb7-beb8a58eae67")
-	)
-	(wire
-		(pts
-			(xy 35.56 124.46) (xy 35.56 125.73)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "54a5fec6-7128-49d1-bc6a-690a2319b05b")
-	)
-	(wire
-		(pts
 			(xy 25.4 85.09) (xy 26.67 85.09)
 		)
 		(stroke
@@ -1107,26 +971,6 @@
 			(type default)
 		)
 		(uuid "5f9d102c-2cbe-4b92-8b56-64b56fbddd05")
-	)
-	(wire
-		(pts
-			(xy 36.83 83.82) (xy 36.83 85.09)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "780f56b3-f9a3-4172-bc57-7b549ebd4628")
-	)
-	(wire
-		(pts
-			(xy 44.45 60.96) (xy 44.45 62.23)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "7d3fed52-869e-458f-8dd6-259d941e140d")
 	)
 	(wire
 		(pts
@@ -1140,26 +984,6 @@
 	)
 	(wire
 		(pts
-			(xy 135.89 83.82) (xy 135.89 85.09)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "90a14b9a-bab4-49f9-aad9-0fde618c1c51")
-	)
-	(wire
-		(pts
-			(xy 35.56 182.88) (xy 35.56 184.15)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "9478fa01-f190-4770-b541-3d4ce5c7a34c")
-	)
-	(wire
-		(pts
 			(xy 110.49 36.83) (xy 110.49 38.1)
 		)
 		(stroke
@@ -1170,23 +994,13 @@
 	)
 	(wire
 		(pts
-			(xy 135.89 182.88) (xy 135.89 184.15)
+			(xy 137.16 184.15) (xy 135.89 184.15)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
 		(uuid "b08ba529-322e-4c97-a230-98ea33a0a244")
-	)
-	(wire
-		(pts
-			(xy 85.09 52.07) (xy 85.09 53.34)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "b15b828e-2619-4413-b1e0-bffcb21d9635")
 	)
 	(wire
 		(pts
@@ -1200,16 +1014,6 @@
 	)
 	(wire
 		(pts
-			(xy 115.57 67.31) (xy 115.57 68.58)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "b8af85a6-cb09-4982-864e-7e3a94dbef74")
-	)
-	(wire
-		(pts
 			(xy 99.06 26.67) (xy 102.87 26.67)
 		)
 		(stroke
@@ -1217,26 +1021,6 @@
 			(type default)
 		)
 		(uuid "bcc8899d-b24c-4f43-b07f-e131f259720e")
-	)
-	(wire
-		(pts
-			(xy 85.09 83.82) (xy 85.09 85.09)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "c5f086bd-fdb8-4aff-aea8-6143aa975fd3")
-	)
-	(wire
-		(pts
-			(xy 135.89 124.46) (xy 135.89 125.73)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "c7671115-1ee0-4055-a9a8-1926b4fa82cc")
 	)
 	(wire
 		(pts
@@ -1260,26 +1044,6 @@
 	)
 	(wire
 		(pts
-			(xy 86.36 124.46) (xy 86.36 125.73)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "d8e6f9be-7b22-4f07-9128-13f5729d9bd9")
-	)
-	(wire
-		(pts
-			(xy 135.89 140.97) (xy 135.89 142.24)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "dc919c31-697c-4640-8632-4e703bbc977a")
-	)
-	(wire
-		(pts
 			(xy 134.62 26.67) (xy 118.11 26.67)
 		)
 		(stroke
@@ -1288,19 +1052,9 @@
 		)
 		(uuid "e7b0437f-1191-4d22-b46d-416e952ad8ba")
 	)
-	(wire
-		(pts
-			(xy 86.36 142.24) (xy 86.36 143.51)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "f4aac68c-6f6b-47e2-98ec-678715d1076c")
-	)
 	(hierarchical_label "TWO"
 		(shape output)
-		(at 85.09 83.82 90)
+		(at 85.09 85.09 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -1311,7 +1065,7 @@
 	)
 	(hierarchical_label "CANCEL"
 		(shape output)
-		(at 44.45 60.96 90)
+		(at 44.45 62.23 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -1322,7 +1076,7 @@
 	)
 	(hierarchical_label "NINE"
 		(shape output)
-		(at 135.89 140.97 90)
+		(at 135.89 142.24 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -1333,7 +1087,7 @@
 	)
 	(hierarchical_label "HASH"
 		(shape output)
-		(at 135.89 182.88 90)
+		(at 137.16 184.15 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -1355,7 +1109,7 @@
 	)
 	(hierarchical_label "FIVE"
 		(shape output)
-		(at 86.36 124.46 90)
+		(at 86.36 125.73 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -1366,7 +1120,7 @@
 	)
 	(hierarchical_label "ASTERISK"
 		(shape output)
-		(at 35.56 182.88 90)
+		(at 35.56 184.15 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -1377,7 +1131,7 @@
 	)
 	(hierarchical_label "ONE"
 		(shape output)
-		(at 36.83 83.82 90)
+		(at 36.83 85.09 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -1388,7 +1142,7 @@
 	)
 	(hierarchical_label "UP"
 		(shape output)
-		(at 138.43 57.15 90)
+		(at 138.43 58.42 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -1410,7 +1164,7 @@
 	)
 	(hierarchical_label "SEVEN"
 		(shape output)
-		(at 35.56 142.24 90)
+		(at 35.56 143.51 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -1421,7 +1175,7 @@
 	)
 	(hierarchical_label "SELECT"
 		(shape output)
-		(at 85.09 52.07 90)
+		(at 85.09 53.34 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -1432,7 +1186,7 @@
 	)
 	(hierarchical_label "THREE"
 		(shape output)
-		(at 135.89 83.82 90)
+		(at 135.89 85.09 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -1443,7 +1197,7 @@
 	)
 	(hierarchical_label "DOWN"
 		(shape output)
-		(at 115.57 67.31 90)
+		(at 115.57 68.58 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -1454,7 +1208,7 @@
 	)
 	(hierarchical_label "ZERO"
 		(shape output)
-		(at 86.36 182.88 90)
+		(at 86.36 184.15 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -1465,7 +1219,7 @@
 	)
 	(hierarchical_label "EIGHT"
 		(shape output)
-		(at 86.36 142.24 90)
+		(at 86.36 143.51 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -1476,7 +1230,7 @@
 	)
 	(hierarchical_label "FOUR"
 		(shape output)
-		(at 35.56 124.46 90)
+		(at 35.56 125.73 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -1509,7 +1263,7 @@
 	)
 	(hierarchical_label "SIX"
 		(shape output)
-		(at 135.89 124.46 90)
+		(at 135.89 125.73 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -1645,72 +1399,6 @@
 			(project "brique"
 				(path "/3906e17f-1a23-46f4-8c63-f34176cde9d9/6f45a547-b2e6-47a5-be1e-3507de1132e1"
 					(reference "#PWR06")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:+3V3")
-		(at 93.98 143.51 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "0c182a77-68d9-4ee0-871f-9ddbc88c384e")
-		(property "Reference" "#PWR044"
-			(at 93.98 147.32 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Value" "+3V3"
-			(at 93.98 138.43 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 93.98 143.51 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" ""
-			(at 93.98 143.51 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Power symbol creates a global label with name \"+3V3\""
-			(at 93.98 143.51 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "fef31321-740a-4b78-8498-6b014958d0c2")
-		)
-		(instances
-			(project "brique"
-				(path "/3906e17f-1a23-46f4-8c63-f34176cde9d9/6f45a547-b2e6-47a5-be1e-3507de1132e1"
-					(reference "#PWR044")
 					(unit 1)
 				)
 			)
@@ -2081,83 +1769,6 @@
 		)
 	)
 	(symbol
-		(lib_id "Device:R")
-		(at 39.37 143.51 90)
-		(mirror x)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "17643893-4908-409c-a681-9c64616a0471")
-		(property "Reference" "R21"
-			(at 39.624 148.59 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "3k"
-			(at 39.624 146.05 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
-			(at 39.37 141.732 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 39.37 143.51 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Resistor"
-			(at 39.37 143.51 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "JLCPCB" "C137872"
-			(at 39.37 143.51 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "4792a54f-f7da-483d-b6db-af7b4989ac53")
-		)
-		(pin "2"
-			(uuid "5ba64230-46c8-445e-9244-c74fffdb0b8f")
-		)
-		(instances
-			(project "brique"
-				(path "/3906e17f-1a23-46f4-8c63-f34176cde9d9/6f45a547-b2e6-47a5-be1e-3507de1132e1"
-					(reference "R21")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "Jumper:Jumper_2_Open")
 		(at 39.37 62.23 0)
 		(unit 1)
@@ -2297,73 +1908,6 @@
 			(project "brique"
 				(path "/3906e17f-1a23-46f4-8c63-f34176cde9d9/6f45a547-b2e6-47a5-be1e-3507de1132e1"
 					(reference "D6")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:+3V3")
-		(at 52.07 62.23 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "21c2413e-ed31-4e02-bfef-7a6c98bab166")
-		(property "Reference" "#PWR035"
-			(at 52.07 66.04 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Value" "+3V3"
-			(at 52.07 57.15 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Footprint" ""
-			(at 52.07 62.23 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" ""
-			(at 52.07 62.23 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Power symbol creates a global label with name \"+3V3\""
-			(at 52.07 62.23 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "c01c666c-4abf-4582-99e9-abdcebb99fe9")
-		)
-		(instances
-			(project "brique"
-				(path "/3906e17f-1a23-46f4-8c63-f34176cde9d9/6f45a547-b2e6-47a5-be1e-3507de1132e1"
-					(reference "#PWR035")
 					(unit 1)
 				)
 			)
@@ -2564,148 +2108,6 @@
 			(project "brique"
 				(path "/3906e17f-1a23-46f4-8c63-f34176cde9d9/6f45a547-b2e6-47a5-be1e-3507de1132e1"
 					(reference "KP5")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Device:R")
-		(at 39.37 125.73 270)
-		(mirror x)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "2823a125-7127-407f-9501-8cbeaae03fc6")
-		(property "Reference" "R24"
-			(at 39.116 131.064 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "3k"
-			(at 39.116 128.524 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
-			(at 39.37 127.508 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 39.37 125.73 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Resistor"
-			(at 39.37 125.73 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "JLCPCB" "C137872"
-			(at 39.37 125.73 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "df8f0355-deed-43a7-b415-c744370156e3")
-		)
-		(pin "2"
-			(uuid "83464984-0b1c-4d66-af3b-f8ff4527489f")
-		)
-		(instances
-			(project "brique"
-				(path "/3906e17f-1a23-46f4-8c63-f34176cde9d9/6f45a547-b2e6-47a5-be1e-3507de1132e1"
-					(reference "R24")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:+3V3")
-		(at 43.18 184.15 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "2c0dd67d-f40e-43a2-9cb0-8dd33ece0be9")
-		(property "Reference" "#PWR037"
-			(at 43.18 187.96 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Value" "+3V3"
-			(at 45.974 183.896 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 43.18 184.15 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" ""
-			(at 43.18 184.15 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Power symbol creates a global label with name \"+3V3\""
-			(at 43.18 184.15 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "4bf06b02-5b97-4456-9243-97846e699b41")
-		)
-		(instances
-			(project "brique"
-				(path "/3906e17f-1a23-46f4-8c63-f34176cde9d9/6f45a547-b2e6-47a5-be1e-3507de1132e1"
-					(reference "#PWR037")
 					(unit 1)
 				)
 			)
@@ -3140,83 +2542,6 @@
 		)
 	)
 	(symbol
-		(lib_id "Device:R")
-		(at 39.37 184.15 90)
-		(mirror x)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "4522db2b-c7be-4354-a4b5-0ebce77f0b40")
-		(property "Reference" "R9"
-			(at 39.37 189.23 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "3k"
-			(at 39.37 186.69 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
-			(at 39.37 182.372 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 39.37 184.15 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Resistor"
-			(at 39.37 184.15 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "JLCPCB" "C137872"
-			(at 39.37 184.15 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "3f8c9bdf-139b-46ca-a74a-dae1eb630c4e")
-		)
-		(pin "2"
-			(uuid "10f9f1eb-35cf-42cd-b4df-c10e86252576")
-		)
-		(instances
-			(project "brique"
-				(path "/3906e17f-1a23-46f4-8c63-f34176cde9d9/6f45a547-b2e6-47a5-be1e-3507de1132e1"
-					(reference "R9")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "Jumper:Jumper_2_Open")
 		(at 30.48 184.15 0)
 		(unit 1)
@@ -3511,413 +2836,6 @@
 		)
 	)
 	(symbol
-		(lib_id "power:+3V3")
-		(at 93.98 125.73 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "5127a4b0-ca47-4290-9185-6e61cfd8d310")
-		(property "Reference" "#PWR069"
-			(at 93.98 129.54 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Value" "+3V3"
-			(at 93.98 120.65 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 93.98 125.73 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" ""
-			(at 93.98 125.73 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Power symbol creates a global label with name \"+3V3\""
-			(at 93.98 125.73 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "884d9f89-0363-4c4e-9de0-4173ef49b5c9")
-		)
-		(instances
-			(project "brique"
-				(path "/3906e17f-1a23-46f4-8c63-f34176cde9d9/6f45a547-b2e6-47a5-be1e-3507de1132e1"
-					(reference "#PWR069")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:+3V3")
-		(at 92.71 85.09 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "57718817-4174-4818-8651-d38e5e4e6be0")
-		(property "Reference" "#PWR063"
-			(at 92.71 88.9 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Value" "+3V3"
-			(at 92.71 80.01 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 92.71 85.09 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" ""
-			(at 92.71 85.09 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Power symbol creates a global label with name \"+3V3\""
-			(at 92.71 85.09 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "ff7cfd05-e31a-42b5-aa71-2a36a596dc7a")
-		)
-		(instances
-			(project "brique"
-				(path "/3906e17f-1a23-46f4-8c63-f34176cde9d9/6f45a547-b2e6-47a5-be1e-3507de1132e1"
-					(reference "#PWR063")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Device:R")
-		(at 139.7 85.09 270)
-		(mirror x)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "5a766737-cc03-4efe-9377-225a212a040d")
-		(property "Reference" "R29"
-			(at 139.7 91.44 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "3k"
-			(at 139.7 88.9 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
-			(at 139.7 86.868 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 139.7 85.09 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Resistor"
-			(at 139.7 85.09 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "JLCPCB" "C137872"
-			(at 139.7 85.09 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "b788235e-a074-4ebc-9006-09bd44875644")
-		)
-		(pin "2"
-			(uuid "51f6f1c3-3fe8-4329-8a8a-45164bb37bfd")
-		)
-		(instances
-			(project "brique"
-				(path "/3906e17f-1a23-46f4-8c63-f34176cde9d9/6f45a547-b2e6-47a5-be1e-3507de1132e1"
-					(reference "R29")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:+3V3")
-		(at 146.05 58.42 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "5bf659e0-e652-4dbb-a8a2-628188b796f4")
-		(property "Reference" "#PWR075"
-			(at 146.05 62.23 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Value" "+3V3"
-			(at 146.05 53.34 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 146.05 58.42 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" ""
-			(at 146.05 58.42 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Power symbol creates a global label with name \"+3V3\""
-			(at 146.05 58.42 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "61828f30-d604-4fad-9655-24d334a17948")
-		)
-		(instances
-			(project "brique"
-				(path "/3906e17f-1a23-46f4-8c63-f34176cde9d9/6f45a547-b2e6-47a5-be1e-3507de1132e1"
-					(reference "#PWR075")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:+3V3")
-		(at 44.45 85.09 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "5d3f3777-1e51-497e-8af3-aef9fb2c775d")
-		(property "Reference" "#PWR013"
-			(at 44.45 88.9 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Value" "+3V3"
-			(at 44.45 80.01 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 44.45 85.09 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" ""
-			(at 44.45 85.09 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Power symbol creates a global label with name \"+3V3\""
-			(at 44.45 85.09 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "7be3e41a-21d6-4d34-95e6-18fcced02322")
-		)
-		(instances
-			(project "brique"
-				(path "/3906e17f-1a23-46f4-8c63-f34176cde9d9/6f45a547-b2e6-47a5-be1e-3507de1132e1"
-					(reference "#PWR013")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:+3V3")
-		(at 43.18 143.51 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "5f5ce744-dc97-45cb-97b9-df6f57d67473")
-		(property "Reference" "#PWR011"
-			(at 43.18 147.32 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Value" "+3V3"
-			(at 43.18 138.43 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 43.18 143.51 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" ""
-			(at 43.18 143.51 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Power symbol creates a global label with name \"+3V3\""
-			(at 43.18 143.51 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "b5f089ee-2b03-4988-bb4d-e997d0b22df5")
-		)
-		(instances
-			(project "brique"
-				(path "/3906e17f-1a23-46f4-8c63-f34176cde9d9/6f45a547-b2e6-47a5-be1e-3507de1132e1"
-					(reference "#PWR011")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "Jumper:Jumper_2_Open")
 		(at 30.48 143.51 0)
 		(unit 1)
@@ -4070,83 +2988,6 @@
 		)
 	)
 	(symbol
-		(lib_id "Device:R")
-		(at 48.26 62.23 270)
-		(mirror x)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "6db2b5e8-86cc-47af-932a-e3fe7f5ac29d")
-		(property "Reference" "R30"
-			(at 48.26 68.58 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "3k"
-			(at 48.26 66.04 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
-			(at 48.26 64.008 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 48.26 62.23 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Resistor"
-			(at 48.26 62.23 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "JLCPCB" "C137872"
-			(at 48.26 62.23 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "9010d8bf-ca3d-4400-a59f-81022af931b9")
-		)
-		(pin "2"
-			(uuid "0e166278-1cf8-4f97-9244-be17fd4b8807")
-		)
-		(instances
-			(project "brique"
-				(path "/3906e17f-1a23-46f4-8c63-f34176cde9d9/6f45a547-b2e6-47a5-be1e-3507de1132e1"
-					(reference "R30")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "Jumper:Jumper_2_Open")
 		(at 130.81 85.09 0)
 		(unit 1)
@@ -4209,71 +3050,6 @@
 			(project "brique"
 				(path "/3906e17f-1a23-46f4-8c63-f34176cde9d9/6f45a547-b2e6-47a5-be1e-3507de1132e1"
 					(reference "KP3")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:+3V3")
-		(at 123.19 68.58 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "744db39f-a0ee-4cf4-ba3c-4e5da71b9473")
-		(property "Reference" "#PWR078"
-			(at 123.19 72.39 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Value" "+3V3"
-			(at 125.73 68.072 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 123.19 68.58 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" ""
-			(at 123.19 68.58 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Power symbol creates a global label with name \"+3V3\""
-			(at 123.19 68.58 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "0eac0ad8-7163-41b9-a666-053610949f33")
-		)
-		(instances
-			(project "brique"
-				(path "/3906e17f-1a23-46f4-8c63-f34176cde9d9/6f45a547-b2e6-47a5-be1e-3507de1132e1"
-					(reference "#PWR078")
 					(unit 1)
 				)
 			)
@@ -4585,148 +3361,6 @@
 		)
 	)
 	(symbol
-		(lib_id "Device:R")
-		(at 90.17 143.51 90)
-		(mirror x)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "7ee2b668-ffaf-4f29-938a-bf814682c0e6")
-		(property "Reference" "R22"
-			(at 90.17 148.59 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "3k"
-			(at 90.17 146.05 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
-			(at 90.17 141.732 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 90.17 143.51 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Resistor"
-			(at 90.17 143.51 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "JLCPCB" "C137872"
-			(at 90.17 143.51 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "c7f663f9-0a3c-4529-9e5a-23c76b69a809")
-		)
-		(pin "2"
-			(uuid "cc6c0cab-13f6-423d-b374-9f70f6a3e209")
-		)
-		(instances
-			(project "brique"
-				(path "/3906e17f-1a23-46f4-8c63-f34176cde9d9/6f45a547-b2e6-47a5-be1e-3507de1132e1"
-					(reference "R22")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:+3V3")
-		(at 93.98 184.15 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "7f963ccf-80c9-43cd-90d1-50040975699a")
-		(property "Reference" "#PWR073"
-			(at 93.98 187.96 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Value" "+3V3"
-			(at 97.282 184.15 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 93.98 184.15 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" ""
-			(at 93.98 184.15 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Power symbol creates a global label with name \"+3V3\""
-			(at 93.98 184.15 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "a1cf6d29-8350-45c9-8fb3-45786dcaece4")
-		)
-		(instances
-			(project "brique"
-				(path "/3906e17f-1a23-46f4-8c63-f34176cde9d9/6f45a547-b2e6-47a5-be1e-3507de1132e1"
-					(reference "#PWR073")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "Jumper:Jumper_2_Open")
 		(at 80.01 85.09 0)
 		(unit 1)
@@ -4992,72 +3626,6 @@
 		)
 	)
 	(symbol
-		(lib_id "power:+3V3")
-		(at 143.51 85.09 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "87567869-6876-49e9-b6cd-04b512e75a82")
-		(property "Reference" "#PWR074"
-			(at 143.51 88.9 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Value" "+3V3"
-			(at 143.51 80.01 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 143.51 85.09 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" ""
-			(at 143.51 85.09 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Power symbol creates a global label with name \"+3V3\""
-			(at 143.51 85.09 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "7a915931-7e57-48a6-bffe-dad932a62d33")
-		)
-		(instances
-			(project "brique"
-				(path "/3906e17f-1a23-46f4-8c63-f34176cde9d9/6f45a547-b2e6-47a5-be1e-3507de1132e1"
-					(reference "#PWR074")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "power:GND")
 		(at 125.73 142.24 0)
 		(unit 1)
@@ -5186,72 +3754,6 @@
 			(project "brique"
 				(path "/3906e17f-1a23-46f4-8c63-f34176cde9d9/6f45a547-b2e6-47a5-be1e-3507de1132e1"
 					(reference "KPSELECT1")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:+3V3")
-		(at 143.51 142.24 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "8fd05d81-f8cd-465f-b91b-51b143155e95")
-		(property "Reference" "#PWR062"
-			(at 143.51 146.05 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Value" "+3V3"
-			(at 143.51 137.16 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 143.51 142.24 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" ""
-			(at 143.51 142.24 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Power symbol creates a global label with name \"+3V3\""
-			(at 143.51 142.24 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "9071466a-3dea-4a5e-bd81-5b0e887310d3")
-		)
-		(instances
-			(project "brique"
-				(path "/3906e17f-1a23-46f4-8c63-f34176cde9d9/6f45a547-b2e6-47a5-be1e-3507de1132e1"
-					(reference "#PWR062")
 					(unit 1)
 				)
 			)
@@ -5545,149 +4047,6 @@
 		)
 	)
 	(symbol
-		(lib_id "Device:R")
-		(at 139.7 125.73 270)
-		(mirror x)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "9f6b6cc1-31db-41db-a4d9-d1c777e93fe2")
-		(property "Reference" "R26"
-			(at 139.7 132.08 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "3k"
-			(at 139.7 129.54 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
-			(at 139.7 127.508 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 139.7 125.73 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Resistor"
-			(at 139.7 125.73 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "JLCPCB" "C137872"
-			(at 139.7 125.73 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "88ba4894-e8f3-43ae-b63a-046301629465")
-		)
-		(pin "2"
-			(uuid "28410eac-287f-476d-be32-7185f0e5d7e4")
-		)
-		(instances
-			(project "brique"
-				(path "/3906e17f-1a23-46f4-8c63-f34176cde9d9/6f45a547-b2e6-47a5-be1e-3507de1132e1"
-					(reference "R26")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:+3V3")
-		(at 92.71 53.34 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "a102c113-3a8f-4465-8bbf-c900b4893f8b")
-		(property "Reference" "#PWR077"
-			(at 92.71 57.15 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Value" "+3V3"
-			(at 92.71 48.26 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 92.71 53.34 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" ""
-			(at 92.71 53.34 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Power symbol creates a global label with name \"+3V3\""
-			(at 92.71 53.34 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "66a0c55f-c8b2-49e8-96a0-1a6abe217033")
-		)
-		(instances
-			(project "brique"
-				(path "/3906e17f-1a23-46f4-8c63-f34176cde9d9/6f45a547-b2e6-47a5-be1e-3507de1132e1"
-					(reference "#PWR077")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "power:GND")
 		(at 74.93 53.34 0)
 		(unit 1)
@@ -5748,83 +4107,6 @@
 			(project "brique"
 				(path "/3906e17f-1a23-46f4-8c63-f34176cde9d9/6f45a547-b2e6-47a5-be1e-3507de1132e1"
 					(reference "#PWR076")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Device:R")
-		(at 40.64 85.09 90)
-		(mirror x)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "a8a2816d-e0ce-4fd7-8eae-5485493226a6")
-		(property "Reference" "R27"
-			(at 40.64 91.44 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "3k"
-			(at 40.64 88.9 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
-			(at 40.64 83.312 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 40.64 85.09 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Resistor"
-			(at 40.64 85.09 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "JLCPCB" "C137872"
-			(at 40.64 85.09 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "50619ee9-802f-4b88-a118-87d21ac300f5")
-		)
-		(pin "2"
-			(uuid "95f62bd0-1a82-4619-8bc0-7ffdb9d69bb4")
-		)
-		(instances
-			(project "brique"
-				(path "/3906e17f-1a23-46f4-8c63-f34176cde9d9/6f45a547-b2e6-47a5-be1e-3507de1132e1"
-					(reference "R27")
 					(unit 1)
 				)
 			)
@@ -5974,82 +4256,6 @@
 		)
 	)
 	(symbol
-		(lib_id "Device:R")
-		(at 142.24 58.42 270)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "b38565a8-1832-4063-9eed-b89a31618bad")
-		(property "Reference" "R32"
-			(at 142.24 60.706 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "3k"
-			(at 142.24 62.484 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
-			(at 142.24 56.642 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 142.24 58.42 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Resistor"
-			(at 142.24 58.42 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "JLCPCB" "C137872"
-			(at 142.24 58.42 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "45bfe7f8-912f-47bb-aeb9-b61ed75e5c98")
-		)
-		(pin "2"
-			(uuid "0ce9a521-7a08-45c0-a875-4ac9a828e069")
-		)
-		(instances
-			(project "brique"
-				(path "/3906e17f-1a23-46f4-8c63-f34176cde9d9/6f45a547-b2e6-47a5-be1e-3507de1132e1"
-					(reference "R32")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "power:+3V3")
 		(at 142.24 26.67 0)
 		(mirror y)
@@ -6110,83 +4316,6 @@
 			(project "brique"
 				(path "/3906e17f-1a23-46f4-8c63-f34176cde9d9/6f45a547-b2e6-47a5-be1e-3507de1132e1"
 					(reference "#PWR099")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Device:R")
-		(at 88.9 85.09 90)
-		(mirror x)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "b7a54dca-9316-482e-80d0-4e57c324e161")
-		(property "Reference" "R28"
-			(at 88.9 90.678 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "3k"
-			(at 88.9 88.138 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
-			(at 88.9 83.312 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 88.9 85.09 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Resistor"
-			(at 88.9 85.09 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "JLCPCB" "C137872"
-			(at 88.9 85.09 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "01088698-c1b0-4b31-a915-0dfe2907c2d8")
-		)
-		(pin "2"
-			(uuid "c5468c61-b848-4482-853d-d631e24ec6e7")
-		)
-		(instances
-			(project "brique"
-				(path "/3906e17f-1a23-46f4-8c63-f34176cde9d9/6f45a547-b2e6-47a5-be1e-3507de1132e1"
-					(reference "R28")
 					(unit 1)
 				)
 			)
@@ -6325,83 +4454,6 @@
 		)
 	)
 	(symbol
-		(lib_id "Device:R")
-		(at 90.17 184.15 90)
-		(mirror x)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "c45f1114-3ef6-4281-9da4-83803ecce539")
-		(property "Reference" "R19"
-			(at 90.17 189.23 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "3k"
-			(at 90.17 186.69 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
-			(at 90.17 182.372 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 90.17 184.15 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Resistor"
-			(at 90.17 184.15 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "JLCPCB" "C137872"
-			(at 90.17 184.15 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "72922ce6-f391-47a9-99e0-2679b3cca80b")
-		)
-		(pin "2"
-			(uuid "d4d18dc7-087a-4020-af11-6ff11ab843de")
-		)
-		(instances
-			(project "brique"
-				(path "/3906e17f-1a23-46f4-8c63-f34176cde9d9/6f45a547-b2e6-47a5-be1e-3507de1132e1"
-					(reference "R19")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "Jumper:Jumper_2_Open")
 		(at 81.28 184.15 0)
 		(unit 1)
@@ -6464,71 +4516,6 @@
 			(project "brique"
 				(path "/3906e17f-1a23-46f4-8c63-f34176cde9d9/6f45a547-b2e6-47a5-be1e-3507de1132e1"
 					(reference "KP0")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:+3V3")
-		(at 143.51 184.15 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "cb0b25de-81c5-418c-86a3-b534b7ee8fc5")
-		(property "Reference" "#PWR089"
-			(at 143.51 187.96 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Value" "+3V3"
-			(at 147.32 183.896 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 143.51 184.15 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" ""
-			(at 143.51 184.15 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Power symbol creates a global label with name \"+3V3\""
-			(at 143.51 184.15 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "712a3762-6eb7-40cc-82db-c2f75e2ddaf2")
-		)
-		(instances
-			(project "brique"
-				(path "/3906e17f-1a23-46f4-8c63-f34176cde9d9/6f45a547-b2e6-47a5-be1e-3507de1132e1"
-					(reference "#PWR089")
 					(unit 1)
 				)
 			)
@@ -6888,83 +4875,6 @@
 		)
 	)
 	(symbol
-		(lib_id "Device:R")
-		(at 139.7 184.15 90)
-		(mirror x)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "d18d6191-2f01-42ca-9ba8-620a7de1935b")
-		(property "Reference" "R20"
-			(at 139.954 189.23 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "3k"
-			(at 139.954 186.69 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
-			(at 139.7 182.372 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 139.7 184.15 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Resistor"
-			(at 139.7 184.15 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "JLCPCB" "C137872"
-			(at 139.7 184.15 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "51ea14c4-466c-4160-9789-88b04fbaee69")
-		)
-		(pin "2"
-			(uuid "908c904e-6e2e-4847-85c1-dc3fed42a9a7")
-		)
-		(instances
-			(project "brique"
-				(path "/3906e17f-1a23-46f4-8c63-f34176cde9d9/6f45a547-b2e6-47a5-be1e-3507de1132e1"
-					(reference "R20")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "Jumper:Jumper_2_Open")
 		(at 130.81 142.24 0)
 		(unit 1)
@@ -7168,83 +5078,6 @@
 	)
 	(symbol
 		(lib_id "Device:R")
-		(at 88.9 53.34 90)
-		(mirror x)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "d65284ba-87c1-4f1e-b004-9f930d77eddc")
-		(property "Reference" "R31"
-			(at 88.9 59.69 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "3k"
-			(at 88.9 57.15 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
-			(at 88.9 51.562 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 88.9 53.34 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Resistor"
-			(at 88.9 53.34 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "JLCPCB" "C137872"
-			(at 88.9 53.34 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "0af97191-d271-4748-82e5-cce950df5169")
-		)
-		(pin "2"
-			(uuid "fd302b51-43ee-432c-9f78-c8f474126f05")
-		)
-		(instances
-			(project "brique"
-				(path "/3906e17f-1a23-46f4-8c63-f34176cde9d9/6f45a547-b2e6-47a5-be1e-3507de1132e1"
-					(reference "R31")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Device:R")
 		(at 63.5 26.67 90)
 		(unit 1)
 		(exclude_from_sim no)
@@ -7380,72 +5213,6 @@
 			(project "brique"
 				(path "/3906e17f-1a23-46f4-8c63-f34176cde9d9/6f45a547-b2e6-47a5-be1e-3507de1132e1"
 					(reference "#PWR080")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:+3V3")
-		(at 43.18 125.73 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "de969f30-16c7-4546-b4d8-6d081352ea07")
-		(property "Reference" "#PWR012"
-			(at 43.18 129.54 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Value" "+3V3"
-			(at 43.18 120.65 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 43.18 125.73 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" ""
-			(at 43.18 125.73 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Power symbol creates a global label with name \"+3V3\""
-			(at 43.18 125.73 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "f2c634b0-f235-465d-8d5b-5e080c7b1aea")
-		)
-		(instances
-			(project "brique"
-				(path "/3906e17f-1a23-46f4-8c63-f34176cde9d9/6f45a547-b2e6-47a5-be1e-3507de1132e1"
-					(reference "#PWR012")
 					(unit 1)
 				)
 			)
@@ -7596,226 +5363,6 @@
 	)
 	(symbol
 		(lib_id "Device:R")
-		(at 119.38 68.58 270)
-		(mirror x)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "e2ba73e2-8b20-428e-b2a0-48597aa81ef9")
-		(property "Reference" "R33"
-			(at 119.38 74.93 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "3k"
-			(at 119.38 72.39 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
-			(at 119.38 70.358 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 119.38 68.58 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Resistor"
-			(at 119.38 68.58 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "JLCPCB" "C137872"
-			(at 119.38 68.58 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "2e5bfaf0-0474-41ed-b375-fdc7e448fe90")
-		)
-		(pin "2"
-			(uuid "da8e8233-3104-424f-be34-d2baac9f5929")
-		)
-		(instances
-			(project "brique"
-				(path "/3906e17f-1a23-46f4-8c63-f34176cde9d9/6f45a547-b2e6-47a5-be1e-3507de1132e1"
-					(reference "R33")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:+3V3")
-		(at 143.51 125.73 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "e348c658-5ece-480b-b2a4-aa8e925dd96e")
-		(property "Reference" "#PWR071"
-			(at 143.51 129.54 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Value" "+3V3"
-			(at 143.51 120.65 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 143.51 125.73 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" ""
-			(at 143.51 125.73 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Power symbol creates a global label with name \"+3V3\""
-			(at 143.51 125.73 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "33f2752a-f112-422a-90cb-7ba074e9bcb9")
-		)
-		(instances
-			(project "brique"
-				(path "/3906e17f-1a23-46f4-8c63-f34176cde9d9/6f45a547-b2e6-47a5-be1e-3507de1132e1"
-					(reference "#PWR071")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Device:R")
-		(at 139.7 142.24 90)
-		(mirror x)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "e51f5ab6-d9b2-4eb7-802f-e328006bca2e")
-		(property "Reference" "R23"
-			(at 139.7 147.574 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "3k"
-			(at 139.7 145.034 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
-			(at 139.7 140.462 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 139.7 142.24 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Resistor"
-			(at 139.7 142.24 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "JLCPCB" "C137872"
-			(at 139.7 142.24 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "d18a73a7-30c4-4e75-8395-687a1f75bab6")
-		)
-		(pin "2"
-			(uuid "f04f4919-1561-45c1-b51b-3cf730b70c5d")
-		)
-		(instances
-			(project "brique"
-				(path "/3906e17f-1a23-46f4-8c63-f34176cde9d9/6f45a547-b2e6-47a5-be1e-3507de1132e1"
-					(reference "R23")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Device:R")
 		(at 96.52 161.29 90)
 		(mirror x)
 		(unit 1)
@@ -7887,83 +5434,6 @@
 			(project "brique"
 				(path "/3906e17f-1a23-46f4-8c63-f34176cde9d9/6f45a547-b2e6-47a5-be1e-3507de1132e1"
 					(reference "R18")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Device:R")
-		(at 90.17 125.73 270)
-		(mirror x)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "f1916006-0cb4-4edf-b318-9905b5515cae")
-		(property "Reference" "R25"
-			(at 90.17 132.08 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "3k"
-			(at 90.17 129.54 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
-			(at 90.17 127.508 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 90.17 125.73 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Resistor"
-			(at 90.17 125.73 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "JLCPCB" "C137872"
-			(at 90.17 125.73 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "09bbd275-e65f-4fc0-8d70-50aca02525af")
-		)
-		(pin "2"
-			(uuid "847085a9-77bd-42f2-bc75-bc646142a8fe")
-		)
-		(instances
-			(project "brique"
-				(path "/3906e17f-1a23-46f4-8c63-f34176cde9d9/6f45a547-b2e6-47a5-be1e-3507de1132e1"
-					(reference "R25")
 					(unit 1)
 				)
 			)
