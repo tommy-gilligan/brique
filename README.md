@@ -4,7 +4,7 @@
   </a>
   <h3 align="center">Brique</h3>
   <p align="center">
-    An RP2350-based replacement mainboard for Nokia 3310.<br />
+    An RP2354-based replacement mainboard for Nokia 3310.<br />
     Rust firmware with browser-based simulator included. 
     <br />
     <br />
@@ -68,10 +68,6 @@ trunk serve
 - power button should turn on device but also function as gpio?
 
 https://serdisplib.sourceforge.net/ser/pcd8544.html
-
-
-
-
 
 Ordering from JLCPCB
 https://github.com/tommy-gilligan/brique/releases/latest

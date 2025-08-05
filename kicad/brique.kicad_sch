@@ -11881,7 +11881,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "RP2350_80QFN"
+		(property "Value" "RP2354_80QFN"
 			(at 207.9341 234.95 0)
 			(effects
 				(font
@@ -11917,7 +11917,7 @@
 				(hide yes)
 			)
 		)
-		(property "JLCPCB" "C42415655"
+		(property "JLCPCB" ""
 			(at 205.74 135.89 0)
 			(effects
 				(font
