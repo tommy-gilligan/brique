@@ -133,11 +133,11 @@ outputs:
         auto_crop: true
         width: 200
       point_of_view:
-        - rotate_x: 160
-          rotate_z: 160
+        - rotate_x: 180
+          rotate_z: 180
           file_id: front
-        - rotate_x: 30
-          rotate_z: -20
+        - rotate_x: 0
+          rotate_z: 0
           file_id: back
       outputs:
         - type: render
