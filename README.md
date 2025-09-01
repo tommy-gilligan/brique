@@ -50,6 +50,21 @@ trunk serve
     - Reassemble 3310
     - Manual Test
 
+## Ordering from JLCPCB
+1.  Download the following files from [the latest release](https://github.com/tommy-gilligan/brique/releases/latest):
+    - [gerbers.zip](https://github.com/tommy-gilligan/brique/releases/latest/gerbers.zip)
+    - [bom.csv](https://github.com/tommy-gilligan/brique/releases/latest/bom.csv)
+    - [cpl.csv](https://github.com/tommy-gilligan/brique/releases/latest/cpl.csv)
+2. Upload `gerbers.zip`
+3. Set `PCB Thickness` to `1.0mm`.  This is the thickness of the original board that is being replaced.  The case is not designed for boards that are not 1mm thick.
+4. Enable `PCB Assembly`
+5. Set `Assembly Side` to `Bottom Side`
+6. Set `PCBA Qty` to `2` (or however many you like, but 2 is the minimum)
+7. Click `Next` to be taken to the next page
+8. Upload `bom.csv`
+9. Upload `cpl.csv`
+10. Click `Process BOM & CPL`
+
 ### TODO
 
 - document app API
@@ -69,26 +84,3 @@ trunk serve
 
 https://serdisplib.sourceforge.net/ser/pcd8544.html
 
-Ordering from JLCPCB
-https://github.com/tommy-gilligan/brique/releases/latest
-Download:
-- gerbers.zip
-- cpl.csv
-- bom.csv
-
-Upload gerbers.zip
-Form with many options
-The board needs to be 1mm (this is the thickness of the original board it is replacing)
-Select 1mm thickness
-Select PCB assembly
-Assemble bottom side
-PCB assembly significantly affects price but minimum quantity is 2.  If you are cheap and only need 1 board: select quantity 2
-Select standard assembly (I think currently 
-Click Next
-You'll be taken to PCB tab of a review page
-Click next
-Upload bom
-Uplaod cpl
-Click Process BOM & CPL
-Click continue on missing parts (I need to change these to NC: M1 J4 LS1 U2)
-The inclusion of 01005 is limiting me to 'Standard' (part C161362... seems to be something wrong with bom.csv output from kibot): upsize
