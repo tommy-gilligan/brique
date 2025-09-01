@@ -10051,7 +10051,7 @@
 				(justify mirror)
 			)
 		)
-		(property "JLCPCB" ""
+		(property "JLCPCB" "C39843328"
 			(at 0 0 90)
 			(unlocked yes)
 			(layer "B.Fab")
