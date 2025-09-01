@@ -30,18 +30,25 @@ This started as a cute "what if?":
 
 Because the board would need to fit into the chassis of a Nokia 3310 and because there are existing doodads that would be sitting alongside the board anyways, scope has crept to include connecting to these other thingamajigs.
 
-![3D render of front of main board](https://github.com/tommy-gilligan/brique/releases/latest/download/3D_blenderfront.png)
-![3D render of back of main board](https://github.com/tommy-gilligan/brique/releases/latest/download/3D_blenderback.png)
+<p>
+<img style="display: inline; width: 140px" alt="3D render of front of main board" src="https://github.com/tommy-gilligan/brique/releases/latest/download/3D_blenderfront.png"/>
+<img style="display: inline; width: 140px" alt="3D render of back of main board" src="https://github.com/tommy-gilligan/brique/releases/latest/download/3D_blenderback.png"/>
+</p>
 
 ## Assuming Rustup
+```
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-select nightly
-load into shell
+```
+- select nightly
+- load into shell
 
 ## Setting up web environment
+
+```
 cargo install --locked trunk
 cd web
 trunk serve
+```
 
 ## Setting up rp environment
 
