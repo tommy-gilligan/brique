@@ -52,9 +52,9 @@ trunk serve
 
 ## Ordering from JLCPCB
 1.  Download the following files from [the latest release](https://github.com/tommy-gilligan/brique/releases/latest):
-    - [gerbers.zip](https://github.com/tommy-gilligan/brique/releases/latest/gerbers.zip)
-    - [bom.csv](https://github.com/tommy-gilligan/brique/releases/latest/bom.csv)
-    - [cpl.csv](https://github.com/tommy-gilligan/brique/releases/latest/cpl.csv)
+    - [gerbers.zip](https://github.com/tommy-gilligan/brique/releases/latest/download/gerbers.zip)
+    - [bom.csv](https://github.com/tommy-gilligan/brique/releases/latest/download/bom.csv)
+    - [cpl.csv](https://github.com/tommy-gilligan/brique/releases/latest/download/cpl.csv)
 2. Upload `gerbers.zip`
 3. Set `PCB Thickness` to `1.0mm`.  This is the thickness of the original board that is being replaced.  The case is not designed for boards that are not 1mm thick.
 4. Enable `PCB Assembly`
